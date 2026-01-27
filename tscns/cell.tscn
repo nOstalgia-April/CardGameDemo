@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://c4h4f4yy2i4s5"]
+
+[ext_resource type="Script" uid="uid://lifi4j6sslj1i" path="res://scripts/cell.gd" id="1_script"]
+
+[node name="Cell" type="Control" unique_id=1934000831]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 128.0
+offset_bottom = 128.0
+script = ExtResource("1_script")
+
+[node name="Root" type="Control" parent="." unique_id=655901528]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Bg" type="Panel" parent="Root" unique_id=2108003936]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FogLayer" type="ColorRect" parent="Root" unique_id=660676512]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Highlight" type="Panel" parent="Root" unique_id=1483272054]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+visible = false
+
+[node name="OccupantSlot" type="Control" parent="Root" unique_id=2001923471]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Input" type="Button" parent="Root" unique_id=1007664392]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
+mouse_filter = 2

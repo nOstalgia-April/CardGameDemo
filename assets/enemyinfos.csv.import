@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://b7o32bv1mgc4p"
+
+[deps]
+
+files=["res://assets/enemyinfos.base.translation", "res://assets/enemyinfos.base.translation", "res://assets/enemyinfos.base.translation", "res://assets/enemyinfos.base.translation", "res://assets/enemyinfos.base.translation"]
+
+source_file="res://assets/enemyinfos.csv"
+dest_files=["res://assets/enemyinfos.base.translation", "res://assets/enemyinfos.base.translation", "res://assets/enemyinfos.base.translation", "res://assets/enemyinfos.base.translation", "res://assets/enemyinfos.base.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

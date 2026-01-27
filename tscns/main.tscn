@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://cyx5jl4c8qdsd"]
+
+[ext_resource type="Script" uid="uid://d0ng80v2suka3" path="res://scripts/main.gd" id="1_jimh7"]
+[ext_resource type="PackedScene" uid="uid://nedwk80y63vm" path="res://tscns/hand_view.tscn" id="2_d36ai"]
+[ext_resource type="PackedScene" uid="uid://bv5h3cwm21ok7" path="res://tscns/board.tscn" id="3_fwypi"]
+[ext_resource type="Texture2D" uid="uid://b7id5pfe8dtrt" path="res://icon.svg" id="4_o2umf"]
+
+[node name="Node2D" type="Node2D" unique_id=1557048967]
+script = ExtResource("1_jimh7")
+
+[node name="HandView" parent="." unique_id=140155012 instance=ExtResource("2_d36ai")]
+offset_left = 76.0
+offset_top = 444.0
+offset_right = 976.0
+offset_bottom = 764.0
+hand_scale = 0.5
+
+[node name="Board" parent="." unique_id=1133862191 instance=ExtResource("3_fwypi")]
+offset_left = 322.0
+offset_top = 12.0
+offset_right = 322.0
+offset_bottom = 12.0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1245972592]
+position = Vector2(-638, 254)
+scale = Vector2(2.1953125, 2.265625)
+texture = ExtResource("4_o2umf")

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://c72vt7hv1ajyp"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dji86p0hw3byr" path="res://tscns/hand_view.tscn" id="2_hand"]
+[ext_resource type="PackedScene" uid="uid://bv5h3cwm21ok7" path="res://tscns/board.tscn" id="3_board"]
+
+[node name="Main" type="Node2D" unique_id=768650474]
+script = ExtResource("1_script")
+
+[node name="Board" parent="." unique_id=1254471944 instance=ExtResource("3_board")]
+
+[node name="HandView" parent="." unique_id=1736671067 instance=ExtResource("2_hand")]
+initial_card_count = 0
