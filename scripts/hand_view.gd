@@ -1,4 +1,5 @@
 extends Control
+class_name HandView
 
 @export var card_scene: PackedScene
 @export var initial_card_count: int = 3
@@ -11,8 +12,7 @@ extends Control
 @export var curve_height: float = 90.0
 @export var bottom_padding: float = 16.0
 
-@export var hover_raise: float = 60.0
-@export var hover_scale: float = 1.0
+@export var hover_scale: float = 1.7
 @export var hover_spread: float = 24.0
 @export var hover_rotation_factor: float = 0.6
 
@@ -33,8 +33,8 @@ func _ready() -> void:
 	for i in range(initial_card_count):
 		add_card()
 
-func add_card() -> Control:
-	var card: Control = card_scene.instantiate()
+func add_card() -> Card:
+	var card: Card = card_scene.instantiate() as Card
 	card_container.add_child(card)
 	_setup_card(card)
 	cards.append(card)
@@ -58,7 +58,7 @@ func clear_cards() -> void:
 			card.queue_free()
 	cards.clear()
 
-func _setup_card(card: Control) -> void:
+func _setup_card(card: Card) -> void:
 	card.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	card.z_as_relative = true
 	var btn: Button = card.get_node_or_null("Button") as Button
@@ -67,13 +67,17 @@ func _setup_card(card: Control) -> void:
 		btn.mouse_exited.connect(_on_card_unhover.bind(card))
 
 func _on_card_hover(card: Control) -> void:
-	hovered_card = card
+	var c: Card = card as Card
+	hovered_card = c
+	c.set_hover_visuals(true)
 	_refresh_z()
 
 func _on_card_unhover(card: Control) -> void:
-	if hovered_card == card:
+	var c: Card = card as Card
+	if hovered_card == c:
 		hovered_card = null
-		_refresh_z()
+	c.set_hover_visuals(false)
+	_refresh_z()
 
 func _process(delta: float) -> void:
 	if hovered_card != null and !is_instance_valid(hovered_card):
@@ -126,8 +130,6 @@ func _update_layout(delta: float) -> void:
 		var y := base_y - effective_curve_height * (1.0 - curve_t * curve_t)
 
 		var is_hovered: bool = hovered_index >= 0 and i == hovered_index
-		_set_card_expanded(card, is_hovered, is_hovered)
-
 		var target_pos := Vector2(x, y) - card.pivot_offset
 		var target_scale := Vector2.ONE
 		var target_rot := rot
@@ -135,12 +137,8 @@ func _update_layout(delta: float) -> void:
 
 		if hovered_card != null and hovered_index >= 0:
 			if is_hovered:
-				var compact_h: float = _get_card_compact_height(card)
-				var expanded_h: float = _get_card_expanded_height(card)
-				var center_down: float = max(0.0, (expanded_h - compact_h) * 0.5)
-				target_pos += Vector2(0, center_down - hover_raise)
 				if hover_scale != 1.0:
-					target_scale = Vector2(1.0, hover_scale)
+					target_scale = Vector2.ONE * hover_scale
 				target_rot = 0.0
 				target_z = count + 10
 			else:
@@ -165,20 +163,6 @@ func _apply_direct(card: Control, target_pos: Vector2, target_rot: float, target
 	card.rotation = target_rot
 	card.scale = target_scale
 	card.z_index = target_z
-
-func _set_card_expanded(card: Control, expanded: bool, instant: bool) -> void:
-	if card.has_method("set_expanded"):
-		card.call("set_expanded", expanded, instant)
-
-func _get_card_compact_height(card: Control) -> float:
-	if card.has_method("get_compact_height"):
-		return float(card.call("get_compact_height"))
-	return card.custom_minimum_size.y
-
-func _get_card_expanded_height(card: Control) -> float:
-	if card.has_method("get_expanded_height"):
-		return float(card.call("get_expanded_height"))
-	return card.custom_minimum_size.y
 
 func _refresh_z() -> void:
 	for i in range(cards.size()):

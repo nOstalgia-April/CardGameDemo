@@ -4,8 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://b7id5pfe8dtrt" path="res://icon.svg" id="2_icon"]
 [ext_resource type="Script" uid="uid://dam8gx2a3m0nd" path="res://scripts/unit_card.gd" id="3_script"]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4qfqs"]
+blend_mode = 1
+
 [node name="UnitCard" type="Control" unique_id=1679329416]
-custom_minimum_size = Vector2(160, 220)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 160.0
@@ -18,6 +20,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -20.0
+offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -31,25 +35,21 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0.26666668, 0.50980395, 0.29803923)
 
-[node name="TextureRect" type="TextureRect" parent="CardBg" unique_id=581895683]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Art" type="TextureRect" parent="." unique_id=1127650245]
+[node name="Art" type="TextureRect" parent="CardBg" unique_id=1127650245]
+material = SubResource("CanvasItemMaterial_4qfqs")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.75
+offset_left = -16.0
+offset_top = -22.0
+offset_right = 16.0
+offset_bottom = 55.0
 mouse_filter = 2
 texture = ExtResource("2_icon")
 expand_mode = 1
-stretch_mode = 3
 
 [node name="DirNums" type="Control" parent="." unique_id=1838042777]
 layout_mode = 1
@@ -111,6 +111,7 @@ offset_bottom = 86.0
 grow_vertical = 2
 
 [node name="HoverBorder" type="Panel" parent="." unique_id=283420279]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -118,4 +119,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-visible = false
