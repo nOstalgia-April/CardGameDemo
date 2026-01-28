@@ -319,3 +319,37 @@ func _get_target_cell(candidates: Array[Cell]) -> Cell:
 
 func _is_mouse_over() -> bool:
 	return get_global_rect().has_point(get_global_mouse_position())
+
+# 撞击动画相关变量
+var _bump_distance: float = 30.0  # 撞击距离
+var _bump_duration_forward: float = 0.1  # 向前冲锋时长
+var _bump_duration_backward: float = 0.15  # 弹回时长
+
+# 播放撞击动画
+func play_bump_animation(direction: int) -> void:
+	print("开始播放撞击动画，方向：", direction)
+	# 根据方向计算移动向量
+	var bump_vector: Vector2 = Vector2.ZERO
+	
+	match direction:
+		Dir.N:
+			bump_vector = Vector2(0, -_bump_distance)
+		Dir.E:
+			bump_vector = Vector2(_bump_distance, 0)
+		Dir.S:
+			bump_vector = Vector2(0, _bump_distance)
+		Dir.W:
+			bump_vector = Vector2(-_bump_distance, 0)
+	
+	# 创建 Tween
+	var tween: Tween = create_tween()
+	
+	# 保存原始位置
+	var original_position: Vector2 = position
+	
+	# 动画序列：向前冲锋 -> 弹回
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "position", original_position + bump_vector, _bump_duration_forward)
+	tween.tween_property(self, "position", original_position, _bump_duration_backward)
+	print("动画已设置")

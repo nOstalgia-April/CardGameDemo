@@ -49,6 +49,8 @@ func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -
 		"attacker_cell=", attacker_cell,
 		"defender_cell=", target_cell
 	)
+	# 播放攻击方的撞击动画
+	attacker.play_bump_animation(dir)
 	defender.take_damage(opp, attacker, atk_value)
 	if !advantage:
 		attacker.take_damage(dir, defender, def_value)
