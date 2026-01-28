@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://nedwk80y63vm"]
+
+[ext_resource type="Script" uid="uid://dvvip21cn7r5y" path="res://scripts/hand_view.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://bdq3c1ep85wt6" path="res://tscns/card.tscn" id="2_card"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j4ft1"]
+
+[node name="HandView" type="Control" unique_id=140155012]
+custom_minimum_size = Vector2(900, 320)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 320.0
+script = ExtResource("1_script")
+card_scene = ExtResource("2_card")
+
+[node name="HandRoot" type="Control" parent="." unique_id=1080046843]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HandArea" type="Panel" parent="HandRoot" unique_id=62363685]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_j4ft1")
+
+[node name="CardContainer" type="Control" parent="HandRoot" unique_id=427102512]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

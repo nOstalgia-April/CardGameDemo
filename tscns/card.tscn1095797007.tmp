@@ -1,0 +1,174 @@
+[gd_scene format=3 uid="uid://bdq3c1ep85wt6"]
+
+[ext_resource type="Texture2D" uid="uid://b7id5pfe8dtrt" path="res://icon.svg" id="1_ivai2"]
+[ext_resource type="Script" uid="uid://crj7ksflybw3w" path="res://scripts/card.gd" id="1_rjlel"]
+[ext_resource type="PackedScene" uid="uid://sq6x1a4b2hoo" path="res://tscns/direction_value.tscn" id="2_dir"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwofj"]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ivai2"]
+draw_center = false
+
+[sub_resource type="Theme" id="Theme_4k7q8"]
+Button/styles/hover = SubResource("StyleBoxFlat_nwofj")
+Button/styles/normal = SubResource("StyleBoxFlat_ivai2")
+
+[node name="Control" type="Control" unique_id=1569535855]
+custom_minimum_size = Vector2(140, 180)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_rjlel")
+
+[node name="Control" type="Panel" parent="." unique_id=871114573]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=409905007]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 7.0
+offset_right = -6.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.85214394, 0.78520525, 0.6893212, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="itemImg" type="TextureRect" parent="Control/ColorRect" unique_id=718050374]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_ivai2")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="name" type="Label" parent="Control/ColorRect" unique_id=548876384]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.035
+anchor_top = 0.5
+anchor_right = 1.027
+anchor_bottom = 0.5
+offset_left = 48.28
+offset_top = 75.0
+offset_right = -46.616
+offset_bottom = 109.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Your Cards"
+horizontal_alignment = 1
+
+[node name="DescPanel" type="Panel" parent="." unique_id=364522295]
+visible = false
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 120.0
+mouse_filter = 2
+
+[node name="DescLabel" type="Label" parent="DescPanel" unique_id=969980227]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "描述文本占位..."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="DirNums" type="Control" parent="." unique_id=733352714]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="N" parent="DirNums" unique_id=1573343413 instance=ExtResource("2_dir")]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -18.0
+offset_top = 12.0
+offset_right = 18.0
+offset_bottom = 48.0
+grow_horizontal = 2
+
+[node name="E" parent="DirNums" unique_id=2019999286 instance=ExtResource("2_dir")]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -52.0
+offset_top = -18.0
+offset_right = -16.0
+offset_bottom = 18.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="S" parent="DirNums" unique_id=1371534971 instance=ExtResource("2_dir")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -18.0
+offset_top = -48.0
+offset_right = 18.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="W" parent="DirNums" unique_id=26409756 instance=ExtResource("2_dir")]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 16.0
+offset_top = -18.0
+offset_right = 52.0
+offset_bottom = 18.0
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="." unique_id=1192335378]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 12.0
+offset_right = -10.0
+offset_bottom = -11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_4k7q8")
+
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
+[connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
