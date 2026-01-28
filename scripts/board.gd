@@ -61,7 +61,8 @@ func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -
 func _trigger_screen_shake() -> void:
 	var battle_node: Node = get_node("/root/Battle")
 	if battle_node and battle_node.has_method("trigger_screen_shake"):
-		battle_node.trigger_screen_shake()
+		# 使用默认参数触发震动
+		battle_node.trigger_screen_shake(0.0, 0.0)
 
 func resolve_attack_on_cell(attacker: UnitCard, target_cell: Cell, advantage: bool = false) -> void:
 	if attacker == null or target_cell == null:

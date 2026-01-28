@@ -8,6 +8,11 @@ extends Node2D
 var card_infos: cardInfos = cardInfos.new()
 
 # 屏幕震动相关变量
+@export var shake_intensity_default: float = 10.0  # 默认震动强度（像素）
+@export var shake_duration_default: float = 0.3  # 默认震动持续时间（秒）
+@export var shake_x_intensity_multiplier: float = 1.0  # X轴震动强度倍率
+@export var shake_y_intensity_multiplier: float = 1.0  # Y轴震动强度倍率
+
 var shake_intensity: float = 0.0
 var shake_duration: float = 0.0
 var is_shaking: bool = false
@@ -15,9 +20,15 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var base_position: Vector2 = Vector2.ZERO
 
 # 触发屏幕震动
-# intensity: 震动强度（像素）
-# duration: 震动持续时间（秒）
-func trigger_screen_shake(intensity: float = 10.0, duration: float = 0.3) -> void:
+# intensity: 震动强度（像素），如果为 0 则使用默认值
+# duration: 震动持续时间（秒），如果为 0 则使用默认值
+func trigger_screen_shake(intensity: float = 0.0, duration: float = 0.0) -> void:
+	# 如果传入的值为 0，使用默认值
+	if intensity == 0.0:
+		intensity = shake_intensity_default
+	if duration == 0.0:
+		duration = shake_duration_default
+
 	shake_intensity = intensity
 	shake_duration = duration
 	is_shaking = true
@@ -31,9 +42,10 @@ func _process(delta: float) -> void:
 			is_shaking = false
 			root.position = base_position
 		else:
+			# 使用 X 和 Y 轴的倍率来控制不同方向的震动强度
 			root.position = base_position + Vector2(
-				rng.randf_range(-shake_intensity, shake_intensity),
-				rng.randf_range(-shake_intensity, shake_intensity)
+				rng.randf_range(-shake_intensity * shake_x_intensity_multiplier, shake_intensity * shake_x_intensity_multiplier),
+				rng.randf_range(-shake_intensity * shake_y_intensity_multiplier, shake_intensity * shake_y_intensity_multiplier)
 			)
 @export var enemy_infos_path: String = "res://assets/enemyinfos.csv"
 var enemy_infos: Dictionary = {}
