@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://lo2p3p0yxlwm" path="res://scripts/energy_label.gd" id="6_energy"]
 [ext_resource type="PackedScene" uid="uid://bugqndusvguwg" path="res://tscns/turn_end_button.tscn" id="7_4ji1g"]
 [ext_resource type="Script" uid="uid://cv37b5w8m8nvk" path="res://scripts/flip_label.gd" id="7_flip"]
+[ext_resource type="Script" path="res://scripts/camera_shake.gd" id="8_camera"]
 
 [node name="Battle" type="Node2D" unique_id=1557048967]
 script = ExtResource("1_jimh7")

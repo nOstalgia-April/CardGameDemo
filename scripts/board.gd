@@ -51,9 +51,17 @@ func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -
 	)
 	# 播放攻击方的撞击动画
 	attacker.play_bump_animation(dir)
+	# 触发屏幕震动效果
+	_trigger_screen_shake()
 	defender.take_damage(opp, attacker, atk_value)
 	if !advantage:
 		attacker.take_damage(dir, defender, def_value)
+
+# 触发屏幕震动效果
+func _trigger_screen_shake() -> void:
+	var battle_node: Node = get_node("/root/Battle")
+	if battle_node and battle_node.has_method("trigger_screen_shake"):
+		battle_node.trigger_screen_shake()
 
 func resolve_attack_on_cell(attacker: UnitCard, target_cell: Cell, advantage: bool = false) -> void:
 	if attacker == null or target_cell == null:

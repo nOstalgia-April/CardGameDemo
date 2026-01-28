@@ -3,12 +3,44 @@ extends Node2D
 @onready var hand_view: HandView = %HandView
 @onready var board: Board = %Board
 @onready var turn_manager: Node2D = %TurnManager
+@onready var root: Control = $Root
 
 var card_infos: cardInfos = cardInfos.new()
+
+# 屏幕震动相关变量
+var shake_intensity: float = 0.0
+var shake_duration: float = 0.0
+var is_shaking: bool = false
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var base_position: Vector2 = Vector2.ZERO
+
+# 触发屏幕震动
+# intensity: 震动强度（像素）
+# duration: 震动持续时间（秒）
+func trigger_screen_shake(intensity: float = 10.0, duration: float = 0.3) -> void:
+	shake_intensity = intensity
+	shake_duration = duration
+	is_shaking = true
+	if base_position == Vector2.ZERO:
+		base_position = root.position
+
+func _process(delta: float) -> void:
+	if is_shaking:
+		shake_duration -= delta
+		if shake_duration <= 0:
+			is_shaking = false
+			root.position = base_position
+		else:
+			root.position = base_position + Vector2(
+				rng.randf_range(-shake_intensity, shake_intensity),
+				rng.randf_range(-shake_intensity, shake_intensity)
+			)
 @export var enemy_infos_path: String = "res://assets/enemyinfos.csv"
 var enemy_infos: Dictionary = {}
 
 func _ready() -> void:
+	rng.randomize()
+	base_position = root.position
 	populate_hand_with_all_cards()
 	enemy_infos = _read_csv_as_nested_dict(enemy_infos_path)
 	spawn_enemy_at_center("社畜")
