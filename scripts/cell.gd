@@ -124,7 +124,7 @@ func _fit_unit_to_slot(unit: Control) -> void:
 	unit.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	unit.size = base_size
 
-	var scale_factor: float = min(slot_size.x / base_size.x, slot_size.y / base_size.y) * 1
+	var scale_factor: float = min(slot_size.x / base_size.x, slot_size.y / base_size.y) * 0.9
 	unit.scale = Vector2.ONE * scale_factor
 	unit.position = (slot_size - base_size * scale_factor) * 0.5
 
