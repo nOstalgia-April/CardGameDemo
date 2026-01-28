@@ -1,17 +1,20 @@
 extends Control
+class_name Cell
 
 enum CellState { HIDDEN, AVAILABLE, VISITED }
 
 @export var state: CellState = CellState.AVAILABLE
 @export var color_hidden: Color = Color(0, 0, 0, 0.6)
-@export var color_available: Color = Color(0.6, 0.6, 0.6, 0.5)
-@export var color_visited: Color = Color(1, 1, 1, 0.2)
+@export var color_available: Color = Color(1.0, 1.0, 1.0, 0.231)
+@export var color_visited: Color = Color(1.0, 1.0, 1.0, 0.502)
 @export var unit_scene: PackedScene
+@export var board: Board
 
 @export var highlight_color: Color = Color(1, 1, 1, 0.9)
 @onready var fog_layer: ColorRect = $Root/FogLayer
 @onready var highlight: Panel = $Root/Highlight
 @onready var occupant_slot: Control = $Root/OccupantSlot
+var visited_by_player: bool = false
 
 func _ready() -> void:
 	add_to_group("cells")
@@ -24,18 +27,29 @@ func set_state(new_state: CellState) -> void:
 	_set_state_internal(state)
 
 func mark_visited() -> void:
+	visited_by_player = true
 	set_state(CellState.VISITED)
 
+func is_visited_by_player() -> bool:
+	return visited_by_player
+
 func place_card(card: Control) -> bool:
-	if !card.has_method("get_card_data"):
+	if !board.can_place_on(self):
 		return false
-	var data: Dictionary = card.call("get_card_data") as Dictionary
+	if is_occupied():
+		return false
+	if board.turn_manager.energy < 1:
+		return false
+	var data: Dictionary = card.get_card_data() as Dictionary
 	var display_name: String = str(data.get("display_name", ""))
 	var n: int = int(data.get("n", 0))
 	var e: int = int(data.get("e", 0))
 	var s: int = int(data.get("s", 0))
 	var w: int = int(data.get("w", 0))
-	return spawn_unit(display_name, n, e, s, w, false)
+	var placed: bool = spawn_unit(display_name, n, e, s, w, false)
+	if placed:
+		board.turn_manager.spend_energy(1)
+	return placed
 
 func spawn_unit(display_name: String, n: int, e: int, s: int, w: int, is_enemy: bool) -> bool:
 	if occupant_slot.get_child_count() > 0:
@@ -43,19 +57,24 @@ func spawn_unit(display_name: String, n: int, e: int, s: int, w: int, is_enemy: 
 	if unit_scene == null:
 		return false
 
-	var unit: Control = unit_scene.instantiate() as Control
+	var unit: UnitCard = unit_scene.instantiate() as UnitCard
 	if unit == null:
 		return false
 	occupant_slot.add_child(unit)
 	call_deferred("_fit_unit_to_slot", unit)
+	unit.set_board(board)
 
-	if unit.has_method("set_card_data"):
-		unit.call("set_card_data", display_name, n, e, s, w, is_enemy)
-	elif unit.has_method("set_is_enemy"):
-		unit.call("set_is_enemy", is_enemy)
+	unit.set_card_data(display_name, n, e, s, w, is_enemy)
+	if is_enemy and unit.custom_resolver == null:
+		unit.custom_resolver = AdjacentAttackResolver.new()
+	_connect_unit_signals(unit)
+	if is_enemy:
+		board.on_enemy_updated()
+	else:
+		board.on_player_unit_placed(self)
 	return true
 
-func place_existing_unit(unit: Control) -> bool:
+func place_existing_unit(unit: UnitCard) -> bool:
 	if occupant_slot.get_child_count() > 0:
 		return false
 	if unit == null or !is_instance_valid(unit):
@@ -64,7 +83,14 @@ func place_existing_unit(unit: Control) -> bool:
 		unit.get_parent().remove_child(unit)
 	occupant_slot.add_child(unit)
 	call_deferred("_fit_unit_to_slot", unit)
+	unit.set_board(board)
+	_connect_unit_signals(unit)
 	return true
+
+func get_unit() -> Control:
+	if occupant_slot.get_child_count() == 0:
+		return null
+	return occupant_slot.get_child(0) as Control
 
 func is_occupied() -> bool:
 	return occupant_slot.get_child_count() > 0
@@ -98,9 +124,15 @@ func _fit_unit_to_slot(unit: Control) -> void:
 	unit.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	unit.size = base_size
 
-	var scale_factor: float = min(slot_size.x / base_size.x, slot_size.y / base_size.y) * 0.9
+	var scale_factor: float = min(slot_size.x / base_size.x, slot_size.y / base_size.y) * 1
 	unit.scale = Vector2.ONE * scale_factor
 	unit.position = (slot_size - base_size * scale_factor) * 0.5
+
+func _connect_unit_signals(unit: Node) -> void:
+	var callable := Callable(board, "on_unit_died")
+	if unit.is_connected("died", callable):
+		return
+	unit.connect("died", callable)
 
 func _set_state_internal(new_state: CellState) -> void:
 	if !is_instance_valid(fog_layer):
