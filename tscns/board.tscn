@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bv5h3cwm21ok7"]
 
 [ext_resource type="PackedScene" uid="uid://c4h4f4yy2i4s5" path="res://tscns/cell.tscn" id="1_cell"]
-[ext_resource type="Script" uid="uid://dr6d0cwagdwvw" path="res://scripts/board.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://dr6d0cwagdwvw" path="res://scripts/presentation/board_view.gd" id="2_script"]
 
 [node name="Board" type="Control" unique_id=1133862191]
 layout_mode = 3

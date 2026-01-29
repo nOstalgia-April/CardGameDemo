@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://lo2p3p0yxlwm" path="res://scripts/energy_label.gd" id="6_energy"]
 [ext_resource type="PackedScene" uid="uid://bugqndusvguwg" path="res://tscns/turn_end_button.tscn" id="7_4ji1g"]
 [ext_resource type="Script" uid="uid://cv37b5w8m8nvk" path="res://scripts/flip_label.gd" id="7_flip"]
+[ext_resource type="Script" uid="uid://cpdl8d45122ol" path="res://scripts/systems/fog_system.gd" id="9_fog"]
 [ext_resource type="Script" uid="uid://24giiccc4jnx" path="res://scripts/presentation/hud_view.gd" id="14_hud"]
 
 [node name="Battle" type="Node2D" unique_id=1557048967]
@@ -43,7 +44,7 @@ offset_left = 474.0
 offset_top = 96.0
 offset_right = 474.0
 offset_bottom = 96.0
-turn_manager_path = NodePath("../../TurnManager")
+fog_system_path = NodePath("../../FogSystem")
 
 [node name="HUD" type="Control" parent="Root" unique_id=2047279455]
 anchors_preset = 0
@@ -86,3 +87,6 @@ turn_manager_path = NodePath("../../../TurnManager")
 unique_name_in_owner = true
 script = ExtResource("5_turn")
 board_path = NodePath("../Root/Board")
+
+[node name="FogSystem" type="Node" parent="." unique_id=77301692]
+script = ExtResource("9_fog")
