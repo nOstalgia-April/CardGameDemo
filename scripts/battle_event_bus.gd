@@ -12,6 +12,7 @@ signal resource_changed(energy: int, flips: int, context: Dictionary)
 signal cell_visibility_changed(cell: Node, state: int)
 signal flip_used(unit: Node, context: Dictionary)
 signal effect_triggered(effect_id: String, unit: Node, context: Dictionary)
+signal screen_shake_requested(intensity: float, duration: float, context: Dictionary)
 
 signal place_card_requested(card: Node, cell: Node, context: Dictionary)
 signal cell_pressed(cell: Node, context: Dictionary)
@@ -25,3 +26,4 @@ signal clear_available_cells_requested(context: Dictionary)
 
 func _ready() -> void:
 	add_to_group("battle_event_bus")
+	pass

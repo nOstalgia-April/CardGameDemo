@@ -3,11 +3,17 @@ extends Node2D
 @onready var hand_view: HandView = %HandView
 @onready var board: Board = %Board
 @onready var turn_manager: TurnManager = %TurnManager
+@onready var root: Control = $Root
 
 @export_group("Data")
 @export var card_infos_path: String = "res://assets/cardinfos.csv"
 @export var enemy_infos_path: String = "res://assets/enemyinfos.csv"
 @export var enemy_unit_scene: PackedScene = preload("res://tscns/unit_card.tscn")
+@export_group("")
+
+@export_group("ScreenShake")
+@export var shake_intensity_default: float = 12.0
+@export var shake_duration_default: float = 0.15
 @export_group("")
 
 const CardDataRepoScript = preload("res://scripts/data/card_data_repo.gd")
@@ -16,14 +22,58 @@ const EnemyDataRepoScript = preload("res://scripts/data/enemy_data_repo.gd")
 var card_repo
 var enemy_repo
 var enemy_infos: Dictionary = {}
+var shake_intensity: float = 0.0
+var shake_duration: float = 0.0
+var shake_time_left: float = 0.0
+var is_shaking: bool = false
+var base_position: Vector2 = Vector2.ZERO
+var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _ready() -> void:
+	_rng.randomize()
+	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
 	_init_repos()
 	populate_hand_with_all_cards()
 	enemy_infos = enemy_repo.get_all()
 	spawn_enemy_at_center("社畜")
 	if turn_manager != null:
 		turn_manager.start_turn()
+
+func _process(delta: float) -> void:
+	if !is_shaking:
+		return
+	if base_position == Vector2.ZERO:
+		base_position = root.position
+	shake_time_left -= delta
+	if shake_time_left <= 0.0:
+		is_shaking = false
+		root.position = base_position
+		return
+	var offset: Vector2 = Vector2(
+		_rng.randf_range(-1.0, 1.0),
+		_rng.randf_range(-1.0, 1.0)
+	) * shake_intensity
+	root.position = base_position + offset
+
+func _on_screen_shake_requested(intensity: float, duration: float, _context: Dictionary) -> void:
+	trigger_screen_shake(intensity, duration)
+
+# 触发屏幕震动
+# intensity: 震动强度（像素），如果为 0 则使用默认值
+# duration: 震动持续时间（秒），如果为 0 则使用默认值
+func trigger_screen_shake(intensity: float = 0.0, duration: float = 0.0) -> void:
+	# 如果传入的值为 0，使用默认值
+	if intensity == 0.0:
+		intensity = shake_intensity_default
+	if duration == 0.0:
+		duration = shake_duration_default
+
+	shake_intensity = intensity
+	shake_duration = duration
+	shake_time_left = duration
+	is_shaking = true
+	if base_position == Vector2.ZERO:
+		base_position = root.position
 
 func _init_repos() -> void:
 	card_repo = CardDataRepoScript.new(card_infos_path)

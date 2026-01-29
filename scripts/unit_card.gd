@@ -225,6 +225,10 @@ func _bind_event_bus() -> void:
 func _on_attack_started(attacker: Node, _target: Node, dir: int, _context: Dictionary) -> void:
 	if attacker == self:
 		play_bump_animation(dir) # direct bump (was play_attack_anim)
+		if _context.get('advantage'):
+			SoundManager.play_sfx('AttackAdvantage')
+		else:
+			SoundManager.play_sfx('Attack')
 
 func _on_damage_applied(_attacker: Node, target: Node, _dir: int, _value: int, _context: Dictionary) -> void:
 	if target == self:

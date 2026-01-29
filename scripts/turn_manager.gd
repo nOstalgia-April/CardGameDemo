@@ -2,15 +2,13 @@ extends Node
 class_name TurnManager
 
 @export_group("Refs")
-@export var board_path: NodePath
+@export var board: Board
 
 @export_group("Config")
 @export var start_energy: int = 1
 @export var max_energy: int = 4
 @export var flip_per_turn: int = 1
 @export_group("")
-
-@onready var board: Board = get_node_or_null(board_path) as Board
 
 var turn_index: int = 0
 var energy_cap: int = 0
@@ -19,8 +17,8 @@ var flips_left: int = 0
 var _resolving_turn: bool = false
 
 func _ready() -> void:
-	if board == null:
-		board = get_tree().get_first_node_in_group("board") as Board
+	BattleEventBus.unit_placed.connect(_on_unit_placed)
+	pass
 
 func start_turn() -> void:
 	turn_index += 1
@@ -38,8 +36,7 @@ func end_turn() -> void:
 		return
 	_resolving_turn = true
 	BattleEventBus.emit_signal("turn_ended", turn_index, {})
-	if board != null:
-		await board.resolve_enemy_turn()
+	await board.resolve_enemy_turn()
 	_resolving_turn = false
 	start_turn()
 
@@ -74,3 +71,8 @@ func _emit_resource_changed() -> void:
 	BattleEventBus.emit_signal("resource_changed", energy, flips_left, {
 		"energy_cap": energy_cap,
 	})
+
+func _on_unit_placed(_unit: Node, _cell: Node, _context: Dictionary) -> void:
+	print(turn_index)
+	if turn_index == 1:
+		end_turn()

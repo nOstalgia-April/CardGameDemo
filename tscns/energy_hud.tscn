@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://ctwxkqyg1cwjv"]
+
+[ext_resource type="Texture2D" uid="uid://merh828y3omi" path="res://assets/UI/行动点数标志.png" id="1_i1mqa"]
+[ext_resource type="Script" uid="uid://lo2p3p0yxlwm" path="res://scripts/energy_label.gd" id="2_alce5"]
+
+[node name="EnergyHUD" type="Control" unique_id=985602427]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=640760547]
+layout_mode = 0
+offset_right = 300.0
+offset_bottom = 300.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_i1mqa")
+
+[node name="EnergyLabel" type="Label" parent="." unique_id=2146052090]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -22.0
+offset_top = 124.0
+offset_right = 155.0
+offset_bottom = 198.0
+theme_override_colors/font_color = Color(0.9882353, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "3"
+horizontal_alignment = 1
+script = ExtResource("2_alce5")

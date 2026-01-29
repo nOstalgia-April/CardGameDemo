@@ -1,12 +1,16 @@
-extends Label
+extends TextureRect
 
 @export_group("Text")
 @export var format_text: String = "翻牌：%d"
-@export_group("")
+@export_group("Texture")
+@export var CanUse: Texture2D
+@export var CannotUse: Texture2D
 
 func _ready() -> void:
-	var cb: Callable = Callable(self, "_on_resource_changed")
-	BattleEventBus.connect("resource_changed", cb)
+	BattleEventBus.resource_changed.connect(_on_resource_changed)
 
 func _on_resource_changed(_energy: int, flips_left: int, _context: Dictionary) -> void:
-	text = format_text % [flips_left]
+	if flips_left == 1:
+		texture = CanUse
+	else:
+		texture = CannotUse

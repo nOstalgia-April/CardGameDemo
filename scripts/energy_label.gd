@@ -1,8 +1,8 @@
 extends Label
 
 @export_group("Text")
-@export var format_text: String = "行动点：%d/%d"
-@export var format_text_no_cap: String = "行动点：%d"
+@export var format_text: String = "%d/%d"
+@export var format_text_no_cap: String = "%d"
 @export_group("")
 
 func _ready() -> void:

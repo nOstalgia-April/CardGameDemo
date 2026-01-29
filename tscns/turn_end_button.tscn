@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bugqndusvguwg"]
 
 [ext_resource type="Script" uid="uid://bhre2rjkc41lw" path="res://tscns/turn_end_button.gd" id="1_m1mn0"]
+[ext_resource type="Texture2D" uid="uid://drl7ohndkm0ee" path="res://assets/BG/战斗背景2.png" id="2_yt30p"]
 
 [node name="TurnEndButton" type="Control" unique_id=2051604309]
 layout_mode = 3
@@ -14,8 +15,15 @@ script = ExtResource("1_m1mn0")
 [node name="Button" type="Button" parent="." unique_id=157069210]
 custom_minimum_size = Vector2(120, 60)
 layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+offset_right = 120.0
+offset_bottom = 60.0
 text = "结束回合"
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1639365673]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_yt30p")
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
