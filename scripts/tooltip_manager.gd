@@ -105,8 +105,14 @@ func _on_unit_hover_started(context: Dictionary) -> void:
 				# 第四格：弹窗右边紧贴卡牌左边
 				tooltip_panel.global_position = Vector2(card_global_pos.x - tooltip_panel.size.x, card_global_pos.y)
 			Vector2i(1, 1):
-				# 第五格：弹窗左边紧贴卡牌右边（同第六格）
-				tooltip_panel.global_position = Vector2(card_global_pos.x + card_size.x, card_global_pos.y)
+				# 第五格：弹窗显示在第六格的右边
+				# 获取第六格的位置
+				var sixth_cell_pos = board.get_cell_at(Vector2i(2, 1))
+				if sixth_cell_pos != null:
+					tooltip_panel.global_position = Vector2(sixth_cell_pos.global_position.x + sixth_cell_pos.size.x, sixth_cell_pos.global_position.y)
+				else:
+					# 如果找不到第六格，则显示在当前卡牌右边
+					tooltip_panel.global_position = Vector2(card_global_pos.x + card_size.x, card_global_pos.y)
 			Vector2i(2, 1):
 				# 第六格：弹窗左边紧贴卡牌右边
 				tooltip_panel.global_position = Vector2(card_global_pos.x + card_size.x, card_global_pos.y)
