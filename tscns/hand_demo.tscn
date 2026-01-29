@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://b3pa0mpm6d0xx"]
+
+[ext_resource type="PackedScene" path="res://tscns/hand_view.tscn" id="1_hand"]
+[ext_resource type="Script" path="res://scripts/hand_demo.gd" id="2_script"]
+
+[node name="HandDemo" type="Control" unique_id=1680075247]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_script")
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=565982489]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+separation = 12
+
+[node name="AddCardButton" type="Button" parent="VBox" unique_id=448567849]
+custom_minimum_size = Vector2(140, 40)
+text = "+ Card"
+
+[node name="HandView" parent="VBox" unique_id=1172822518 instance=ExtResource("1_hand")]
+size_flags_vertical = 3
