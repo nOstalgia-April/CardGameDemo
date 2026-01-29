@@ -1,5 +1,5 @@
 extends Control
-class_name TooltipManager
+class_name CardTooltipManager
 
 @onready var tooltip_panel: Panel = $TooltipPanel
 @onready var name_label: Label = $TooltipPanel/VBoxContainer/NameLabel
@@ -67,9 +67,68 @@ func _on_unit_hover_started(context: Dictionary) -> void:
 		desc_label.text = context.get("desc", "")
 
 	var global_rect: Rect2 = context.get("global_rect", Rect2())
-	global_position = global_rect.position
+	
+	# 获取卡牌的全局位置
+	var card_global_pos = global_rect.position
+	
+	# 获取Board节点以确定中心格子位置
+	var board = _get_board_node()
+	if board != null:
+		# 获取中心格子位置（通常是(0,0)）
+		var center_cell = board.get_cell_at(Vector2i(0, 0))
+		var center_pos = Vector2.ZERO
+		if center_cell != null:
+			center_pos = center_cell.global_position
+		
+		# 计算卡牌相对于中心格子的坐标
+		var card_pos = _get_card_cell_position(board, card_global_pos)
+		var relative_pos = card_pos - Vector2i(0, 0)  # 中心格子是(0,0)
+		
+		# 根据相对位置决定弹窗显示位置
+		if relative_pos.x > 0 and relative_pos.y > 0:
+			# 右上象限，从卡牌右上角显示弹窗
+			global_position = card_global_pos
+		elif relative_pos.x > 0 and relative_pos.y <= 0:
+			# 右下象限，从卡牌右上角显示弹窗
+			global_position = Vector2(card_global_pos.x, card_global_pos.y)
+		elif relative_pos.x <= 0 and relative_pos.y > 0:
+			# 左上象限，从卡牌左下角显示弹窗
+			global_position = Vector2(card_global_pos.x - tooltip_panel.size.x, card_global_pos.y - tooltip_panel.size.y)
+		else:  # relative_pos.x <= 0 and relative_pos.y <= 0
+			# 左下象限，从卡牌左下角显示弹窗
+			global_position = Vector2(card_global_pos.x - tooltip_panel.size.x, card_global_pos.y)
+	else:
+		# 如果找不到Board节点，则使用原始方法
+		global_position = card_global_pos
+
 	tooltip_panel.visible = true
 
 func _on_unit_hover_ended() -> void:
 	if tooltip_panel != null:
 		tooltip_panel.visible = false
+
+# 辅助函数：获取Board节点
+func _get_board_node() -> Board:
+	# 遍历场景树查找Board节点
+	var root = get_tree().root
+	var board = _find_board_recursive(root)
+	return board
+
+func _get_card_cell_position(board: Board, card_global_pos: Vector2) -> Vector2i:
+	# 遍历所有单元格，找到包含指定卡牌位置的单元格
+	for cell in board._get_all_cells():
+		var cell_global_rect = Rect2(cell.global_position, cell.size)
+		if cell_global_rect.has_point(card_global_pos):
+			return board.get_cell_pos(cell)
+	return Vector2i(0, 0)  # 默认返回中心位置
+
+# 递归查找Board节点的辅助函数
+func _find_board_recursive(node: Node) -> Board:
+	if node is Board:
+		return node
+	
+	for child in node.get_children():
+		var result = _find_board_recursive(child)
+		if result != null:
+			return result
+	return null
