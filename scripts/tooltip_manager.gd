@@ -68,8 +68,9 @@ func _on_unit_hover_started(context: Dictionary) -> void:
 
 	var global_rect: Rect2 = context.get("global_rect", Rect2())
 	
-	# 获取卡牌的全局位置
+	# 获取卡牌的全局位置和大小
 	var card_global_pos = global_rect.position
+	var card_size = global_rect.size
 	
 	# 获取Board节点以确定中心格子位置
 	var board = _get_board_node()
@@ -84,19 +85,50 @@ func _on_unit_hover_started(context: Dictionary) -> void:
 		var card_pos = _get_card_cell_position(board, card_global_pos)
 		var relative_pos = card_pos - Vector2i(0, 0)  # 中心格子是(0,0)
 		
-		# 根据相对位置决定弹窗显示位置
-		if relative_pos.x > 0 and relative_pos.y > 0:
-			# 右上象限，从卡牌右上角显示弹窗
-			global_position = card_global_pos
-		elif relative_pos.x > 0 and relative_pos.y <= 0:
-			# 右下象限，从卡牌右上角显示弹窗
-			global_position = Vector2(card_global_pos.x, card_global_pos.y)
-		elif relative_pos.x <= 0 and relative_pos.y > 0:
-			# 左上象限，从卡牌左下角显示弹窗
-			global_position = Vector2(card_global_pos.x - tooltip_panel.size.x, card_global_pos.y - tooltip_panel.size.y)
-		else:  # relative_pos.x <= 0 and relative_pos.y <= 0
-			# 左下象限，从卡牌左下角显示弹窗
-			global_position = Vector2(card_global_pos.x - tooltip_panel.size.x, card_global_pos.y)
+		# 根据九宫格位置决定弹窗显示位置，确保弹窗紧贴棋子边缘
+		# 九宫格布局：
+		# (0,0) (1,0) (2,0)
+		# (0,1) (1,1) (2,1)
+		# (0,2) (1,2) (2,2)
+
+		match relative_pos:
+			Vector2i(0, 0):
+				# 第一格：弹窗右下角重合于卡牌左上角
+				tooltip_panel.global_position = Vector2(card_global_pos.x - tooltip_panel.size.x, card_global_pos.y - tooltip_panel.size.y)
+			Vector2i(1, 0):
+				# 第二格：弹窗下边紧贴卡牌上边
+				tooltip_panel.global_position = Vector2(card_global_pos.x + (card_size.x - tooltip_panel.size.x) / 2, card_global_pos.y - tooltip_panel.size.y)
+			Vector2i(2, 0):
+				# 第三格：弹窗左下角重合于卡牌右上角
+				tooltip_panel.global_position = Vector2(card_global_pos.x + card_size.x, card_global_pos.y - tooltip_panel.size.y)
+			Vector2i(0, 1):
+				# 第四格：弹窗右边紧贴卡牌左边
+				tooltip_panel.global_position = Vector2(card_global_pos.x - tooltip_panel.size.x, card_global_pos.y)
+			Vector2i(1, 1):
+				# 第五格：弹窗左边紧贴卡牌右边（同第六格）
+				tooltip_panel.global_position = Vector2(card_global_pos.x + card_size.x, card_global_pos.y)
+			Vector2i(2, 1):
+				# 第六格：弹窗左边紧贴卡牌右边
+				tooltip_panel.global_position = Vector2(card_global_pos.x + card_size.x, card_global_pos.y)
+			Vector2i(0, 2):
+				# 第七格：弹窗右上角重合于卡牌左下角
+				tooltip_panel.global_position = Vector2(card_global_pos.x - tooltip_panel.size.x, card_global_pos.y + card_size.y)
+			Vector2i(1, 2):
+				# 第八格：弹窗上边紧贴卡牌下边
+				tooltip_panel.global_position = Vector2(card_global_pos.x + (card_size.x - tooltip_panel.size.x) / 2, card_global_pos.y + card_size.y)
+			Vector2i(2, 2):
+				# 第九格：弹窗左上角重合于卡牌右下角
+				tooltip_panel.global_position = Vector2(card_global_pos.x + card_size.x, card_global_pos.y + card_size.y)
+			_:
+				# 默认情况：弹窗显示在棋子右侧
+				tooltip_panel.global_position = Vector2(card_global_pos.x + card_size.x, card_global_pos.y)
+
+		# 输出调试信息
+		print("棋子位置: ", card_global_pos)
+		print("棋子大小: ", card_size)
+		print("弹窗位置: ", global_position)
+		print("弹窗大小: ", tooltip_panel.size)
+		print("相对位置: ", relative_pos)
 	else:
 		# 如果找不到Board节点，则使用原始方法
 		global_position = card_global_pos
