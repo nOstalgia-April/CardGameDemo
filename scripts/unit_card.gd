@@ -23,6 +23,8 @@ var custom_resolver: UnitResolver = null
 var death_behavior: String = ""
 var death_transform: Dictionary = {}
 var effect_id: String = ""
+var display_name: String = ""
+var description: String = ""
 
 @onready var card_bg: Panel = $CardBg
 @onready var color_rect: ColorRect = $CardBg/ColorRect
@@ -323,7 +325,11 @@ func _on_mouse_entered() -> void:
 		return
 	_hover_active = true
 	_update_border()
-	var context = {"global_rect": get_global_rect(), "text": "Debug Hover Test"}
+	var context = {
+		"global_rect": get_global_rect(),
+		"name": display_name,
+		"desc": description
+	}
 	BattleEventBus.emit_signal("unit_hover_started", context)
 
 func _on_mouse_exited() -> void:

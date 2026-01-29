@@ -2,7 +2,8 @@ extends Control
 class_name TooltipManager
 
 @onready var tooltip_panel: Panel = $TooltipPanel
-@onready var tooltip_label: Label = $TooltipPanel/TooltipLabel
+@onready var name_label: Label = $TooltipPanel/VBoxContainer/NameLabel
+@onready var desc_label: Label = $TooltipPanel/VBoxContainer/DescLabel
 
 func _ready() -> void:
 	if tooltip_panel != null:
@@ -15,8 +16,11 @@ func _on_unit_hover_started(context: Dictionary) -> void:
 	if tooltip_panel == null:
 		return
 
-	if tooltip_label != null:
-		tooltip_label.text = context.get("text", "")
+	if name_label != null:
+		name_label.text = context.get("name", "")
+
+	if desc_label != null:
+		desc_label.text = context.get("desc", "")
 
 	var global_rect: Rect2 = context.get("global_rect", Rect2())
 	global_position = global_rect.position

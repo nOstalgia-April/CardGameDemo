@@ -94,6 +94,7 @@ func place_card_on_cell(card: Card, cell: Cell, context: Dictionary = {}) -> boo
 
 	var display_name: String = card.card_display_name
 	var numbers: DirectionNumbers = card.get_direction_numbers()
+	var desc_text: String = card.card_desc_text
 	var placed: bool = cell.spawn_unit_numbers(display_name, numbers, false)
 	if !placed:
 		return false
@@ -101,6 +102,8 @@ func place_card_on_cell(card: Card, cell: Cell, context: Dictionary = {}) -> boo
 	var unit: UnitCard = cell.get_unit() as UnitCard
 	if unit != null:
 		unit.effect_id = effect_id
+		unit.display_name = display_name
+		unit.description = desc_text
 		_bind_unit_refs(unit)
 		unit._reset_attacks() # direct reset (was reset_attacks)
 		if effect_id == "charge" and turn_manager != null:
