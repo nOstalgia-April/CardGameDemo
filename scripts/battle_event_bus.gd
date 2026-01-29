@@ -22,6 +22,8 @@ signal cell_neighbors_requested(cell: Node, context: Dictionary)
 signal units_requested(filter: Variant, context: Dictionary)
 signal available_cells_requested(cells: Array, context: Dictionary)
 signal clear_available_cells_requested(context: Dictionary)
+signal unit_hover_started(context: Dictionary)
+signal unit_hover_ended()
 
 func _ready() -> void:
 	add_to_group("battle_event_bus")

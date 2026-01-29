@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bugqndusvguwg" path="res://tscns/turn_end_button.tscn" id="7_4ji1g"]
 [ext_resource type="Script" uid="uid://cv37b5w8m8nvk" path="res://scripts/flip_label.gd" id="7_flip"]
 [ext_resource type="Script" uid="uid://24giiccc4jnx" path="res://scripts/presentation/hud_view.gd" id="14_hud"]
+[ext_resource type="PackedScene" uid="uid://tooltip_manager_scene" path="res://tscns/tooltip_manager.tscn" id="15_tooltip"]
 
 [node name="Battle" type="Node2D" unique_id=1557048967]
 script = ExtResource("1_jimh7")
@@ -81,6 +82,9 @@ offset_top = 552.0
 offset_right = 935.0
 offset_bottom = 552.0
 turn_manager_path = NodePath("../../../TurnManager")
+
+[node name="TooltipManager" parent="Root" unique_id=9999999999 instance=ExtResource("15_tooltip")]
+layout_mode = 1
 
 [node name="TurnManager" type="Node2D" parent="." unique_id=633090675]
 unique_name_in_owner = true

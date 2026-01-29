@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://tooltip_manager_scene"]
+
+[ext_resource type="Script" path="res://scripts/tooltip_manager.gd" id="1_tooltip"]
+
+[node name="TooltipManager" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_tooltip")
+
+[node name="TooltipPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 0
+offset_left = 100.0
+offset_top = 100.0
+offset_right = 300.0
+offset_bottom = 200.0
+mouse_filter = 2
+
+[node name="TooltipLabel" type="Label" parent="TooltipPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Tooltip Text"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

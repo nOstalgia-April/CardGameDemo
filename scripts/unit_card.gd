@@ -323,12 +323,15 @@ func _on_mouse_entered() -> void:
 		return
 	_hover_active = true
 	_update_border()
+	var context = {"global_rect": get_global_rect(), "text": "Debug Hover Test"}
+	BattleEventBus.emit_signal("unit_hover_started", context)
 
 func _on_mouse_exited() -> void:
 	if _selecting:
 		return
 	_hover_active = false
 	_update_border()
+	BattleEventBus.emit_signal("unit_hover_ended")
 
 func _gui_input(event: InputEvent) -> void:
 	if is_enemy:
