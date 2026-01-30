@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://qjgokcagvgjy"]
+
+[ext_resource type="PackedScene" uid="uid://cyx5jl4c8qdsd" path="res://tscns/battle.tscn" id="1_ouwv7"]
+[ext_resource type="Script" uid="uid://c73eyasv6hc8r" path="res://scripts/level_select.gd" id="2_qttnj"]
+
+[node name="level_select" unique_id=1557048967 instance=ExtResource("1_ouwv7")]
+script = ExtResource("2_qttnj")
+
+[node name="HandView" parent="Root" parent_id_path=PackedInt32Array(286232410) index="0" unique_id=140155012]
+visible = false
