@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dvs0frxfwv77n"]
+
+[node name="Main" type="Control" unique_id=1098102689]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="这是主界面" type="Control" parent="." unique_id=468777754]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="." unique_id=1940999463]
+layout_mode = 0
+offset_left = 299.0
+offset_top = 382.0
+offset_right = 1195.0
+offset_bottom = 559.0
+theme_override_font_sizes/font_size = 128
+text = "你来到了主界面"

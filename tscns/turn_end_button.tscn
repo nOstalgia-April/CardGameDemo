@@ -1,29 +1,35 @@
 [gd_scene format=3 uid="uid://bugqndusvguwg"]
 
 [ext_resource type="Script" uid="uid://bhre2rjkc41lw" path="res://tscns/turn_end_button.gd" id="1_m1mn0"]
-[ext_resource type="Texture2D" uid="uid://drl7ohndkm0ee" path="res://assets/BG/战斗背景2.png" id="2_yt30p"]
+[ext_resource type="Texture2D" uid="uid://c1wyq8jq7mpjy" path="res://assets/BG/电脑.png" id="2_20wnv"]
+[ext_resource type="Texture2D" uid="uid://com1xi1p5t2wa" path="res://assets/BG/next turn.png" id="3_g7x3t"]
 
 [node name="TurnEndButton" type="Control" unique_id=2051604309]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_right = 0.286
+anchor_bottom = 0.45800003
+offset_right = -0.6000366
+offset_bottom = 0.039978027
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_m1mn0")
-
-[node name="Button" type="Button" parent="." unique_id=157069210]
-custom_minimum_size = Vector2(120, 60)
-layout_mode = 0
-offset_right = 120.0
-offset_bottom = 60.0
-text = "结束回合"
+metadata/_edit_lock_ = true
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1639365673]
-visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-texture = ExtResource("2_yt30p")
+mouse_filter = 2
+texture = ExtResource("2_20wnv")
+metadata/_edit_lock_ = true
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[node name="TextureButton" type="TextureButton" parent="." unique_id=227949170]
+layout_mode = 0
+offset_left = 153.0
+offset_top = 34.0
+offset_right = 403.0
+offset_bottom = 200.0
+texture_normal = ExtResource("3_g7x3t")
+stretch_mode = 3
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

@@ -36,39 +36,6 @@ func resolve(unit: UnitCard) -> bool:
 	await unit.get_tree().process_frame
 	return bool(action_context.get("accepted", false))
 
-func propose_actions(unit: UnitCard) -> Array:
-	if !enabled:
-		return []
-	var origin_context: Dictionary = {
-		"cell": null,
-	}
-	BattleEventBus.emit_signal("unit_cell_requested", unit, origin_context)
-	var origin_cell: Cell = origin_context.get("cell", null)
-	var units_context: Dictionary = {
-		"units": [],
-	}
-	var enemy_filter: String = "player" if unit.is_enemy else "enemy"
-	BattleEventBus.emit_signal("units_requested", enemy_filter, units_context)
-	var enemies: Array = units_context.get("units", [])
-	var enemy: UnitCard = _find_best_threat_enemy(unit, origin_cell, enemies)
-	if enemy == null:
-		return []
-	var enemy_context: Dictionary = {
-		"cell": null,
-	}
-	BattleEventBus.emit_signal("unit_cell_requested", enemy, enemy_context)
-	var enemy_cell: Cell = enemy_context.get("cell", null)
-
-	var target_cell: Cell = _choose_chase_cell(unit, origin_cell, enemy_cell)
-	if target_cell == null:
-		return []
-
-	return [{
-		"type": "move",
-		"unit": unit,
-		"target_cell": target_cell,
-	}]
-
 func _dir_from_positions(from_pos: Vector2i, to_pos: Vector2i) -> int:
 	var delta: Vector2i = to_pos - from_pos
 	if delta == Vector2i(0, -1):

@@ -28,30 +28,6 @@ func resolve(unit: UnitCard) -> bool:
 	await unit.get_tree().process_frame
 	return false
 
-func propose_actions(unit: UnitCard) -> Array:
-	if !enabled:
-		return []
-	var cell_context: Dictionary = {
-		"cell": null,
-	}
-	BattleEventBus.emit_signal("unit_cell_requested", unit, cell_context)
-	var origin_cell: Cell = cell_context.get("cell", null)
-	var neighbors_context: Dictionary = {
-		"neighbors": [],
-	}
-	BattleEventBus.emit_signal("cell_neighbors_requested", origin_cell, neighbors_context)
-	var neighbors: Array[Cell] = neighbors_context.get("neighbors", [])
-	for cell in neighbors:
-		if cell == null or cell.is_occupied():
-			continue
-		if !_is_in_danger(unit, cell):
-			return [{
-				"type": "move",
-				"unit": unit,
-				"target_cell": cell,
-			}]
-	return []
-
 func is_in_danger(unit: UnitCard) -> bool:
 	var cell_context: Dictionary = {
 		"cell": null,

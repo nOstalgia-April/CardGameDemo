@@ -9,6 +9,3 @@ func resolve(unit: UnitCard) -> bool:
 		return false
 	await unit.get_tree().process_frame
 	return false
-
-func propose_actions(_unit: UnitCard) -> Array:
-	return []

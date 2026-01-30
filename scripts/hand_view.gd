@@ -21,6 +21,9 @@ class_name HandView
 @export var hover_spread: float = 24.0
 @export var hover_rotation_factor: float = 0.6
 
+@export_group("Drag")
+@export var drag_out_size: Vector2 = Vector2(140, 180)
+
 @export_group("Motion")
 @export var follow_speed: float = 12.0
 @export_group("")
@@ -132,6 +135,20 @@ func _update_layout(delta: float) -> void:
 	for i in range(count):
 		var card := cards[i]
 		if !is_instance_valid(card):
+			continue
+		if card == dragging_card and !_dragging_inside_hand:
+			var base_size: Vector2 = card.custom_minimum_size
+			if base_size.x <= 0.0 or base_size.y <= 0.0:
+				base_size = card.size
+			if base_size.x <= 0.0 or base_size.y <= 0.0:
+				base_size = Vector2.ONE
+			var target_scale := Vector2(
+				drag_out_size.x / base_size.x,
+				drag_out_size.y / base_size.y
+			)
+			var t_drag := 1.0 - pow(0.001, delta * follow_speed)
+			card.scale = card.scale.lerp(target_scale, t_drag)
+			card.z_index = count + 20
 			continue
 
 		var t: float = 0.0

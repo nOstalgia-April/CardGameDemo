@@ -4,6 +4,8 @@ extends Control
 @export var turn_manager: TurnManager
 @export_group("")
 
+@onready var texture_button: TextureButton = $TextureButton
+
 func _ready() -> void:
 	_bind_event_bus()
 
@@ -16,4 +18,9 @@ func _bind_event_bus() -> void:
 
 
 func _on_turn_started(turn_index: int, _context: Dictionary) -> void:
-	visible = turn_index >= 0
+	texture_button.visible = turn_index > 1
+
+func _on_texture_button_pressed() -> void:
+	print("下个回合")
+	turn_manager.end_turn()
+	pass # Replace with function body.

@@ -3,18 +3,19 @@ extends Node2D
 @onready var hand_view: HandView = %HandView
 @onready var board: Board = %Board
 @onready var turn_manager: TurnManager = %TurnManager
-@onready var root: Control = $Root
+@onready var root: Control = %Root
 
 @export_group("Data")
 @export var card_infos_path: String = "res://assets/cardinfos.csv"
 @export var enemy_infos_path: String = "res://assets/enemyinfos.csv"
-@export var enemy_unit_scene: PackedScene = preload("res://tscns/unit_card.tscn")
+@export var enemy_unit_scene: PackedScene
 @export_group("")
 
 @export_group("ScreenShake")
 @export var shake_intensity_default: float = 12.0
 @export var shake_duration_default: float = 0.15
 @export_group("")
+@export var BGM : AudioStream
 
 const CardDataRepoScript = preload("res://scripts/data/card_data_repo.gd")
 const EnemyDataRepoScript = preload("res://scripts/data/enemy_data_repo.gd")
@@ -30,6 +31,7 @@ var base_position: Vector2 = Vector2.ZERO
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _ready() -> void:
+	SoundManager.play_bgm(BGM)
 	_rng.randomize()
 	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
 	_init_repos()
