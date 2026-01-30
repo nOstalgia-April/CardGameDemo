@@ -3,7 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://cyx5jl4c8qdsd" path="res://tscns/battle.tscn" id="1_ouwv7"]
 [ext_resource type="Script" uid="uid://c73eyasv6hc8r" path="res://scripts/level_select.gd" id="2_qttnj"]
 [ext_resource type="Texture2D" uid="uid://4s0hru72081x" path="res://ui_back_1.png" id="3_mkrl1"]
-[ext_resource type="Texture2D" uid="uid://hpy3qgkxudxx" path="res://ui_back_2.png" id="4_h8c4j"]
+[ext_resource type="Texture2D" uid="uid://prvigyny2bgv" path="res://ui_confirm (1).png" id="4_h8c4j"]
+[ext_resource type="Texture2D" uid="uid://hpy3qgkxudxx" path="res://ui_back_2.png" id="5_h8c4j"]
 
 [node name="level_select" unique_id=1557048967 instance=ExtResource("1_ouwv7")]
 script = ExtResource("2_qttnj")
@@ -283,6 +284,11 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
 
+[node name="TextureButton" parent="Root/HUD/TurnEndButton" parent_id_path=PackedInt32Array(2051604309) index="1" unique_id=227949170]
+self_modulate = Color(0.2627451, 0.8745098, 0.9882353, 1)
+disabled = true
+texture_disabled = ExtResource("4_h8c4j")
+
 [node name="BackAnchor" type="Control" parent="CanvasLayer" parent_id_path=PackedInt32Array(829244223) index="0" unique_id=1135355005]
 layout_mode = 3
 anchors_preset = 0
@@ -304,7 +310,7 @@ offset_top = -56.0
 offset_right = 501.0
 offset_bottom = 457.0
 mouse_filter = 2
-texture = ExtResource("4_h8c4j")
+texture = ExtResource("5_h8c4j")
 
 [connection signal="mouse_entered" from="Root/Board/GridContainer/Cell00" to="." method="_on_cell_00_mouse_entered"]
 [connection signal="mouse_entered" from="Root/Board/GridContainer/Cell01" to="." method="_on_cell_01_mouse_entered"]
@@ -315,5 +321,7 @@ texture = ExtResource("4_h8c4j")
 [connection signal="mouse_entered" from="Root/Board/GridContainer/Cell20" to="." method="_on_cell_20_mouse_entered"]
 [connection signal="mouse_entered" from="Root/Board/GridContainer/Cell21" to="." method="_on_cell_21_mouse_entered"]
 [connection signal="mouse_entered" from="Root/Board/GridContainer/Cell22" to="." method="_on_cell_22_mouse_entered"]
+[connection signal="pressed" from="Root/HUD/TurnEndButton/TextureButton" to="." method="_on_texture_button_pressed"]
 
 [editable path="Root/Board"]
+[editable path="Root/HUD/TurnEndButton"]

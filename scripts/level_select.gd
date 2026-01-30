@@ -8,6 +8,9 @@ extends Node2D
 @onready var fancy_back_button: TextureButton = $CanvasLayer/BackAnchor/FancyBackButton
 @onready var cover_image: TextureRect = $CanvasLayer/BackAnchor/FancyBackButton/CoverImage
 
+# 引用确认按钮
+@onready var confirm_btn: TextureButton = $Root/HUD/TurnEndButton/TextureButton
+
 # 引用 Board 下所有 Cell 里的 Highlight 节点
 @onready var cell_highlights: Array[Panel] = []
 
@@ -16,6 +19,9 @@ var max_unlocked_level: int = 2  # 暂时手动设为2，方便测试
 
 # CoverImage 的初始坐标
 var cover_origin: Vector2
+
+# 当前选中的关卡ID
+var selected_level_id: int = 0
 
 # 全局输入检测函数
 func _input(event: InputEvent) -> void:
@@ -69,6 +75,17 @@ func _ready() -> void:
 	# 连接按钮的鼠标事件
 	fancy_back_button.mouse_entered.connect(_on_fancy_back_button_mouse_entered)
 	fancy_back_button.mouse_exited.connect(_on_fancy_back_button_mouse_exited)
+
+	# 初始化确认按钮：禁用并完全透明
+	print("DEBUG: 关卡选择场景已就绪")
+	if confirm_btn != null:
+		print("DEBUG: 确认按钮成功获取")
+		confirm_btn.disabled = true
+		confirm_btn.modulate.a = 0.0
+		# 连接确认按钮的点击事件
+		confirm_btn.pressed.connect(_on_confirm_button_pressed)
+	else:
+		push_error("ERROR: 找不到确认按钮节点！")
 
 	# 监听 Cell 点击事件
 	BattleEventBus.cell_pressed.connect(_on_cell_pressed)
@@ -160,8 +177,15 @@ func _on_cell_pressed(cell: Cell, context: Dictionary) -> void:
 	
 	# 检查是否已解锁
 	if level_index <= max_unlocked_level:
-		# 已解锁，跳转到战斗场景
-		BattleEventBus.go("battle", {"level_id": level_index})
+		# 已解锁，显示确认按钮
+		print("DEBUG: 条件达成，正在显示确认按钮...")
+		selected_level_id = level_index
+		if confirm_btn != null:
+			confirm_btn.disabled = false
+			confirm_btn.modulate.a = 1.0
+			print("DEBUG: 确认按钮已显示")
+		else:
+			push_error("ERROR: confirm_btn 为 null，无法显示按钮！")
 	else:
 		# 未解锁，打印提示
 		print("请先通关上一关")
@@ -182,20 +206,29 @@ func _on_cell_input(event: InputEvent, index: int) -> void:
 
 	# 只处理鼠标左键按下事件
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print("[LevelSelect] 点击了关卡: ", index + 1)
+		print("DEBUG: 点击了格子，索引为: ", index + 1, " 状态为: ", "已解锁" if index + 1 <= max_unlocked_level else "未解锁")
 
 		# 检查是否已解锁
 		if index + 1 > max_unlocked_level:
-			# 未解锁，显示提示
+			# 未解锁，显示提示并隐藏确认按钮
 			var message_label: Label = get_node_or_null("MessageLabel") as Label
 			if message_label != null:
 				message_label.text = "请先通关上一关"
 				message_label.visible = true
 				print("[LevelSelect] 关卡未解锁")
+			if confirm_btn != null:
+				confirm_btn.disabled = true
+				confirm_btn.modulate.a = 0.0
+				print("DEBUG: 确认按钮已隐藏")
 		else:
-			# 已解锁，进入关卡
-			print("[LevelSelect] 进入关卡: ", index + 1)
-			BattleEventBus.go("battle", {"level_id": index + 1})
+			# 已解锁，显示确认按钮
+			print("DEBUG: 条件达成，正在显示确认按钮...")
+			print("[LevelSelect] 选择关卡: ", index + 1)
+			selected_level_id = index + 1
+			if confirm_btn != null:
+				confirm_btn.disabled = false
+				confirm_btn.modulate.a = 1.0
+				print("DEBUG: 确认按钮已显示")
 
 
 func _on_cell_00_mouse_entered() -> void:
@@ -231,4 +264,22 @@ func _on_cell_21_mouse_entered() -> void:
 
 
 func _on_cell_22_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+# 处理确认按钮点击事件
+func _on_confirm_button_pressed() -> void:
+	print("DEBUG: 确认按钮被点击！准备跳转，LevelID: ", selected_level_id)
+	if selected_level_id > 0 and selected_level_id <= max_unlocked_level:
+		print("[LevelSelect] 确认进入关卡: ", selected_level_id)
+		BattleEventBus.go("battle", {"level_id": selected_level_id})
+		# 重置选中状态并隐藏确认按钮
+		selected_level_id = 0
+		if confirm_btn != null:
+			confirm_btn.disabled = true
+			confirm_btn.modulate.a = 0.0
+			print("DEBUG: 确认按钮已隐藏")
+
+
+func _on_texture_button_pressed() -> void:
 	pass # Replace with function body.
