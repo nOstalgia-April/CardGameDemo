@@ -2,9 +2,33 @@
 
 [ext_resource type="PackedScene" uid="uid://cyx5jl4c8qdsd" path="res://tscns/battle.tscn" id="1_ouwv7"]
 [ext_resource type="Script" uid="uid://c73eyasv6hc8r" path="res://scripts/level_select.gd" id="2_qttnj"]
+[ext_resource type="Texture2D" uid="uid://4s0hru72081x" path="res://ui_back_1.png" id="3_mkrl1"]
+[ext_resource type="Texture2D" uid="uid://hpy3qgkxudxx" path="res://ui_back_2.png" id="4_h8c4j"]
 
 [node name="level_select" unique_id=1557048967 instance=ExtResource("1_ouwv7")]
 script = ExtResource("2_qttnj")
 
 [node name="HandView" parent="Root" parent_id_path=PackedInt32Array(286232410) index="0" unique_id=140155012]
 visible = false
+
+[node name="BackAnchor" type="Control" parent="CanvasLayer" parent_id_path=PackedInt32Array(829244223) index="0" unique_id=1135355005]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FancyBackButton" type="TextureButton" parent="CanvasLayer/BackAnchor" index="0" unique_id=2039761193]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 737.0
+offset_right = 478.0
+offset_bottom = 1250.0
+texture_normal = ExtResource("3_mkrl1")
+
+[node name="CoverImage" type="TextureRect" parent="CanvasLayer/BackAnchor/FancyBackButton" index="0" unique_id=1144973413]
+layout_mode = 0
+offset_left = 44.0
+offset_top = -56.0
+offset_right = 501.0
+offset_bottom = 457.0
+texture = ExtResource("4_h8c4j")
