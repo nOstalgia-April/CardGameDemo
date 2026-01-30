@@ -5,11 +5,53 @@
 [ext_resource type="Texture2D" uid="uid://blx2lfdo5ooyg" path="res://assets/BG/战斗背景1.png" id="2_7wdkb"]
 [ext_resource type="PackedScene" uid="uid://nedwk80y63vm" path="res://tscns/hand_view.tscn" id="2_d36ai"]
 [ext_resource type="PackedScene" uid="uid://bv5h3cwm21ok7" path="res://tscns/board.tscn" id="3_fwypi"]
-[ext_resource type="Script" uid="uid://dlcdgo7i30f4y" path="res://scripts/board.gd" id="5_q4gcv"]
 [ext_resource type="Script" uid="uid://cxrmr0j7edstx" path="res://scripts/turn_manager.gd" id="5_turn"]
 [ext_resource type="PackedScene" uid="uid://bugqndusvguwg" path="res://tscns/turn_end_button.tscn" id="7_4ji1g"]
 [ext_resource type="PackedScene" uid="uid://cno353yuv2xjm" path="res://tscns/flip_hud.tscn" id="7_7wdkb"]
 [ext_resource type="PackedScene" uid="uid://ctwxkqyg1cwjv" path="res://tscns/energy_hud.tscn" id="7_q4gcv"]
+
+[sub_resource type="Shader" id="Shader_q4gcv"]
+code = "shader_type canvas_item;
+
+uniform sampler2D noise_texture : repeat_enable, filter_linear;
+uniform float speed = 0.02;
+uniform float noise_strength : hint_range(0.0, 1.0) = 0.2; 
+
+// 【新增】纹理颜色：默认是白色，你可以随便改
+uniform vec4 texture_color : source_color = vec4(1.0, 1.0, 1.0, 1.0); 
+
+void fragment() {
+    // 获取背景原本的黄色
+    vec4 base_color = COLOR; 
+    
+    // 计算流动
+    vec2 flow_uv = UV + vec2(TIME * speed, TIME * speed * 0.5);
+    float noise = texture(noise_texture, flow_uv).r;
+    
+    // 【核心修改】混合颜色
+    // 之前我们是让黄色变暗(mix black)，现在我们是让黄色变成 texture_color
+    // noise * noise_strength 决定了有多少“纹理色”盖在“底色”上
+    COLOR.rgb = mix(base_color.rgb, texture_color.rgb, noise * noise_strength);
+    COLOR.a = base_color.a; // 保持透明度不变
+}"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_q4gcv"]
+noise_type = 2
+frequency = 0.008
+fractal_type = 2
+domain_warp_enabled = true
+domain_warp_amplitude = 20.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7wdkb"]
+noise = SubResource("FastNoiseLite_q4gcv")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q4gcv"]
+shader = SubResource("Shader_q4gcv")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_7wdkb")
+shader_parameter/speed = 0.05
+shader_parameter/noise_strength = 1.0
+shader_parameter/texture_color = Color(1, 1, 1, 1)
 
 [node name="Battle" type="Node2D" unique_id=1557048967]
 script = ExtResource("1_7wdkb")
@@ -18,6 +60,12 @@ script = ExtResource("1_7wdkb")
 position = Vector2(800, 560)
 texture = ExtResource("2_7wdkb")
 metadata/_edit_lock_ = true
+
+[node name="dynamicwall" type="ColorRect" parent="." unique_id=2147398521]
+material = SubResource("ShaderMaterial_q4gcv")
+offset_right = 1603.0
+offset_bottom = 790.0
+color = Color(0.8745098, 1, 0.3647059, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1245972592]
 position = Vector2(350.00003, 466.00003)
@@ -49,7 +97,6 @@ offset_left = 474.0
 offset_top = 96.0
 offset_right = 474.0
 offset_bottom = 96.0
-script = ExtResource("5_q4gcv")
 turn_manager_path = NodePath("../../TurnManager")
 
 [node name="HUD" type="Control" parent="Root" unique_id=2047279455]
