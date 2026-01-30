@@ -24,7 +24,11 @@ signal cell_neighbors_requested(cell: Node, context: Dictionary)
 signal units_requested(filter: Variant, context: Dictionary)
 signal available_cells_requested(cells: Array, context: Dictionary)
 signal clear_available_cells_requested(context: Dictionary)
+signal request_scene(scene_key: String, payload: Dictionary)
 
 func _ready() -> void:
 	add_to_group("battle_event_bus")
 	pass
+
+func go(scene_key: String, payload: Dictionary = {}) -> void:
+	emit_signal("request_scene", scene_key, payload)

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bhre2rjkc41lw" path="res://tscns/turn_end_button.gd" id="1_m1mn0"]
 [ext_resource type="Texture2D" uid="uid://c1wyq8jq7mpjy" path="res://assets/BG/电脑.png" id="2_20wnv"]
-[ext_resource type="Texture2D" uid="uid://com1xi1p5t2wa" path="res://assets/BG/next turn.png" id="3_g7x3t"]
+[ext_resource type="Texture2D" uid="uid://prvigyny2bgv" path="res://ui_confirm (1).png" id="3_20wnv"]
 
 [node name="TurnEndButton" type="Control" unique_id=2051604309]
 layout_mode = 3
@@ -25,11 +25,11 @@ metadata/_edit_lock_ = true
 
 [node name="TextureButton" type="TextureButton" parent="." unique_id=227949170]
 layout_mode = 0
-offset_left = 153.0
-offset_top = 34.0
-offset_right = 403.0
-offset_bottom = 200.0
-texture_normal = ExtResource("3_g7x3t")
+offset_left = 124.0
+offset_top = -36.0
+offset_right = 424.0
+offset_bottom = 264.0
+texture_normal = ExtResource("3_20wnv")
 stretch_mode = 3
 
 [connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]
