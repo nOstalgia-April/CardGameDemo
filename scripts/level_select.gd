@@ -23,6 +23,9 @@ var cover_origin: Vector2
 # 当前选中的关卡ID
 var selected_level_id: int = 0
 
+# 当前选中的格子
+var selected_cell: Cell = null
+
 # 全局输入检测函数
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -216,6 +219,13 @@ func _on_cell_input(event: InputEvent, index: int) -> void:
 				message_label.text = "请先通关上一关"
 				message_label.visible = true
 				print("[LevelSelect] 关卡未解锁")
+
+			# 清除选中效果
+			if selected_cell != null and is_instance_valid(selected_cell):
+				selected_cell.set_state(Cell.CellState.AVAILABLE)
+				selected_cell = null
+				print("DEBUG: 已清除选中效果")
+
 			if confirm_btn != null:
 				confirm_btn.disabled = true
 				confirm_btn.modulate.a = 0.0
@@ -225,6 +235,21 @@ func _on_cell_input(event: InputEvent, index: int) -> void:
 			print("DEBUG: 条件达成，正在显示确认按钮...")
 			print("[LevelSelect] 选择关卡: ", index + 1)
 			selected_level_id = index + 1
+
+			# 获取当前点击的格子
+			var cells: Array = grid.get_children()
+			if index >= 0 and index < cells.size():
+				var clicked_cell: Cell = cells[index] as Cell
+				if clicked_cell != null:
+					# 清除之前的选中效果
+					if selected_cell != null and is_instance_valid(selected_cell):
+						selected_cell.set_state(Cell.CellState.AVAILABLE)
+
+					# 设置新的选中效果
+					selected_cell = clicked_cell
+					selected_cell.set_state(Cell.CellState.VISITED)
+					print("DEBUG: 格子已选中，状态设置为VISITED")
+
 			if confirm_btn != null:
 				confirm_btn.disabled = false
 				confirm_btn.modulate.a = 1.0
@@ -272,9 +297,16 @@ func _on_confirm_button_pressed() -> void:
 	print("DEBUG: 确认按钮被点击！准备跳转，LevelID: ", selected_level_id)
 	if selected_level_id > 0 and selected_level_id <= max_unlocked_level:
 		print("[LevelSelect] 确认进入关卡: ", selected_level_id)
+
+		# 重置选中格子的状态
+		if selected_cell != null and is_instance_valid(selected_cell):
+			selected_cell.set_state(Cell.CellState.AVAILABLE)
+			print("DEBUG: 已重置选中格子的状态")
+
 		BattleEventBus.go("battle", {"level_id": selected_level_id})
 		# 重置选中状态并隐藏确认按钮
 		selected_level_id = 0
+		selected_cell = null
 		if confirm_btn != null:
 			confirm_btn.disabled = true
 			confirm_btn.modulate.a = 0.0
