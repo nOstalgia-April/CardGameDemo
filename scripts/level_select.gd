@@ -93,3 +93,39 @@ func _on_cell_pressed(cell: Cell, context: Dictionary) -> void:
 	else:
 		# 未解锁，打印提示
 		print("请先通关上一关")
+
+
+func _on_cell_00_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_cell_01_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_cell_02_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_cell_10_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_cell_11_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_cell_12_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_cell_20_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_cell_21_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_cell_22_mouse_entered() -> void:
+	pass # Replace with function body.

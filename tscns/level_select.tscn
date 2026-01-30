@@ -30,6 +30,17 @@ text = "1
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell00" parent_id_path=PackedInt32Array(1133862191, 1610105831) index="2" unique_id=320348282]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
+
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell01" parent_id_path=PackedInt32Array(1133862191, 1294838380) index="1" unique_id=2037143125]
 layout_mode = 1
 anchors_preset = 8
@@ -48,6 +59,17 @@ text = "2
 "
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell01" parent_id_path=PackedInt32Array(1133862191, 1294838380) index="2" unique_id=262732565]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
 
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell02" parent_id_path=PackedInt32Array(1133862191, 1441882771) index="1" unique_id=2114388650]
 layout_mode = 1
@@ -68,6 +90,17 @@ text = "3
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell02" parent_id_path=PackedInt32Array(1133862191, 1441882771) index="2" unique_id=943342658]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
+
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell10" parent_id_path=PackedInt32Array(1133862191, 1133657646) index="1" unique_id=748765828]
 layout_mode = 1
 anchors_preset = 8
@@ -86,6 +119,17 @@ text = "4
 "
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell10" parent_id_path=PackedInt32Array(1133862191, 1133657646) index="2" unique_id=209937689]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
 
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell11" parent_id_path=PackedInt32Array(1133862191, 1578018743) index="1" unique_id=41779126]
 layout_mode = 1
@@ -106,6 +150,17 @@ text = "5
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell11" parent_id_path=PackedInt32Array(1133862191, 1578018743) index="2" unique_id=1238750900]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
+
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell12" parent_id_path=PackedInt32Array(1133862191, 105087745) index="1" unique_id=1997796219]
 layout_mode = 1
 anchors_preset = 8
@@ -124,6 +179,17 @@ text = "6
 "
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell12" parent_id_path=PackedInt32Array(1133862191, 105087745) index="2" unique_id=750122685]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
 
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell20" parent_id_path=PackedInt32Array(1133862191, 710458070) index="1" unique_id=677408095]
 layout_mode = 1
@@ -144,6 +210,17 @@ text = "7
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell20" parent_id_path=PackedInt32Array(1133862191, 710458070) index="2" unique_id=402424819]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
+
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell21" parent_id_path=PackedInt32Array(1133862191, 1880558082) index="1" unique_id=895644375]
 layout_mode = 1
 anchors_preset = 8
@@ -161,6 +238,17 @@ theme_override_font_sizes/font_size = 32
 text = "8"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell21" parent_id_path=PackedInt32Array(1133862191, 1880558082) index="2" unique_id=122008021]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
 
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell22" parent_id_path=PackedInt32Array(1133862191, 1958790764) index="1" unique_id=87683590]
 layout_mode = 1
@@ -180,6 +268,17 @@ text = "9
 "
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Highlight" type="ColorRect" parent="Root/Board/GridContainer/Cell22" parent_id_path=PackedInt32Array(1133862191, 1958790764) index="2" unique_id=247436643]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.34509805, 0.654902, 0.8901961, 0.3137255)
 
 [node name="BackAnchor" type="Control" parent="CanvasLayer" parent_id_path=PackedInt32Array(829244223) index="0" unique_id=1135355005]
 layout_mode = 3
@@ -203,5 +302,15 @@ offset_right = 501.0
 offset_bottom = 457.0
 mouse_filter = 2
 texture = ExtResource("4_h8c4j")
+
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell00" to="." method="_on_cell_00_mouse_entered"]
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell01" to="." method="_on_cell_01_mouse_entered"]
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell02" to="." method="_on_cell_02_mouse_entered"]
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell10" to="." method="_on_cell_10_mouse_entered"]
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell11" to="." method="_on_cell_11_mouse_entered"]
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell12" to="." method="_on_cell_12_mouse_entered"]
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell20" to="." method="_on_cell_20_mouse_entered"]
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell21" to="." method="_on_cell_21_mouse_entered"]
+[connection signal="mouse_entered" from="Root/Board/GridContainer/Cell22" to="." method="_on_cell_22_mouse_entered"]
 
 [editable path="Root/Board"]
