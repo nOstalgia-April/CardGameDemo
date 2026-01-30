@@ -7,10 +7,13 @@ var velocity: Vector2 = Vector2.ZERO
 var damping: float = 0.45
 var stiffness: float = 500.0
 
-@export var cardCurrentState: cardState = cardState.following
-@export var follow_target: CanvasItem
-
+@export_group("Drag")
 @export var dir_move_duration: float = 0.1
+@export var drag_follow_speed: float = 100
+@export_group("")
+
+var cardCurrentState: cardState = cardState.following
+var follow_target: CanvasItem = null
 
 @onready var desc_panel: Panel = $DescPanel
 @onready var desc_label: Label = $DescPanel/DescLabel
@@ -25,10 +28,12 @@ var _hovered_visual: bool = false
 var _dir_layouts: Dictionary = {}
 var _layout_tweens: Dictionary = {}
 var card_display_name: String = ""
-var card_n: int = 0
-var card_e: int = 0
-var card_s: int = 0
-var card_w: int = 0
+var card_numbers: DirectionNumbers = DirectionNumbers.new()
+var card_id: int = -1
+var card_effect_id: String = ""
+var card_desc_text: String = ""
+var _drag_prev_z: int = 0
+var _ui_ready: bool = false
 
 func _ready() -> void:
 	_base_width = custom_minimum_size.x if custom_minimum_size.x > 0.0 else size.x
@@ -38,6 +43,8 @@ func _ready() -> void:
 	if is_instance_valid(name_label):
 		name_label.visible = true
 	_sync_layout()
+	_ui_ready = true
+	_apply_card_data_to_ui()
 	var btn: Button = get_node_or_null("Button") as Button
 	if btn != null:
 		btn.mouse_entered.connect(_on_button_mouse_entered)
@@ -47,8 +54,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	match cardCurrentState:
 		cardState.dragging:
-			var target_position: Vector2 = get_global_mouse_position() - size * 0.5
-			global_position = global_position.lerp(target_position, 0.4)
+			var local_center: Vector2 = size * 0.5
+			var global_rect: Rect2 = get_global_rect()
+			var center: Vector2 = global_rect.position + global_rect.size * 0.5
+			var offset: Vector2 = center - global_position
+			var target_position: Vector2 = get_global_mouse_position() - offset
+			var t: float = 1.0 - pow(0.001, delta * drag_follow_speed)
+			global_position = global_position.lerp(target_position, t)
 		cardState.following:
 			if follow_target != null and is_instance_valid(follow_target):
 				var target_position: Vector2 = follow_target.global_position
@@ -57,40 +69,86 @@ func _process(delta: float) -> void:
 				velocity += force * delta
 				velocity *= (1.0 - damping)
 				global_position += velocity * delta
-	if follow_target!=null:
+	if cardCurrentState == cardState.following and follow_target != null:
 		var target_position = follow_target.global_position
 		var displacement = target_position - global_position
-		var force = displacement*stiffness
-		velocity += force*delta
-		velocity *= (1.0-damping)
+		var force = displacement * stiffness
+		velocity += force * delta
+		velocity *= (1.0 - damping)
 		global_position += velocity * delta
 
 func set_card_data(display_name: String, n: int, e: int, s: int, w: int) -> void:
 	card_display_name = display_name
-	card_n = n
-	card_e = e
-	card_s = s
-	card_w = w
-	if is_instance_valid(name_label):
-		name_label.text = display_name
-	_set_dir_value(dir_n, n)
-	_set_dir_value(dir_e, e)
-	_set_dir_value(dir_s, s)
-	_set_dir_value(dir_w, w)
+	card_numbers.set_value("n", n)
+	card_numbers.set_value("e", e)
+	card_numbers.set_value("s", s)
+	card_numbers.set_value("w", w)
+	if _ui_ready:
+		_apply_card_data_to_ui()
+
+func set_direction_numbers(numbers: DirectionNumbers) -> void:
+	card_numbers = numbers.clone()
+	if _ui_ready:
+		_apply_card_data_to_ui()
+
+func get_direction_numbers() -> DirectionNumbers:
+	return card_numbers.clone()
 
 func get_card_data() -> Dictionary:
 	return {
+		"card_id": card_id,
 		"display_name": card_display_name,
-		"n": card_n,
-		"e": card_e,
-		"s": card_s,
-		"w": card_w,
+		"n": card_numbers.get_value("n"),
+		"e": card_numbers.get_value("e"),
+		"s": card_numbers.get_value("s"),
+		"w": card_numbers.get_value("w"),
+		"numbers": card_numbers.to_dict(),
+		"effect_id": card_effect_id,
+		"desc": card_desc_text,
 	}
 
+func set_desc_text(text: String) -> void:
+	card_desc_text = text
+	if _ui_ready:
+		desc_label.text = text
+
+func _apply_card_data_to_ui() -> void:
+	name_label.text = card_display_name
+	_set_dir_value(dir_n, card_numbers.get_value("n"))
+	_set_dir_value(dir_e, card_numbers.get_value("e"))
+	_set_dir_value(dir_s, card_numbers.get_value("s"))
+	_set_dir_value(dir_w, card_numbers.get_value("w"))
+	desc_label.text = card_desc_text
+
+func rotate_direction_numbers(is_clockwise: bool, times: int = 1) -> void:
+	var steps: int = times % 4
+	if steps < 0:
+		steps += 4
+	if steps == 0:
+		return
+	for _i in range(steps):
+		var old_n: int = card_numbers.get_value("n")
+		var old_e: int = card_numbers.get_value("e")
+		var old_s: int = card_numbers.get_value("s")
+		var old_w: int = card_numbers.get_value("w")
+		if is_clockwise:
+			card_numbers.set_value("n", old_w)
+			card_numbers.set_value("e", old_n)
+			card_numbers.set_value("s", old_e)
+			card_numbers.set_value("w", old_s)
+		else:
+			card_numbers.set_value("n", old_e)
+			card_numbers.set_value("e", old_s)
+			card_numbers.set_value("s", old_w)
+			card_numbers.set_value("w", old_n)
+	_set_dir_value(dir_n, card_numbers.get_value("n"))
+	_set_dir_value(dir_e, card_numbers.get_value("e"))
+	_set_dir_value(dir_s, card_numbers.get_value("s"))
+	_set_dir_value(dir_w, card_numbers.get_value("w"))
+
 func _set_dir_value(node: Control, value: int) -> void:
-	var label: Label = node.get_node("Value") as Label
-	if label != null:
-		label.text = str(value)
+	var label: Label = node.get_node_or_null("Value") as Label
+	label.text = str(value)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -149,7 +207,7 @@ func _restore_dir_layouts(tween: bool) -> void:
 	_apply_layout(dir_w, _dir_layouts.get("W", {}), tween)
 
 func _apply_layout(node: Control, data: Dictionary, tween: bool) -> void:
-	if node == null or data.is_empty():
+	if data.is_empty():
 		return
 	if tween:
 		_tween_layout(node, data)
@@ -178,8 +236,6 @@ func _get_node_size(node: Control) -> Vector2:
 	return size_vec
 
 func _edge_layout(node: Control, edge: int) -> Dictionary:
-	if node == null:
-		return {}
 	var sz: Vector2 = _get_node_size(node)
 	var data: Dictionary = {
 		"grow_horizontal": node.grow_horizontal,
@@ -248,10 +304,22 @@ func _tween_layout(node: Control, data: Dictionary) -> void:
 
 func _on_button_button_down() -> void:
 	cardCurrentState = cardState.dragging
+	velocity = Vector2.ZERO
+	_drag_prev_z = z_index
+	z_index = 1000
+	_set_other_cards_mouse_filter(true)
+	var hand: HandView = _get_hand_view()
+	if hand != null:
+		hand.begin_drag(self)
 	pass # Replace with function body.
 
 func _on_button_button_up() -> void:
 	if cardCurrentState == cardState.dragging:
+		var hand: HandView = _get_hand_view()
+		if hand != null:
+			hand.end_drag(self)
+		_set_other_cards_mouse_filter(false)
+		z_index = _drag_prev_z
 		if _try_place_on_cell():
 			return
 	cardCurrentState = cardState.following
@@ -270,6 +338,36 @@ func _try_place_on_cell() -> bool:
 				_remove_from_hand()
 				return true
 	return false
+
+func _get_hand_view() -> HandView:
+	var node: Node = get_parent()
+	while node != null:
+		if node is HandView:
+			return node as HandView
+		node = node.get_parent()
+	return null
+
+func _set_other_cards_mouse_filter(ignore: bool) -> void:
+	var hand: HandView = _get_hand_view()
+	if hand == null:
+		return
+	for card_node in hand.cards:
+		var other: Card = card_node as Card
+		if other == null or other == self:
+			continue
+		var btn: Button = other.get_node_or_null("Button") as Button
+		if btn == null:
+			continue
+		if ignore:
+			if !btn.has_meta("prev_mouse_filter"):
+				btn.set_meta("prev_mouse_filter", btn.mouse_filter)
+			btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		else:
+			if btn.has_meta("prev_mouse_filter"):
+				btn.mouse_filter = int(btn.get_meta("prev_mouse_filter"))
+				btn.remove_meta("prev_mouse_filter")
+			else:
+				btn.mouse_filter = Control.MOUSE_FILTER_STOP
 
 func _remove_from_hand() -> void:
 	var node: Node = get_parent()

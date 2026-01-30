@@ -1,9 +1,13 @@
 extends Control
 class_name HandView
 
+@export_group("Setup")
 @export var card_scene: PackedScene
 @export var initial_card_count: int = 3
+@export var hand_scale: float = 1.0
+@export var hand_z_index: int = 20
 
+@export_group("Layout")
 @export var hand_width: float = 900.0
 @export var default_spacing: float = 180.0
 @export var fan_angle_deg: float = 40.0
@@ -12,12 +16,17 @@ class_name HandView
 @export var curve_height: float = 90.0
 @export var bottom_padding: float = 16.0
 
+@export_group("Hover")
 @export var hover_scale: float = 1.7
 @export var hover_spread: float = 24.0
 @export var hover_rotation_factor: float = 0.6
 
+@export_group("Drag")
+@export var drag_out_size: Vector2 = Vector2(140, 180)
+
+@export_group("Motion")
 @export var follow_speed: float = 12.0
-@export var hand_scale: float = 1.0
+@export_group("")
 
 @onready var hand_root: Control = $HandRoot
 @onready var hand_area: Control = $HandRoot/HandArea
@@ -25,8 +34,11 @@ class_name HandView
 
 var cards: Array[Control] = []
 var hovered_card: Control = null
+var dragging_card: Control = null
+var _dragging_inside_hand: bool = false
 
 func _ready() -> void:
+	z_index = hand_z_index
 	_apply_hand_scale()
 	if card_scene == null:
 		card_scene = preload("res://tscns/card.tscn")
@@ -74,6 +86,10 @@ func _on_card_hover(card: Control) -> void:
 
 func _on_card_unhover(card: Control) -> void:
 	var c: Card = card as Card
+	if dragging_card == c:
+		return
+	if c != null and c.cardCurrentState == Card.cardState.dragging:
+		return
 	if hovered_card == c:
 		hovered_card = null
 	c.set_hover_visuals(false)
@@ -82,6 +98,9 @@ func _on_card_unhover(card: Control) -> void:
 func _process(delta: float) -> void:
 	if hovered_card != null and !is_instance_valid(hovered_card):
 		hovered_card = null
+	if dragging_card != null and !is_instance_valid(dragging_card):
+		dragging_card = null
+	_update_drag_hover_state()
 	_update_layout(delta)
 
 func _update_layout(delta: float) -> void:
@@ -109,12 +128,27 @@ func _update_layout(delta: float) -> void:
 	var effective_curve_height: float = curve_height * span_factor
 
 	var hovered_index := -1
-	if hovered_card != null:
-		hovered_index = cards.find(hovered_card)
+	var active_hover: Control = dragging_card if dragging_card != null and _dragging_inside_hand else hovered_card
+	if active_hover != null:
+		hovered_index = cards.find(active_hover)
 
 	for i in range(count):
 		var card := cards[i]
 		if !is_instance_valid(card):
+			continue
+		if card == dragging_card and !_dragging_inside_hand:
+			var base_size: Vector2 = card.custom_minimum_size
+			if base_size.x <= 0.0 or base_size.y <= 0.0:
+				base_size = card.size
+			if base_size.x <= 0.0 or base_size.y <= 0.0:
+				base_size = Vector2.ONE
+			var target_scale := Vector2(
+				drag_out_size.x / base_size.x,
+				drag_out_size.y / base_size.y
+			)
+			var t_drag := 1.0 - pow(0.001, delta * follow_speed)
+			card.scale = card.scale.lerp(target_scale, t_drag)
+			card.z_index = count + 20
 			continue
 
 		var t: float = 0.0
@@ -169,6 +203,46 @@ func _refresh_z() -> void:
 		var card := cards[i]
 		if is_instance_valid(card):
 			card.z_index = i
+
+func begin_drag(card: Card) -> void:
+	dragging_card = card
+	hovered_card = card
+	card.set_hover_visuals(true)
+	_refresh_z()
+
+func end_drag(card: Card) -> void:
+	if dragging_card == card:
+		dragging_card = null
+	if hovered_card == card:
+		hovered_card = null
+	if is_instance_valid(card):
+		card.set_hover_visuals(false)
+	_dragging_inside_hand = false
+	if _is_mouse_over_card(card):
+		_on_card_hover(card)
+	_refresh_z()
+
+func _is_mouse_over_card(card: Control) -> bool:
+	return card.get_global_rect().has_point(get_viewport().get_mouse_position())
+
+func _is_mouse_inside_hand() -> bool:
+	if hand_area == null:
+		return false
+	return hand_area.get_global_rect().has_point(get_viewport().get_mouse_position())
+
+func _update_drag_hover_state() -> void:
+	if dragging_card == null or !is_instance_valid(dragging_card):
+		_dragging_inside_hand = false
+		return
+	_dragging_inside_hand = _is_mouse_inside_hand()
+	if _dragging_inside_hand:
+		if hovered_card != dragging_card:
+			hovered_card = dragging_card
+			dragging_card.set_hover_visuals(true)
+	else:
+		if hovered_card == dragging_card:
+			hovered_card = null
+		dragging_card.set_hover_visuals(false)
 
 func _apply_hand_scale() -> void:
 	if is_instance_valid(hand_root):

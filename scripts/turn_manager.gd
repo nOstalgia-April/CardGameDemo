@@ -1,27 +1,24 @@
 extends Node
 class_name TurnManager
 
-signal turn_started(turn_index: int)
-signal resources_changed(energy: int, energy_cap: int, flips_left: int)
-signal request_turn_resolution(units: Array)
-signal turn_resolution_finished
+@export_group("Refs")
+@export var board: Board
 
-@export var start_energy: int = 0
-@export var max_energy: int = 10
+@export_group("Config")
+@export var start_energy: int = 1
+@export var max_energy: int = 4
 @export var flip_per_turn: int = 1
+@export_group("")
 
 var turn_index: int = 0
 var energy_cap: int = 0
 var energy: int = 0
 var flips_left: int = 0
+var _resolving_turn: bool = false
 
 func _ready() -> void:
-	start_turn()
-
-func next_turn(units: Array = []) -> void:
-	emit_signal("request_turn_resolution", units)
-	await turn_resolution_finished
-	start_turn()
+	BattleEventBus.unit_placed.connect(_on_unit_placed)
+	pass
 
 func start_turn() -> void:
 	turn_index += 1
@@ -31,8 +28,22 @@ func start_turn() -> void:
 		energy_cap = clamp(energy_cap + 1, 0, max_energy)
 	energy = energy_cap
 	flips_left = max(0, flip_per_turn)
-	emit_signal("turn_started", turn_index)
-	emit_signal("resources_changed", energy, energy_cap, flips_left)
+	_emit_turn_started()
+	_emit_resource_changed()
+
+func end_turn() -> void:
+	if _resolving_turn:
+		return
+	_resolving_turn = true
+	BattleEventBus.emit_signal("turn_ended", turn_index, {})
+	await board.resolve_enemy_turn()
+	_resolving_turn = false
+	start_turn()
+
+func can_spend_energy(cost: int) -> bool:
+	if cost <= 0:
+		return true
+	return energy >= cost
 
 func spend_energy(cost: int) -> bool:
 	if cost <= 0:
@@ -40,12 +51,28 @@ func spend_energy(cost: int) -> bool:
 	if energy < cost:
 		return false
 	energy -= cost
-	emit_signal("resources_changed", energy, energy_cap, flips_left)
+	_emit_resource_changed()
 	return true
+
+func can_use_flip() -> bool:
+	return flips_left > 0
 
 func use_flip() -> bool:
 	if flips_left <= 0:
 		return false
 	flips_left -= 1
-	emit_signal("resources_changed", energy, energy_cap, flips_left)
+	_emit_resource_changed()
 	return true
+
+func _emit_turn_started() -> void:
+	BattleEventBus.emit_signal("turn_started", turn_index, {})
+
+func _emit_resource_changed() -> void:
+	BattleEventBus.emit_signal("resource_changed", energy, flips_left, {
+		"energy_cap": energy_cap,
+	})
+
+func _on_unit_placed(_unit: Node, _cell: Node, _context: Dictionary) -> void:
+	print(turn_index)
+	if turn_index == 1:
+		end_turn()

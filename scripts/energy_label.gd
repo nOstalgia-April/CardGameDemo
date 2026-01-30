@@ -1,20 +1,17 @@
 extends Label
 
-@export var turn_manager_path: NodePath
-@onready var turn_manager: TurnManager = get_node(turn_manager_path) as TurnManager
-@export var format_text: String = "行动点：%d/%d"
+@export_group("Text")
+@export var format_text: String = "%d/%d"
+@export var format_text_no_cap: String = "%d"
+@export_group("")
 
 func _ready() -> void:
-	var cb: Callable = Callable(self, "_on_resources_changed")
-	if !turn_manager.is_connected("resources_changed", cb):
-		turn_manager.connect("resources_changed", cb)
-	_sync_from_manager()
+	var cb: Callable = Callable(self, "_on_resource_changed")
+	BattleEventBus.connect("resource_changed", cb)
 
-func _sync_from_manager() -> void:
-	var energy_val: int = int(turn_manager.energy)
-	var energy_cap_val: int = int(turn_manager.energy_cap)
-	var flips_val: int = int(turn_manager.flips_left)
-	_on_resources_changed(energy_val, energy_cap_val, flips_val)
-
-func _on_resources_changed(energy: int, energy_cap: int, _flips_left: int) -> void:
-	text = format_text % [energy, energy_cap]
+func _on_resource_changed(energy: int, _flips_left: int, context: Dictionary) -> void:
+	var cap: int = int(context.get("energy_cap", -1))
+	if cap >= 0:
+		text = format_text % [energy, cap]
+	else:
+		text = format_text_no_cap % [energy]

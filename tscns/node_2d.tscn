@@ -1,11 +1,9 @@
 [gd_scene format=3 uid="uid://c3pqi7lrcnsrp"]
 
-[ext_resource type="Script" uid="uid://d0ng80v2suka3" path="res://scripts/main.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://nedwk80y63vm" path="res://tscns/hand_view.tscn" id="2_hand"]
-[ext_resource type="PackedScene" uid="uid://bv5h3cwm21ok7" path="res://tscns/board.tscn" id="3_board"]
+[ext_resource type="PackedScene" uid="uid://bv5h3cwm21ok7" path="res://tscns/battleground/board/board.tscn" id="3_board"]
 
 [node name="Main" type="Node2D" unique_id=768650474]
-script = ExtResource("1_script")
 
 [node name="Board" parent="." unique_id=1254471944 instance=ExtResource("3_board")]
 
