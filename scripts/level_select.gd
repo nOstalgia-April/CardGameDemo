@@ -11,6 +11,12 @@ extends Node2D
 # 引用确认按钮
 @onready var confirm_btn: TextureButton = $Root/HUD/TurnEndButton/TextureButton
 
+# 引用消息标签
+@onready var message_label: Label = $CanvasLayer/MessageLabel
+
+# 消息显示计时器
+var message_timer: Timer = null
+
 # 引用 Board 下所有 Cell 里的 Highlight 节点
 @onready var cell_highlights: Array[Panel] = []
 
@@ -78,6 +84,18 @@ func _ready() -> void:
 	# 连接按钮的鼠标事件
 	fancy_back_button.mouse_entered.connect(_on_fancy_back_button_mouse_entered)
 	fancy_back_button.mouse_exited.connect(_on_fancy_back_button_mouse_exited)
+
+	# 初始化消息标签
+	if message_label != null:
+		message_label.visible = false
+		message_label.modulate.a = 0.0
+
+	# 创建消息显示计时器
+	message_timer = Timer.new()
+	message_timer.wait_time = 2.0
+	message_timer.one_shot = true
+	message_timer.timeout.connect(_on_message_timeout)
+	add_child(message_timer)
 
 	# 初始化确认按钮：禁用并完全透明
 	print("DEBUG: 关卡选择场景已就绪")
@@ -214,11 +232,8 @@ func _on_cell_input(event: InputEvent, index: int) -> void:
 		# 检查是否已解锁
 		if index + 1 > max_unlocked_level:
 			# 未解锁，显示提示并隐藏确认按钮
-			var message_label: Label = get_node_or_null("MessageLabel") as Label
-			if message_label != null:
-				message_label.text = "请先通关上一关"
-				message_label.visible = true
-				print("[LevelSelect] 关卡未解锁")
+			print("[LevelSelect] 关卡未解锁，显示提示信息")
+			show_message("请先通过上一关")
 
 			# 清除选中效果
 			if selected_cell != null and is_instance_valid(selected_cell):
@@ -314,4 +329,41 @@ func _on_confirm_button_pressed() -> void:
 
 
 func _on_texture_button_pressed() -> void:
-	pass # Replace with function body.
+	pass
+
+# 显示消息提示
+func show_message(text: String) -> void:
+	if message_label == null:
+		return
+
+	# 停止之前的计时器
+	if message_timer != null and message_timer.is_stopped() == false:
+		message_timer.stop()
+
+	# 设置消息文本
+	message_label.text = text
+	message_label.visible = true
+
+	# 使用Tween动画显示消息
+	var tween = create_tween()
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.tween_property(message_label, "modulate:a", 1.0, 0.3)
+
+	# 启动计时器，2秒后隐藏消息
+	if message_timer != null:
+		message_timer.start()
+
+# 消息计时器超时回调
+func _on_message_timeout() -> void:
+	if message_label == null:
+		return
+
+	# 使用Tween动画隐藏消息
+	var tween = create_tween()
+	tween.set_ease(Tween.EASE_IN)
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.tween_property(message_label, "modulate:a", 0.0, 0.3)
+
+	# 动画结束后隐藏标签
+	tween.tween_callback(func(): message_label.visible = false)
