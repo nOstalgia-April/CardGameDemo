@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://smbcvcot02gd"]
+
+[ext_resource type="Script" uid="uid://b43owx7bibo7m" path="res://globals/sound_manager/sound_manager.gd" id="1_s8vuo"]
+[ext_resource type="AudioStream" uid="uid://hvh1oqnyx4in" path="res://assets/SFX/优势攻击1.ogg" id="2_nr15h"]
+[ext_resource type="AudioStream" uid="uid://sc0g1lryj82y" path="res://assets/SFX/攻击1.ogg" id="3_trcv1"]
+[ext_resource type="AudioStream" uid="uid://dlhmwfp4amp2d" path="res://assets/Music/战斗1_intro_0128.ogg" id="4_pi4bd"]
+
+[node name="SoundManager" type="Node" unique_id=392211674]
+script = ExtResource("1_s8vuo")
+metadata/_custom_type_script = "uid://b43owx7bibo7m"
+
+[node name="SFX" type="Node" parent="." unique_id=1760039392]
+
+[node name="AttackAdvantage" type="AudioStreamPlayer" parent="SFX" unique_id=842347302]
+stream = ExtResource("2_nr15h")
+
+[node name="Attack" type="AudioStreamPlayer" parent="SFX" unique_id=948937000]
+stream = ExtResource("3_trcv1")
+
+[node name="BattleBGMIntro" type="AudioStreamPlayer" parent="SFX" unique_id=490562374]
+stream = ExtResource("4_pi4bd")
+
+[node name="BGMPlayer" type="AudioStreamPlayer" parent="." unique_id=452265197]
+volume_db = -6.0

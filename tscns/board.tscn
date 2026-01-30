@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bv5h3cwm21ok7"]
+
+[ext_resource type="PackedScene" uid="uid://c4h4f4yy2i4s5" path="res://tscns/cell.tscn" id="1_cell"]
+[ext_resource type="Script" uid="uid://dlcdgo7i30f4y" path="res://scripts/board.gd" id="1_re371"]
+
+[node name="Board" type="Control" unique_id=1133862191]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_re371")
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1142765234]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+columns = 3
+
+[node name="Cell00" parent="GridContainer" unique_id=1610105831 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Cell01" parent="GridContainer" unique_id=1294838380 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Cell02" parent="GridContainer" unique_id=1441882771 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Cell10" parent="GridContainer" unique_id=1133657646 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Cell11" parent="GridContainer" unique_id=1578018743 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Cell12" parent="GridContainer" unique_id=105087745 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Cell20" parent="GridContainer" unique_id=710458070 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Cell21" parent="GridContainer" unique_id=1880558082 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Cell22" parent="GridContainer" unique_id=1958790764 instance=ExtResource("1_cell")]
+layout_mode = 2
+metadata/_edit_lock_ = true
