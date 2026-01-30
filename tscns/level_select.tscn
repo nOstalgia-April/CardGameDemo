@@ -11,6 +11,9 @@ script = ExtResource("2_qttnj")
 [node name="HandView" parent="Root" parent_id_path=PackedInt32Array(286232410) index="0" unique_id=140155012]
 visible = false
 
+[node name="Board" parent="Root" parent_id_path=PackedInt32Array(286232410) index="1" unique_id=1133862191]
+mouse_filter = 2
+
 [node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell00" parent_id_path=PackedInt32Array(1133862191, 1610105831) index="1" unique_id=495054445]
 layout_mode = 1
 anchors_preset = 8
