@@ -11,6 +11,176 @@ script = ExtResource("2_qttnj")
 [node name="HandView" parent="Root" parent_id_path=PackedInt32Array(286232410) index="0" unique_id=140155012]
 visible = false
 
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell00" parent_id_path=PackedInt32Array(1133862191, 1610105831) index="1" unique_id=495054445]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "1
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell01" parent_id_path=PackedInt32Array(1133862191, 1294838380) index="1" unique_id=2037143125]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "2
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell02" parent_id_path=PackedInt32Array(1133862191, 1441882771) index="1" unique_id=2114388650]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "3
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell10" parent_id_path=PackedInt32Array(1133862191, 1133657646) index="1" unique_id=748765828]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "4
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell11" parent_id_path=PackedInt32Array(1133862191, 1578018743) index="1" unique_id=41779126]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "5
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell12" parent_id_path=PackedInt32Array(1133862191, 105087745) index="1" unique_id=1997796219]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "6
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell20" parent_id_path=PackedInt32Array(1133862191, 710458070) index="1" unique_id=677408095]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "7
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell21" parent_id_path=PackedInt32Array(1133862191, 1880558082) index="1" unique_id=895644375]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -46.5
+offset_right = 20.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "8"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelNumber" type="Label" parent="Root/Board/GridContainer/Cell22" parent_id_path=PackedInt32Array(1133862191, 1958790764) index="1" unique_id=87683590]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "9
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="BackAnchor" type="Control" parent="CanvasLayer" parent_id_path=PackedInt32Array(829244223) index="0" unique_id=1135355005]
 layout_mode = 3
 anchors_preset = 0
@@ -33,3 +203,5 @@ offset_right = 501.0
 offset_bottom = 457.0
 mouse_filter = 2
 texture = ExtResource("4_h8c4j")
+
+[editable path="Root/Board"]
