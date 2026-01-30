@@ -1,5 +1,7 @@
 extends Control
 
+signal pressed
+
 @export_group("Refs")
 @export var turn_manager: TurnManager
 @export_group("")
@@ -21,6 +23,7 @@ func _on_turn_started(turn_index: int, _context: Dictionary) -> void:
 	texture_button.visible = turn_index > 1
 
 func _on_texture_button_pressed() -> void:
+	pressed.emit()
 	print("下个回合")
 	turn_manager.end_turn()
 	pass # Replace with function body.
