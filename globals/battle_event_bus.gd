@@ -25,11 +25,8 @@ signal units_requested(filter: Variant, context: Dictionary)
 signal available_cells_requested(cells: Array, context: Dictionary)
 signal clear_available_cells_requested(context: Dictionary)
 signal request_scene(scene_key: String, payload: Dictionary)
-<<<<<<< HEAD
 signal battle_victory(context: Dictionary)
 signal battle_defeated(context: Dictionary)
-=======
->>>>>>> 040a60b630bd6e8b8b78cf30f1826d2600e1c4ea
 
 func _ready() -> void:
 	add_to_group("battle_event_bus")

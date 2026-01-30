@@ -2,11 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dj0ue2grusmdy" path="res://scripts/composition/game_controller.gd" id="1_fvxco"]
 [ext_resource type="PackedScene" uid="uid://gcpxx4boco1g" path="res://tscns/battleground/board/unitcard/unit_card.tscn" id="2_jvffs"]
-<<<<<<< HEAD
 [ext_resource type="AudioStream" uid="uid://inpdblvrwt3f" path="res://Music/BGM/战斗1_0128.ogg" id="3_f2q7m"]
-=======
-[ext_resource type="AudioStream" uid="uid://inpdblvrwt3f" path="res://assets/Music/战斗1_0128.ogg" id="3_f2q7m"]
->>>>>>> 040a60b630bd6e8b8b78cf30f1826d2600e1c4ea
 [ext_resource type="Texture2D" uid="uid://blx2lfdo5ooyg" path="res://assets/BG/战斗背景1.png" id="4_t25nq"]
 [ext_resource type="Texture2D" uid="uid://uvigbbleccrc" path="res://123.png" id="5_78w4g"]
 [ext_resource type="Script" uid="uid://cxrmr0j7edstx" path="res://scripts/turn_manager.gd" id="6_hwa8p"]
