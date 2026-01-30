@@ -41,6 +41,13 @@ func _ready() -> void:
 		# 添加类型检查，确保是 Cell 类型
 		if cell is Cell:
 			cell.set_meta("level_index", level_index)
+
+			# 设置 LevelNumber 标签文本
+			var level_number_label: Label = cell.get_node_or_null("LevelNumber") as Label
+			if level_number_label != null:
+				level_number_label.text = str(level_index)
+				# 根据解锁状态设置可见性
+				level_number_label.visible = (level_index <= max_unlocked_level)
 			
 			# 根据解锁状态设置 Cell 状态
 			if level_index <= max_unlocked_level:
