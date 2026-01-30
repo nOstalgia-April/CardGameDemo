@@ -1,4 +1,5 @@
 extends RefCounted
+class_name CardDataRepo
 
 var file_path: String = "res://assets/cardinfos.csv"
 var infos: Dictionary = {}

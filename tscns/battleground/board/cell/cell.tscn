@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c4h4f4yy2i4s5"]
 
 [ext_resource type="Script" uid="uid://cb7b7psnbkqkq" path="res://tscns/battleground/board/cell/cell.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dwj5ppjajr2dt" path="res://assets/BG/九宫格（默认可选中）.png" id="2_2j4oj"]
+[ext_resource type="Texture2D" uid="uid://dwj5ppjajr2dt" path="res://assets/Board/DefaultCell.png" id="2_2j4oj"]
 
 [node name="Cell" type="Control" unique_id=1934000831]
 custom_minimum_size = Vector2(200, 200)
@@ -10,6 +10,7 @@ anchors_preset = 0
 offset_right = 128.0
 offset_bottom = 128.0
 script = ExtResource("1_script")
+use_style_highlight = true
 
 [node name="Root" type="Control" parent="." unique_id=655901528]
 layout_mode = 1
@@ -57,6 +58,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="Hover" type="TextureRect" parent="Root" unique_id=582516997]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch_mode = 3
 
 [node name="OccupantSlot" type="Control" parent="Root" unique_id=2001923471]
 layout_mode = 1

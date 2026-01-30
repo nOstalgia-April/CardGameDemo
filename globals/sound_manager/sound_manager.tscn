@@ -1,9 +1,18 @@
 [gd_scene format=3 uid="uid://smbcvcot02gd"]
 
 [ext_resource type="Script" uid="uid://b43owx7bibo7m" path="res://globals/sound_manager/sound_manager.gd" id="1_s8vuo"]
-[ext_resource type="AudioStream" uid="uid://hvh1oqnyx4in" path="res://assets/SFX/优势攻击1.ogg" id="2_nr15h"]
-[ext_resource type="AudioStream" uid="uid://sc0g1lryj82y" path="res://assets/SFX/攻击1.ogg" id="3_trcv1"]
-[ext_resource type="AudioStream" uid="uid://dlhmwfp4amp2d" path="res://assets/Music/战斗1_intro_0128.ogg" id="4_pi4bd"]
+[ext_resource type="AudioStream" uid="uid://cyrlruihu4s6" path="res://Music/SFX/computer_click.ogg" id="2_0xjot"]
+[ext_resource type="AudioStream" uid="uid://hvh1oqnyx4in" path="res://Music/SFX/AttackAdvantage.ogg" id="2_nr15h"]
+[ext_resource type="AudioStream" uid="uid://sc0g1lryj82y" path="res://Music/SFX/Attack.ogg" id="3_trcv1"]
+[ext_resource type="AudioStream" uid="uid://co8r2uvts1bnb" path="res://Music/SFX/computer_hover.ogg" id="3_x6p0s"]
+[ext_resource type="AudioStream" uid="uid://cusyhxs4sqa1u" path="res://Music/SFX/unit_on_flip.ogg" id="5_qu4yp"]
+[ext_resource type="AudioStream" uid="uid://bib7c0frenmo1" path="res://Music/SFX/handview_NoCost_error.ogg" id="6_i5rk7"]
+[ext_resource type="AudioStream" uid="uid://dnq4fsc2uvfx0" path="res://Music/SFX/unit_on_placed.ogg" id="8_hgqfu"]
+[ext_resource type="AudioStream" uid="uid://4soejunjap8o" path="res://Music/SFX/unit_selecting.ogg" id="12_gbcdf"]
+[ext_resource type="AudioStream" uid="uid://cu6gy1wpy7pp3" path="res://Music/SFX/unit_break_sheild.ogg" id="12_m0av4"]
+[ext_resource type="AudioStream" uid="uid://dpkea5ddb4utj" path="res://Music/SFX/round_end.ogg" id="13_0xjot"]
+[ext_resource type="AudioStream" uid="uid://cpqkg2xk7cn8q" path="res://Music/SFX/unit_on_death.ogg" id="13_servx"]
+[ext_resource type="AudioStream" uid="uid://cue5pi1svq4ip" path="res://Music/SFX/Victory.ogg" id="14_sq74m"]
 
 [node name="SoundManager" type="Node" unique_id=392211674]
 script = ExtResource("1_s8vuo")
@@ -17,8 +26,36 @@ stream = ExtResource("2_nr15h")
 [node name="Attack" type="AudioStreamPlayer" parent="SFX" unique_id=948937000]
 stream = ExtResource("3_trcv1")
 
-[node name="BattleBGMIntro" type="AudioStreamPlayer" parent="SFX" unique_id=490562374]
-stream = ExtResource("4_pi4bd")
+[node name="UnitOnDeath" type="AudioStreamPlayer" parent="SFX" unique_id=551877563]
+stream = ExtResource("13_servx")
+
+[node name="Victory" type="AudioStreamPlayer" parent="SFX" unique_id=1693806882]
+stream = ExtResource("14_sq74m")
+
+[node name="HandviewNoCostError" type="AudioStreamPlayer" parent="SFX" unique_id=1866660591]
+stream = ExtResource("6_i5rk7")
+
+[node name="ComputerClick" type="AudioStreamPlayer" parent="SFX" unique_id=223170940]
+stream = ExtResource("2_0xjot")
+
+[node name="ComputerHover" type="AudioStreamPlayer" parent="SFX" unique_id=623269577]
+stream = ExtResource("3_x6p0s")
+
+[node name="UnitBreakShield" type="AudioStreamPlayer" parent="SFX" unique_id=667965227]
+stream = ExtResource("12_m0av4")
+
+[node name="UnitOnFlip" type="AudioStreamPlayer" parent="SFX" unique_id=775950146]
+stream = ExtResource("5_qu4yp")
+
+[node name="UnitOnPlaced" type="AudioStreamPlayer" parent="SFX" unique_id=203164735]
+stream = ExtResource("8_hgqfu")
+
+[node name="UnitSelecting" type="AudioStreamPlayer" parent="SFX" unique_id=568420168]
+stream = ExtResource("12_gbcdf")
+volume_db = 10.0
+
+[node name="RoundEnd" type="AudioStreamPlayer" parent="SFX" unique_id=1243568796]
+stream = ExtResource("13_0xjot")
 
 [node name="BGMPlayer" type="AudioStreamPlayer" parent="." unique_id=452265197]
 volume_db = -6.0

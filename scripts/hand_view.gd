@@ -36,10 +36,12 @@ var cards: Array[Control] = []
 var hovered_card: Control = null
 var dragging_card: Control = null
 var _dragging_inside_hand: bool = false
+var _current_energy: int = 0
 
 func _ready() -> void:
 	z_index = hand_z_index
 	_apply_hand_scale()
+	BattleEventBus.resource_changed.connect(_on_resource_changed)
 	if card_scene == null:
 		card_scene = preload("res://tscns/card.tscn")
 	for i in range(initial_card_count):
@@ -210,7 +212,7 @@ func begin_drag(card: Card) -> void:
 	card.set_hover_visuals(true)
 	_refresh_z()
 
-func end_drag(card: Card) -> void:
+func end_drag(card: Card, allow_hover: bool = true) -> void:
 	if dragging_card == card:
 		dragging_card = null
 	if hovered_card == card:
@@ -218,7 +220,7 @@ func end_drag(card: Card) -> void:
 	if is_instance_valid(card):
 		card.set_hover_visuals(false)
 	_dragging_inside_hand = false
-	if _is_mouse_over_card(card):
+	if allow_hover and _is_mouse_over_card(card):
 		_on_card_hover(card)
 	_refresh_z()
 
@@ -235,6 +237,14 @@ func _update_drag_hover_state() -> void:
 		_dragging_inside_hand = false
 		return
 	_dragging_inside_hand = _is_mouse_inside_hand()
+	if !_dragging_inside_hand and _current_energy <= 0:
+		SoundManager.play_sfx("HandviewNoCostError")
+		var cancelled: Card = dragging_card
+		cancelled.cardCurrentState = Card.cardState.following
+		end_drag(cancelled, false)
+		if is_instance_valid(cancelled):
+			cancelled._set_other_cards_mouse_filter(false)
+		return
 	if _dragging_inside_hand:
 		if hovered_card != dragging_card:
 			hovered_card = dragging_card
@@ -247,3 +257,6 @@ func _update_drag_hover_state() -> void:
 func _apply_hand_scale() -> void:
 	if is_instance_valid(hand_root):
 		hand_root.scale = Vector2.ONE * hand_scale
+
+func _on_resource_changed(energy: int, _flips_left: int, _context: Dictionary) -> void:
+	_current_energy = energy

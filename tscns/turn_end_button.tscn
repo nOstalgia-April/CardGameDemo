@@ -1,8 +1,15 @@
 [gd_scene format=3 uid="uid://bugqndusvguwg"]
 
 [ext_resource type="Script" uid="uid://bhre2rjkc41lw" path="res://tscns/turn_end_button.gd" id="1_m1mn0"]
+<<<<<<< HEAD
+[ext_resource type="Texture2D" uid="uid://c1wyq8jq7mpjy" path="res://assets/UI/Computer/电脑.png" id="2_20wnv"]
+[ext_resource type="Texture2D" uid="uid://d0i5guyep7ubn" path="res://assets/UI/Computer/next_turn/ui_nextturn.png" id="3_js2lw"]
+[ext_resource type="Texture2D" uid="uid://c2so0jdxnwhpa" path="res://assets/UI/Computer/next_turn/ui_nextturn_hover.png" id="4_syl6f"]
+[ext_resource type="Texture2D" uid="uid://d1wacet22clyc" path="res://assets/UI/Computer/next_turn/ui_nextturn_press.png" id="5_w8xtc"]
+=======
 [ext_resource type="Texture2D" uid="uid://c1wyq8jq7mpjy" path="res://assets/BG/电脑.png" id="2_20wnv"]
 [ext_resource type="Texture2D" uid="uid://prvigyny2bgv" path="res://ui_confirm (1).png" id="3_20wnv"]
+>>>>>>> 040a60b630bd6e8b8b78cf30f1826d2600e1c4ea
 
 [node name="TurnEndButton" type="Control" unique_id=2051604309]
 layout_mode = 3
@@ -23,13 +30,20 @@ mouse_filter = 2
 texture = ExtResource("2_20wnv")
 metadata/_edit_lock_ = true
 
-[node name="TextureButton" type="TextureButton" parent="." unique_id=227949170]
+[node name="NextTurn" type="TextureButton" parent="." unique_id=227949170]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 124.0
 offset_top = -36.0
 offset_right = 424.0
 offset_bottom = 264.0
+<<<<<<< HEAD
+texture_normal = ExtResource("3_js2lw")
+texture_pressed = ExtResource("4_syl6f")
+texture_hover = ExtResource("5_w8xtc")
+=======
 texture_normal = ExtResource("3_20wnv")
+>>>>>>> 040a60b630bd6e8b8b78cf30f1826d2600e1c4ea
 stretch_mode = 3
 
-[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]
+[connection signal="pressed" from="NextTurn" to="." method="_on_texture_button_pressed"]

@@ -4,6 +4,11 @@ class_name Cell
 enum CellState { HIDDEN, AVAILABLE, VISITED }
 
 @export_group("Visual")
+@export var base_texture_even: Texture2D = preload("res://assets/Board/DefaultCell.png")
+@export var base_texture_odd: Texture2D = preload("res://assets/Board/DefaultCell2.png")
+@export var hover_texture_white: Texture2D = preload("res://assets/Board/WhiteHover.png")
+@export var hover_texture_red: Texture2D = preload("res://assets/Board/RedHover.png")
+@export var use_style_highlight: bool = false
 @export var color_hidden: Color = Color(0, 0, 0, 0.6)
 @export var color_available: Color = Color(1.0, 1.0, 1.0, 0.231)
 @export var color_visited: Color = Color(1.0, 1.0, 1.0, 0.502)
@@ -15,8 +20,10 @@ enum CellState { HIDDEN, AVAILABLE, VISITED }
 
 @export_group("")
 var state: CellState = CellState.AVAILABLE
+@onready var base_texture_rect: TextureRect = $Root/TextureRect
 @onready var fog_layer: ColorRect = $Root/FogLayer
 @onready var highlight: Panel = $Root/Highlight
+@onready var hover_texture_rect: TextureRect = $Root/Hover
 @onready var occupant_slot: Control = $Root/OccupantSlot
 @onready var input_button: Button = $Root/Input
 var visited_by_player: bool = false
@@ -115,10 +122,12 @@ func is_occupied() -> bool:
 	return occupant_slot.get_child_count() > 0
 
 func set_highlight(active: bool, color: Color = highlight_color) -> void:
-	if !is_instance_valid(highlight):
-		return
-	highlight.visible = active
-	if active:
+	if use_style_highlight:
+		if !is_instance_valid(highlight):
+			return
+		highlight.visible = active
+		if !active:
+			return
 		var style: StyleBoxFlat = StyleBoxFlat.new()
 		style.draw_center = false
 		style.border_width_left = 4
@@ -127,6 +136,24 @@ func set_highlight(active: bool, color: Color = highlight_color) -> void:
 		style.border_width_bottom = 4
 		style.border_color = color
 		highlight.add_theme_stylebox_override("panel", style)
+		if is_instance_valid(hover_texture_rect):
+			hover_texture_rect.visible = false
+		return
+	if !is_instance_valid(hover_texture_rect):
+		return
+	hover_texture_rect.visible = active
+	if !active:
+		return
+	var is_red: bool = color.r > color.g and color.r > color.b
+	hover_texture_rect.texture = hover_texture_red if is_red else hover_texture_white
+	if is_instance_valid(highlight):
+		highlight.visible = false
+
+func set_base_texture(is_even: bool) -> void:
+	var tex: Texture2D = base_texture_even if is_even else base_texture_odd
+	if tex == null:
+		tex = base_texture_even
+	base_texture_rect.texture = tex
 
 func _fit_unit_to_slot(unit: Control) -> void:
 	var slot_size: Vector2 = occupant_slot.size

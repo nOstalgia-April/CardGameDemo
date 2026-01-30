@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cno353yuv2xjm"]
 
-[ext_resource type="Texture2D" uid="uid://b1v00kks5j08r" path="res://assets/UI/技能牌使用点数标志-睁眼.png" id="1_q2og5"]
+[ext_resource type="Texture2D" uid="uid://b1v00kks5j08r" path="res://assets/UI/Flipper/技能牌使用点数标志-睁眼.png" id="1_q2og5"]
 [ext_resource type="Script" uid="uid://cv37b5w8m8nvk" path="res://scripts/flip_label.gd" id="2_ca3ug"]
-[ext_resource type="Texture2D" uid="uid://cigf0g3owuwbj" path="res://assets/UI/技能牌使用点数标志-闭眼.png" id="3_ca3ug"]
+[ext_resource type="Texture2D" uid="uid://cigf0g3owuwbj" path="res://assets/UI/Flipper/技能牌使用点数标志-闭眼.png" id="3_ca3ug"]
 
 [node name="FlipHUD" type="Control" unique_id=314267766]
 layout_mode = 3

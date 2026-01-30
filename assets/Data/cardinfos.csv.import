@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cvf6wnucyoxt0"
+
+[deps]
+
+files=["res://assets/Data/cardinfos.index.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation"]
+
+source_file="res://assets/Data/cardinfos.csv"
+dest_files=["res://assets/Data/cardinfos.index.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation", "res://assets/Data/cardinfos.base.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c4h4f4yy2i4s5" path="res://tscns/battleground/board/cell/cell.tscn" id="1_cell"]
 [ext_resource type="Script" uid="uid://dlcdgo7i30f4y" path="res://tscns/battleground/board/board.gd" id="1_re371"]
-[ext_resource type="Texture2D" uid="uid://cjb6sq61urrbw" path="res://assets/BG/棋盘.png" id="2_1rvxx"]
+[ext_resource type="Texture2D" uid="uid://cjb6sq61urrbw" path="res://assets/Board/棋盘.png" id="2_1rvxx"]
 
 [node name="Board" type="Control" unique_id=1133862191]
 layout_mode = 3

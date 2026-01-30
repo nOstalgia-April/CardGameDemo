@@ -58,6 +58,7 @@ var knockback_on_hurt: bool = false
 var death_used: bool = false
 var _ui_ready: bool = false
 var turn_manager: TurnManager = null
+var _select_sfx_requester: String = ""
 
 func _ready() -> void:
 	_apply_faction_color()
@@ -65,6 +66,7 @@ func _ready() -> void:
 	_update_border()
 	_reset_attacks()
 	_sync_dir_labels()
+	_select_sfx_requester = "UnitCardSelect_%s" % str(get_instance_id())
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 	_bind_event_bus()
@@ -161,6 +163,8 @@ func die(killer: Node, dir: int) -> void:
 	if _dead:
 		return
 	_dead = true
+	SoundManager.request_loop_sfx("UnitSelecting", _select_sfx_requester, false)
+	SoundManager.play_sfx("UnitOnDeath")
 	emit_signal("died", self, killer, dir)
 	BattleEventBus.emit_signal("unit_died", self, killer, dir, {})
 
@@ -217,10 +221,9 @@ func _update_border() -> void:
 		hover_border.visible = false
 
 func _bind_event_bus() -> void:
-	var cb_attack: Callable = Callable(self, "_on_attack_started")
-	BattleEventBus.connect("attack_started", cb_attack)
-	var cb_damage: Callable = Callable(self, "_on_damage_applied")
-	BattleEventBus.connect("damage_applied", cb_damage)
+	BattleEventBus.connect("attack_started", _on_attack_started)
+	BattleEventBus.connect("damage_applied", _on_damage_applied)
+	BattleEventBus.connect("unit_placed", _on_unit_placed)
 
 func _on_attack_started(attacker: Node, _target: Node, dir: int, _context: Dictionary) -> void:
 	if attacker == self:
@@ -235,6 +238,10 @@ func _on_attack_started(attacker: Node, _target: Node, dir: int, _context: Dicti
 func _on_damage_applied(_attacker: Node, target: Node, _dir: int, _value: int, _context: Dictionary) -> void:
 	if target == self:
 		_update_border()
+
+func _on_unit_placed(unit: Node, _cell: Node, _context: Dictionary) -> void:
+	if unit == self:
+		SoundManager.play_sfx("UnitOnPlaced")
 
 func _make_border_style(color: Color) -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
@@ -251,27 +258,34 @@ func _set_dir_value(node: Control, value: int) -> void:
 	label.text = str(value)
 
 func _apply_dir_value(dir: int, value: int) -> void:
+	var prev_value: int = 0
 	match dir:
 		Dir.N:
+			prev_value = value_n
 			value_n = value
 			if dir_n != null:
 				dir_n.visible = value_n > 0
 			_set_dir_value(dir_n, value)
 		Dir.E:
+			prev_value = value_e
 			value_e = value
 			if dir_e != null:
 				dir_e.visible = value_e > 0
 			_set_dir_value(dir_e, value)
 		Dir.S:
+			prev_value = value_s
 			value_s = value
 			if dir_s != null:
 				dir_s.visible = value_s > 0
 			_set_dir_value(dir_s, value)
 		Dir.W:
+			prev_value = value_w
 			value_w = value
 			if dir_w != null:
 				dir_w.visible = value_w > 0
 			_set_dir_value(dir_w, value)
+	if prev_value > 0 and value <= 0:
+		SoundManager.play_sfx("UnitBreakShield")
 
 func get_dir_value(dir: int) -> int:
 	match dir:
@@ -355,6 +369,7 @@ func _begin_select() -> void:
 	if _selecting:
 		return
 	_selecting = true
+	SoundManager.request_loop_sfx("UnitSelecting", _select_sfx_requester, true)
 	_hover_active = true
 	_neighbor_cells = _get_available_neighbor_cells()
 	BattleEventBus.emit_signal("available_cells_requested", _neighbor_cells, {}) # request highlight
@@ -364,6 +379,7 @@ func _end_select() -> void:
 	if !_selecting:
 		return
 	_selecting = false
+	SoundManager.request_loop_sfx("UnitSelecting", _select_sfx_requester, false)
 	var target_cell: Node = _get_target_cell(_neighbor_cells)
 	BattleEventBus.emit_signal("clear_available_cells_requested", {}) # request clear
 	_neighbor_cells.clear()
@@ -443,6 +459,7 @@ func flip(context: Dictionary = {}) -> bool:
 		return false
 	if effect_id != "":
 		apply_effect(effect_id, context)
+	SoundManager.play_sfx('CardFlip')
 	BattleEventBus.emit_signal("flip_used", self, context)
 	_on_flip()
 	return true

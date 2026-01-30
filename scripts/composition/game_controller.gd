@@ -6,8 +6,8 @@ extends Node2D
 @onready var root: Control = %Root
 
 @export_group("Data")
-@export var card_infos_path: String = "res://assets/cardinfos.csv"
-@export var enemy_infos_path: String = "res://assets/enemyinfos.csv"
+@export var card_infos_path: String = "res://assets/Data/cardinfos.csv"
+@export var enemy_infos_path: String = "res://assets/Data/enemyinfos.csv"
 @export var enemy_unit_scene: PackedScene
 @export_group("")
 
@@ -29,11 +29,14 @@ var shake_time_left: float = 0.0
 var is_shaking: bool = false
 var base_position: Vector2 = Vector2.ZERO
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _battle_over: bool = false
 
 func _ready() -> void:
 	SoundManager.play_bgm(BGM)
 	_rng.randomize()
 	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
+	BattleEventBus.connect("turn_started", Callable(self, "_on_turn_started"))
+	BattleEventBus.connect("unit_died", Callable(self, "_on_unit_died"))
 	_init_repos()
 	populate_hand_with_all_cards()
 	enemy_infos = enemy_repo.get_all()
@@ -59,6 +62,35 @@ func _process(delta: float) -> void:
 
 func _on_screen_shake_requested(intensity: float, duration: float, _context: Dictionary) -> void:
 	trigger_screen_shake(intensity, duration)
+
+func _on_turn_started(turn_index: int, _context: Dictionary) -> void:
+	if _battle_over:
+		return
+	if turn_index <= 1:
+		return
+	if board.find_units("player").is_empty():
+		_handle_defeated()
+
+func _on_unit_died(_unit: Node, _killer: Node, _dir: int, _context: Dictionary) -> void:
+	if _battle_over:
+		return
+	call_deferred("_check_victory")
+
+func _check_victory() -> void:
+	if _battle_over:
+		return
+	if board.find_units("enemy").is_empty():
+		_handle_victory()
+
+func _handle_victory() -> void:
+	_battle_over = true
+	SoundManager.play_sfx("Victory")
+	BattleEventBus.emit_signal("battle_victory", {})
+
+func _handle_defeated() -> void:
+	_battle_over = true
+	# SoundManager.play_sfx("Defeated") # placeholder
+	BattleEventBus.emit_signal("battle_defeated", {})
 
 # 触发屏幕震动
 # intensity: 震动强度（像素），如果为 0 则使用默认值

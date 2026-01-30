@@ -140,6 +140,7 @@ func move_unit(unit: UnitCard, target_cell: Cell, consume_energy: bool = true) -
 		return false
 	if consume_energy and !unit.is_enemy:
 		if turn_manager != null and !turn_manager.can_spend_energy(1):
+			SoundManager.play_sfx("HandviewNoCostError")
 			return false
 	var moved: bool = target_cell.place_existing_unit(unit)
 	if !moved:
@@ -378,6 +379,7 @@ func _index_cells() -> void:
 			pos = Vector2i(i % columns, i / columns)
 		cell.set_meta("grid_x", pos.x)
 		cell.set_meta("grid_y", pos.y)
+		#cell.set_base_texture(((pos.x + pos.y) % 2) == 0)
 		cell_map[pos] = cell
 	for cell in _get_all_cells():
 		var unit: UnitCard = cell.get_unit() as UnitCard
