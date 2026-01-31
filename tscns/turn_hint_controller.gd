@@ -30,6 +30,7 @@ func _on_unit_placed(_unit: Node, _cell: Node, _context: Dictionary) -> void:
 	# 单位放置后，显示确认按钮
 	show_button_state()
 
-func _on_turn_started(_turn_index: int, _context: Dictionary) -> void:
-	# 回合开始时，显示提示图片
-	show_hint_state()
+func _on_turn_started(turn_index: int, _context: Dictionary) -> void:
+	# 只在第一回合显示提示
+	if turn_index == 1:
+		show_hint_state()
