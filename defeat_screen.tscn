@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b04nlv4as4wmh"]
 
 [ext_resource type="Script" uid="uid://by38tuy3lp4qt" path="res://defeat_screen.gd" id="1_rbj83"]
-[ext_resource type="AudioStream" uid="uid://cue5pi1svq4ip" path="res://Music/SFX/Victory.ogg" id="2_x0sfi"]
+[ext_resource type="AudioStream" uid="uid://c68xiirm1cprh" path="res://Music/SFX/Defeated.ogg" id="2_qyds9"]
 
 [sub_resource type="Animation" id="Animation_qyds8"]
 length = 0.001
@@ -34,10 +34,27 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0.19607843), Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_7yehl"]
+resource_name = "blink_1"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PressKeyLabel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rax26"]
 _data = {
 &"RESET": SubResource("Animation_qyds8"),
-&"blink": SubResource("Animation_r8dr5")
+&"blink": SubResource("Animation_r8dr5"),
+&"blink_1": SubResource("Animation_7yehl")
 }
 
 [node name="DefeatScreen" type="Control" unique_id=1816913603]
@@ -56,7 +73,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.35827613, 0, 0.01585203, 1)
+color = Color(0.30601564, 0.043079756, 0.05963298, 0.5882353)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=512337633]
 layout_mode = 1
@@ -74,7 +91,7 @@ grow_vertical = 2
 
 [node name="DefeatLabel" type="Label" parent="VBoxContainer" unique_id=826140103]
 layout_mode = 2
-theme_override_font_sizes/font_size = 64
+theme_override_font_sizes/font_size = 100
 text = "失败"
 horizontal_alignment = 1
 
@@ -86,6 +103,7 @@ horizontal_alignment = 1
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=49413651]
 root_node = NodePath("../VBoxContainer")
 libraries/ = SubResource("AnimationLibrary_rax26")
+autoplay = &"blink_1"
 
 [node name="VictorySound" type="AudioStreamPlayer" parent="." unique_id=833521380]
-stream = ExtResource("2_x0sfi")
+stream = ExtResource("2_qyds9")

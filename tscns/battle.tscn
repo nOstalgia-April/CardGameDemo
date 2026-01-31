@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://b4yf7oh765m7q" path="res://assets/UI/Folder/ui_pls.png" id="13_t25nq"]
 [ext_resource type="Script" uid="uid://kfpxxfu11pr7" path="res://tscns/turn_hint_controller.gd" id="14_78w4g"]
 [ext_resource type="PackedScene" uid="uid://d03rlp4ewyrs1" path="res://victory_screen.tscn" id="15_78w4g"]
+[ext_resource type="PackedScene" uid="uid://b04nlv4as4wmh" path="res://defeat_screen.tscn" id="16_hwa8p"]
 
 [sub_resource type="Shader" id="Shader_dynamicwall"]
 code = "shader_type canvas_item;
@@ -50,11 +51,12 @@ shader_parameter/speed = 0.05
 shader_parameter/noise_strength = 1.0
 shader_parameter/texture_color = Color(1, 1, 1, 1)
 
-[node name="Battle" type="Node2D" unique_id=1557048967 node_paths=PackedStringArray("victory_screen")]
+[node name="Battle" type="Node2D" unique_id=1557048967 node_paths=PackedStringArray("victory_screen", "defeat_screen")]
 script = ExtResource("1_fvxco")
 enemy_unit_scene = ExtResource("2_jvffs")
 BGM = ExtResource("3_f2q7m")
 victory_screen = NodePath("CanvasLayer/VictoryScreen")
+defeat_screen = NodePath("CanvasLayer/DefeatScreen")
 
 [node name="BG" type="Sprite2D" parent="." unique_id=43290717]
 position = Vector2(800, 560)
@@ -170,16 +172,14 @@ confirm_button = NodePath("../Root/HUD/TurnEndButton/NextTurn")
 
 [node name="VictoryScreen" parent="CanvasLayer" unique_id=1816913603 instance=ExtResource("15_78w4g")]
 
-[node name="VBoxContainer" parent="CanvasLayer/VictoryScreen" index="1" unique_id=512337633]
-anchors_preset = -1
-
-[node name="VictoryLabel" parent="CanvasLayer/VictoryScreen/VBoxContainer" index="0" unique_id=826140103]
+[node name="VictoryLabel" parent="CanvasLayer/VictoryScreen/VBoxContainer" parent_id_path=PackedInt32Array(1816913603, 512337633) index="0" unique_id=826140103]
 theme_override_font_sizes/font_size = 100
-text = "胜利！"
 
-[node name="InfoLabel" parent="CanvasLayer/VictoryScreen/VBoxContainer" index="1" unique_id=326548973]
+[node name="InfoLabel" parent="CanvasLayer/VictoryScreen/VBoxContainer" parent_id_path=PackedInt32Array(1816913603, 512337633) index="1" unique_id=326548973]
 theme_override_font_sizes/font_size = 80
 text = "下一关已解锁！"
+
+[node name="DefeatScreen" parent="CanvasLayer" unique_id=2100988190 instance=ExtResource("16_hwa8p")]
 
 [editable path="Root/HUD/TurnEndButton"]
 [editable path="CanvasLayer/VictoryScreen"]

@@ -11,6 +11,7 @@ signal return_to_level_select
 var can_input = false
 
 func _ready():
+	print(name, ": _ready started")
 	# 第一步：隐藏整个 VictoryScreen（包括背景和所有子节点）
 	hide()
 

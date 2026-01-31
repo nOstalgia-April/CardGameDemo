@@ -148,6 +148,12 @@ func _on_confirm_pressed() -> void:
 		return
 	if GameState != null:
 		GameState.set_current_level(_selected_level_index)
+	print("Attempting to load level: ", _selected_level_index)
+	var level_path = "res://tscns/battle.tscn"
+	if not FileAccess.file_exists(level_path):
+		print("ERROR: Level file not found at: ", level_path)
+	else:
+		print("Level file found at: ", level_path)
 	BattleEventBus.go("battle")
 
 func _show_message(text: String) -> void:

@@ -18,6 +18,7 @@ extends Node2D
 @export_group("")
 @export var BGM : AudioStream
 @export var victory_screen: Control
+@export var defeat_screen: Control
 
 const CardDataRepoScript = preload("res://scripts/data/card_data_repo.gd")
 const EnemyDataRepoScript = preload("res://scripts/data/enemy_data_repo.gd")
@@ -36,14 +37,28 @@ var _battle_over: bool = false
 var _current_level: LevelData = null
 
 func _ready() -> void:
+	print("GameController: Starting _ready...")
 	SoundManager.play_bgm(BGM)
 	_rng.randomize()
 	_sync_root_layout()
 	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
 	BattleEventBus.connect("turn_started", Callable(self, "_on_turn_started"))
 	BattleEventBus.connect("unit_died", Callable(self, "_on_unit_died"))
+	print("Checking victory_screen and defeat_screen...")
+	if victory_screen == null or defeat_screen == null:
+		print("CRITICAL: victory_screen or defeat_screen is NULL!")
+	print("Connecting victory_screen...")
 	if victory_screen != null:
 		victory_screen.return_to_level_select.connect(_on_victory_screen_return)
+		print("Victory_screen connected.")
+	else:
+		print("ERROR: victory_screen is NULL, cannot connect signal!")
+	print("Connecting defeat_screen...")
+	if defeat_screen != null:
+		defeat_screen.restart_level.connect(_on_defeat_screen_restart)
+		print("Defeat_screen connected.")
+	else:
+		print("ERROR: defeat_screen is NULL, cannot connect signal!")
 	if GameState != null and GameState.current_level_index > 0:
 		level_index = GameState.current_level_index
 	_init_repos()
@@ -104,9 +119,14 @@ func _handle_defeated() -> void:
 	_battle_over = true
 	SoundManager.play_sfx("Defeated")
 	BattleEventBus.emit_signal("battle_defeated", {})
+	if defeat_screen != null:
+		defeat_screen.open()
 
 func _on_victory_screen_return() -> void:
 	get_tree().change_scene_to_file("res://tscns/level_select.tscn")
+
+func _on_defeat_screen_restart() -> void:
+	get_tree().reload_current_scene()
 
 func restart_level() -> void:
 	GameState.set_current_level(level_index)
