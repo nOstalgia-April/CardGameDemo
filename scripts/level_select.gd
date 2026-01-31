@@ -75,25 +75,7 @@ func _init_cells() -> void:
 		level_index += 1
 
 func _ensure_level_label(cell: Cell, level_index: int, unlocked: bool) -> void:
-	var root: Control = cell.get_node_or_null("Root") as Control
-	var label: Label = null
-	if root != null:
-		label = root.get_node_or_null("LevelNumber") as Label
-		if label == null:
-			label = Label.new()
-			label.name = "LevelNumber"
-			label.layout_mode = 1
-			label.anchors_preset = Control.PRESET_CENTER
-			label.grow_horizontal = Control.GROW_DIRECTION_BOTH
-			label.grow_vertical = Control.GROW_DIRECTION_BOTH
-			label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			root.add_child(label)
-	if label == null:
-		return
-	label.text = str(level_index)
-	label.visible = unlocked
+	cell.set_level_number(level_index, unlocked)
 
 func _bind_cell_input(cell: Cell) -> void:
 	var root: Control = cell.get_node_or_null("Root") as Control
