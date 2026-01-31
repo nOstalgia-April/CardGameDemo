@@ -11,16 +11,16 @@ signal return_to_level_select
 var can_input = false
 
 func _ready():
-	# 第一步：必须先把所有标签设为不可见
+	# 第一步：隐藏整个 VictoryScreen（包括背景和所有子节点）
+	hide()
+
+	# 第二步：必须先把所有标签设为不可见
 	victory_label.visible = false
 	info_label.visible = false
 	press_key_label.visible = false
 
 	# 确保动画不会自动播放
 	animation_player.stop()
-
-	# 第二步：调用 open() 进行测试
-	open()
 
 func open():
 	# 第一步：根节点设为可见

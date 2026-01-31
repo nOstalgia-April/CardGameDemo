@@ -6,9 +6,9 @@
 script = ExtResource("1_ojj6d")
 enemy_key = "小怪"
 display_name = "小怪"
-n = 5
-e = 6
-s = 3
-w = 2
+n = 1
+e = 1
+s = 1
+w = 1
 card_art = null
 card_art_flipped = null

@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://cut5772wtvpsw" path="res://tscns/folder_button.tscn" id="12_folder_button"]
 [ext_resource type="Texture2D" uid="uid://b4yf7oh765m7q" path="res://assets/UI/Folder/ui_pls.png" id="13_t25nq"]
 [ext_resource type="Script" uid="uid://kfpxxfu11pr7" path="res://tscns/turn_hint_controller.gd" id="14_78w4g"]
+[ext_resource type="PackedScene" uid="uid://d03rlp4ewyrs1" path="res://victory_screen.tscn" id="15_78w4g"]
 
 [sub_resource type="Shader" id="Shader_dynamicwall"]
 code = "shader_type canvas_item;
@@ -49,10 +50,11 @@ shader_parameter/speed = 0.05
 shader_parameter/noise_strength = 1.0
 shader_parameter/texture_color = Color(1, 1, 1, 1)
 
-[node name="Battle" type="Node2D" unique_id=1557048967]
+[node name="Battle" type="Node2D" unique_id=1557048967 node_paths=PackedStringArray("victory_screen")]
 script = ExtResource("1_fvxco")
 enemy_unit_scene = ExtResource("2_jvffs")
 BGM = ExtResource("3_f2q7m")
+victory_screen = NodePath("CanvasLayer/VictoryScreen")
 
 [node name="BG" type="Sprite2D" parent="." unique_id=43290717]
 position = Vector2(800, 560)
@@ -164,4 +166,9 @@ script = ExtResource("14_78w4g")
 hint_texture = NodePath("../Root/HUD/TurnEndButton/HintImage")
 confirm_button = NodePath("../Root/HUD/TurnEndButton/NextTurn")
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1103474778]
+
+[node name="VictoryScreen" parent="CanvasLayer" unique_id=1816913603 instance=ExtResource("15_78w4g")]
+
 [editable path="Root/HUD/TurnEndButton"]
+[editable path="CanvasLayer/VictoryScreen"]

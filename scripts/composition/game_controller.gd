@@ -17,6 +17,7 @@ extends Node2D
 @export var shake_duration_default: float = 0.15
 @export_group("")
 @export var BGM : AudioStream
+@export var victory_screen: Control
 
 const CardDataRepoScript = preload("res://scripts/data/card_data_repo.gd")
 const EnemyDataRepoScript = preload("res://scripts/data/enemy_data_repo.gd")
@@ -41,6 +42,8 @@ func _ready() -> void:
 	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
 	BattleEventBus.connect("turn_started", Callable(self, "_on_turn_started"))
 	BattleEventBus.connect("unit_died", Callable(self, "_on_unit_died"))
+	if victory_screen != null:
+		victory_screen.return_to_level_select.connect(_on_victory_screen_return)
 	if GameState != null and GameState.current_level_index > 0:
 		level_index = GameState.current_level_index
 	_init_repos()
@@ -94,11 +97,16 @@ func _handle_victory() -> void:
 		GameState.unlock_next_level(level_index)
 	SoundManager.play_sfx("Victory")
 	BattleEventBus.emit_signal("battle_victory", {})
+	if victory_screen != null:
+		victory_screen.open()
 
 func _handle_defeated() -> void:
 	_battle_over = true
 	SoundManager.play_sfx("Defeated")
 	BattleEventBus.emit_signal("battle_defeated", {})
+
+func _on_victory_screen_return() -> void:
+	get_tree().change_scene_to_file("res://tscns/level_select.tscn")
 
 func restart_level() -> void:
 	GameState.set_current_level(level_index)
