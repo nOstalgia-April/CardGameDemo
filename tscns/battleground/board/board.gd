@@ -220,11 +220,13 @@ func resolve_enemy_turn() -> void:
 	if _resolving_enemy_turn:
 		return
 	_resolving_enemy_turn = true
+	await get_tree().create_timer(1.5).timeout
 	var enemies: Array[UnitCard] = find_units("enemy")
 	for unit in enemies:
 		if unit == null or !is_instance_valid(unit):
 			continue
 		await unit.resolve_turn()
+	await get_tree().create_timer(1.0).timeout
 	_resolving_enemy_turn = false
 
 func get_neighbor_cells(cell: Cell) -> Dictionary:
