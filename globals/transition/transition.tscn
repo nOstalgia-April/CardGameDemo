@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0qcp4rm1l7wn"]
+
+[ext_resource type="Script" path="res://globals/transition/transition.gd" id="1_pqg4r"]
+
+[node name="Transition" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_pqg4r")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 1)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+expand_mode = 1

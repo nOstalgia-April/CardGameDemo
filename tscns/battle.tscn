@@ -1,0 +1,148 @@
+[gd_scene format=3 uid="uid://cyx5jl4c8qdsd"]
+
+[ext_resource type="Script" uid="uid://dj0ue2grusmdy" path="res://scripts/composition/game_controller.gd" id="1_fvxco"]
+[ext_resource type="PackedScene" uid="uid://gcpxx4boco1g" path="res://tscns/battleground/board/unitcard/unit_card.tscn" id="2_jvffs"]
+[ext_resource type="AudioStream" uid="uid://inpdblvrwt3f" path="res://Music/BGM/战斗1_0128.ogg" id="3_f2q7m"]
+[ext_resource type="Texture2D" uid="uid://blx2lfdo5ooyg" path="res://assets/BG/战斗背景1.png" id="4_t25nq"]
+[ext_resource type="Texture2D" uid="uid://uvigbbleccrc" path="res://123.png" id="5_78w4g"]
+[ext_resource type="Script" uid="uid://cxrmr0j7edstx" path="res://scripts/turn_manager.gd" id="6_hwa8p"]
+[ext_resource type="PackedScene" uid="uid://nedwk80y63vm" path="res://tscns/hand_view.tscn" id="7_f5wwg"]
+[ext_resource type="PackedScene" uid="uid://bv5h3cwm21ok7" path="res://tscns/battleground/board/board.tscn" id="8_na4yj"]
+[ext_resource type="PackedScene" uid="uid://ctwxkqyg1cwjv" path="res://tscns/energy_hud.tscn" id="9_guyid"]
+[ext_resource type="PackedScene" uid="uid://cno353yuv2xjm" path="res://tscns/flip_hud.tscn" id="10_owkka"]
+[ext_resource type="PackedScene" uid="uid://bugqndusvguwg" path="res://tscns/turn_end_button.tscn" id="11_ivtmp"]
+
+[sub_resource type="Shader" id="Shader_dynamicwall"]
+code = "shader_type canvas_item;
+
+uniform sampler2D noise_texture : repeat_enable, filter_linear;
+uniform float speed = 0.02;
+uniform float noise_strength : hint_range(0.0, 1.0) = 0.2;
+uniform vec4 texture_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+
+void fragment() {
+    vec4 base_color = COLOR;
+    vec2 flow_uv = UV + vec2(TIME * speed, TIME * speed * 0.5);
+    float noise = texture(noise_texture, flow_uv).r;
+    COLOR.rgb = mix(base_color.rgb, texture_color.rgb, noise * noise_strength);
+    COLOR.a = base_color.a;
+}"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_dynamicwall"]
+noise_type = 2
+frequency = 0.008
+fractal_type = 2
+domain_warp_enabled = true
+domain_warp_amplitude = 20.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dynamicwall"]
+noise = SubResource("FastNoiseLite_dynamicwall")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dynamicwall"]
+shader = SubResource("Shader_dynamicwall")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_dynamicwall")
+shader_parameter/speed = 0.05
+shader_parameter/noise_strength = 1.0
+shader_parameter/texture_color = Color(1, 1, 1, 1)
+
+[node name="Battle" type="Node2D" unique_id=1557048967]
+script = ExtResource("1_fvxco")
+enemy_unit_scene = ExtResource("2_jvffs")
+BGM = ExtResource("3_f2q7m")
+
+[node name="BG" type="Sprite2D" parent="." unique_id=43290717]
+position = Vector2(800, 560)
+texture = ExtResource("4_t25nq")
+metadata/_edit_lock_ = true
+
+[node name="ColorRect" type="ColorRect" parent="BG" unique_id=270966036]
+material = SubResource("ShaderMaterial_dynamicwall")
+offset_left = -800.0
+offset_top = -560.0
+offset_right = 800.0
+offset_bottom = 230.0
+color = Color(0.8352941, 0.44705883, 0.6745098, 0.39607844)
+
+[node name="Portrait" type="Sprite2D" parent="." unique_id=1245972592]
+position = Vector2(323.00003, 478.00003)
+scale = Vector2(0.37, 0.37)
+texture = ExtResource("5_78w4g")
+region_enabled = true
+region_rect = Rect2(0, 0, 2020.1237, 1689.0928)
+
+[node name="TurnManager" type="Node2D" parent="." unique_id=633090675 node_paths=PackedStringArray("board")]
+unique_name_in_owner = true
+script = ExtResource("6_hwa8p")
+board = NodePath("../Root/Board")
+
+[node name="Root" type="Control" parent="." unique_id=286232410]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="HandView" parent="Root" unique_id=140155012 instance=ExtResource("7_f5wwg")]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 0
+offset_left = 167.0
+offset_top = 799.0
+offset_right = 1367.0
+offset_bottom = 1119.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Board" parent="Root" unique_id=1133862191 instance=ExtResource("8_na4yj")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 628.0
+offset_top = 94.0
+offset_right = 628.0
+offset_bottom = 94.0
+turn_manager_path = NodePath("../../TurnManager")
+metadata/_edit_use_anchors_ = true
+
+[node name="HUD" type="Control" parent="Root" unique_id=2047279455]
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 424.0
+offset_bottom = 80.0
+metadata/_edit_use_anchors_ = true
+
+[node name="EnergyHUD" parent="Root/HUD" unique_id=985602427 instance=ExtResource("9_guyid")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_bottom = 56.0
+grow_horizontal = 1
+grow_vertical = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="FlipHUD" parent="Root/HUD" unique_id=314267766 instance=ExtResource("10_owkka")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 1.0
+offset_top = 200.0
+offset_right = 1.0
+offset_bottom = 256.0
+grow_horizontal = 1
+grow_vertical = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TurnEndButton" parent="Root/HUD" unique_id=2051604309 node_paths=PackedStringArray("turn_manager") instance=ExtResource("11_ivtmp")]
+layout_mode = 1
+offset_left = 1215.0
+offset_top = 552.0
+offset_right = 935.0
+offset_bottom = 552.0
+turn_manager = NodePath("../../../TurnManager")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=829244223]
