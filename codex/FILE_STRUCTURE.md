@@ -9,8 +9,8 @@ This is a proposed, UI-decoupled folder layout aligned with the rewritten archit
 ├─ assets/
 │  ├─ cards/
 │  └─ data/
-│     ├─ cardinfos.csv
-│     └─ enemyinfos.csv
+│     ├─ cards/
+│     └─ enemies/
 ├─ globals/
 │  └─ autoloads.gd          # optional: keep autoload list / bootstrap
 ├─ scripts/

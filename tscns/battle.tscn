@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://ctwxkqyg1cwjv" path="res://tscns/energy_hud.tscn" id="9_guyid"]
 [ext_resource type="PackedScene" uid="uid://cno353yuv2xjm" path="res://tscns/flip_hud.tscn" id="10_owkka"]
 [ext_resource type="PackedScene" uid="uid://bugqndusvguwg" path="res://tscns/turn_end_button.tscn" id="11_ivtmp"]
+[ext_resource type="PackedScene" uid="uid://cut5772wtvpsw" path="res://tscns/folder_button.tscn" id="12_folder_button"]
 
 [sub_resource type="Shader" id="Shader_dynamicwall"]
 code = "shader_type canvas_item;
@@ -78,18 +79,24 @@ board = NodePath("../Root/Board")
 
 [node name="Root" type="Control" parent="." unique_id=286232410]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(4, 4)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-metadata/_edit_use_anchors_ = true
 
 [node name="HandView" parent="Root" unique_id=140155012 instance=ExtResource("7_f5wwg")]
 unique_name_in_owner = true
 z_index = 1
-layout_mode = 0
+custom_minimum_size = Vector2(900, 320)
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
 offset_left = 167.0
 offset_top = 799.0
 offset_right = 1367.0
@@ -103,6 +110,7 @@ offset_left = 628.0
 offset_top = 94.0
 offset_right = 628.0
 offset_bottom = 94.0
+mouse_filter = 2
 turn_manager_path = NodePath("../../TurnManager")
 metadata/_edit_use_anchors_ = true
 
@@ -145,4 +153,4 @@ offset_right = 935.0
 offset_bottom = 552.0
 turn_manager = NodePath("../../../TurnManager")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=829244223]
+[node name="BackButton" parent="." unique_id=136421909 instance=ExtResource("12_folder_button")]

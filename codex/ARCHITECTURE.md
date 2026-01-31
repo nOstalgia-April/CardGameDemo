@@ -4,7 +4,7 @@
 
 ## 分层与职责
 1) **Data（配置层）**
-- 负责读 CSV/资源并缓存，不涉及游戏逻辑。
+- 负责读资源并缓存，不涉及游戏逻辑。
 - 输出规范化数据：`CardDef`、`EnemyDef`、`EffectDef`。
 
 2) **State（纯数据状态层）**
@@ -24,8 +24,8 @@
 
 ## 核心模块
 ### Data
-- `CardDataRepo`：加载 `assets/cardinfos.csv` → `CardDef` 列表。
-- `EnemyDataRepo`：加载 `assets/enemyinfos.csv` → `EnemyDef` 列表。
+- `CardDataRepo`：加载 `assets/Data/cards/*.tres` → `CardDef` 列表。
+- `EnemyDataRepo`：加载 `assets/Data/enemies/*.tres` → `EnemyDef` 列表。
 - `EffectCatalog`：卡牌/单位效果的注册表（可数据驱动）。
 
 ### State
@@ -75,7 +75,7 @@
 ### 1) 启动与首帧初始化
 ```mermaid
 flowchart TD
-  A[GameController._ready] --> B[加载卡牌/敌人CSV]
+  A[GameController._ready] --> B[加载卡牌/敌人资源]
   B --> C[发手牌到HandView]
   C --> D[生成敌人Unit到Board]
   D --> E[StateHub.build_from_scene]
@@ -198,7 +198,7 @@ flowchart TD
     - `HUDView`
 
 ## 迁移建议（分阶段）
-1) 抽离 Data：统一 CSV 解析到 `CardDataRepo`/`EnemyDataRepo`。
+1) 抽离 Data：统一资源加载到 `CardDataRepo`/`EnemyDataRepo`。
 2) 引入 `GameState` + `ActionSystem`，让 UI 不直接改 Board/Cell。
 3) `FogSystem` 独立计算，移除 `Cell.state` 与“可用高亮”的混用。
 4) `UnitCard` 只保留显示与输入；行动/攻击交给 System。

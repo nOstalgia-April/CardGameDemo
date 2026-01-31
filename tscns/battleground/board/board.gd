@@ -29,6 +29,7 @@ func _ready() -> void:
 	BattleEventBus.connect("unit_action_requested", _on_unit_action_requested)
 	BattleEventBus.connect("unit_attack_requested", _on_unit_attack_requested)
 	BattleEventBus.connect("unit_cell_requested", _on_unit_cell_requested)
+	BattleEventBus.connect("unit_knockback_requested", _on_unit_knockback_requested)
 	BattleEventBus.connect("cell_neighbors_requested", _on_cell_neighbors_requested)
 	BattleEventBus.connect("units_requested", _on_units_requested)
 	BattleEventBus.connect("available_cells_requested", _on_available_cells_requested)
@@ -39,8 +40,13 @@ func _on_turn_started(_turn_index: int, _context: Dictionary) -> void:
 	reset_attacks_for_player()
 
 func _on_place_card_requested(card: Node, cell: Node, context: Dictionary) -> void:
-	var placed: bool = place_card_on_cell(card as Card, cell as Cell, context)
+	var unit: UnitCard = place_card_on_cell(card as Card, cell as Cell, context)
+	var placed: bool = unit != null
 	context["accepted"] = placed
+	if !placed:
+		return
+	await unit.on_placed(context)
+	BattleEventBus.emit_signal("unit_placed", unit, cell, context)
 
 func _on_unit_died_event(unit: Node, killer: Node, dir: int, _context: Dictionary) -> void:
 	on_unit_died(unit, killer, dir)
@@ -51,8 +57,30 @@ func _on_unit_action_requested(unit: Node, target_cell: Node, context: Dictionar
 
 func _on_unit_attack_requested(unit: Node, dir: int, advantage: bool, context: Dictionary) -> void:
 	var attacker: UnitCard = unit as UnitCard
-	var ok: bool = resolve_attack_dir(attacker, dir, advantage, !attacker.is_enemy)
+	var ok: bool = resolve_attack_dir(attacker, dir, advantage)
 	context["accepted"] = ok
+
+func _on_unit_knockback_requested(unit: Node, dir: int, context: Dictionary) -> void:
+	var u: UnitCard = unit as UnitCard
+	if u == null:
+		return
+	var from_cell: Cell = get_parent_cell_of_unit(u)
+	if from_cell == null:
+		return
+	var target_cell: Cell = get_neighbor_cells(from_cell).get(dir, null) as Cell
+	if target_cell == null or target_cell.is_occupied():
+		return
+	var moved: bool = target_cell.place_existing_unit(u)
+	if !moved:
+		return
+	SoundManager.play_sfx("UnitMove")
+	_bind_unit_refs(u)
+	if u.is_enemy:
+		update_visibility()
+	else:
+		on_player_unit_moved(from_cell, target_cell)
+	BattleEventBus.emit_signal("unit_moved", u, from_cell, target_cell, {"knockback": true})
+	context["accepted"] = true
 
 func _on_unit_cell_requested(unit: Node, context: Dictionary) -> void:
 	context["cell"] = get_parent_cell_of_unit(unit as UnitCard)
@@ -69,38 +97,33 @@ func _on_available_cells_requested(cells: Array, _context: Dictionary) -> void:
 func _on_clear_available_cells_requested(_context: Dictionary) -> void:
 	clear_available_cells(true)
 
-func place_card_on_cell(card: Card, cell: Cell, context: Dictionary = {}) -> bool:
+func place_card_on_cell(card: Card, cell: Cell, context: Dictionary = {}) -> UnitCard:
 	if cell.is_occupied(): # direct occupancy check (was is_cell_empty)
-		return false
+		return null
 	if !can_place_on(cell):
-		return false
+		return null
 	var effect_id: String = card.card_effect_id
 	if turn_manager != null:
 		if !turn_manager.can_spend_energy(1):
-			return false
+			return null
 		if effect_id == "charge" and !turn_manager.can_use_flip():
-			return false
+			return null
 	var display_name: String = card.card_display_name
 	var numbers: DirectionNumbers = card.get_direction_numbers()
 	var placed: bool = cell.spawn_unit_numbers(display_name, numbers, false)
 	if !placed:
-		return false
+		return null
 	var unit: UnitCard = cell.get_unit() as UnitCard
 	if unit != null:
 		unit.effect_id = effect_id
+		unit.flip_trigger_id = "on_place" if effect_id == "charge" else "input"
 		_bind_unit_refs(unit)
 		unit._reset_attacks() # direct reset (was reset_attacks)
-		if effect_id == "charge" and turn_manager != null:
-			turn_manager.use_flip()
-			BattleEventBus.emit_signal("flip_used", unit, context)
+		unit.set_art(card.get_card_art(), card.get_card_art_flipped())
 	if turn_manager != null:
 		turn_manager.spend_energy(1)
-
 	on_player_unit_placed(cell)
-	BattleEventBus.emit_signal("unit_placed", unit, cell, context)
-	if unit != null and effect_id == "charge":
-		_execute_charge_attack(unit, context)
-	return true
+	return unit
 
 func place_existing_unit(unit: UnitCard, cell: Cell, context: Dictionary = {}) -> bool:
 	var from_cell: Cell = get_parent_cell_of_unit(unit)
@@ -145,6 +168,7 @@ func move_unit(unit: UnitCard, target_cell: Cell, consume_energy: bool = true) -
 	var moved: bool = target_cell.place_existing_unit(unit)
 	if !moved:
 		return false
+	SoundManager.play_sfx("UnitMove")
 	_bind_unit_refs(unit)
 	if consume_energy and !unit.is_enemy and turn_manager != null:
 		turn_manager.spend_energy(1)
@@ -160,20 +184,36 @@ func resolve_attack_on_cell(attacker: UnitCard, target_cell: Cell, advantage: bo
 	var dir: int = _get_dir_between_cells(attacker_cell, target_cell)
 	if dir < 0:
 		return false
-	return resolve_attack_dir(attacker, dir, advantage, consume_energy)
-
-func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false, consume_energy: bool = true) -> bool:
-	var attacker_cell: Cell = get_parent_cell_of_unit(attacker)
-	var target_cell: Cell = get_neighbor_cells(attacker_cell).get(dir, null) as Cell # direct neighbor lookup (was get_neighbor_cell_by_dir)
 	var target: UnitCard = target_cell.get_unit() as UnitCard
-	var atk_value: int = attacker.get_dir_value(dir)
-	if atk_value <= 0:
+	if target == null:
+		return false
+	if attacker.get_dir_value(dir) <= 0:
 		return false
 	if consume_energy and !attacker.is_enemy:
 		if attacker.attacks_left <= 0:
 			return false
 		if turn_manager != null and !turn_manager.can_spend_energy(1):
 			return false
+	var ok: bool = resolve_attack_dir(attacker, dir, advantage)
+	if !ok:
+		return false
+	if consume_energy and !attacker.is_enemy:
+		if turn_manager != null:
+			turn_manager.spend_energy(1)
+		attacker.consume_attack()
+	return true
+
+func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -> bool:
+	var attacker_cell: Cell = get_parent_cell_of_unit(attacker)
+	var target_cell: Cell = get_neighbor_cells(attacker_cell).get(dir, null) as Cell # direct neighbor lookup (was get_neighbor_cell_by_dir)
+	if target_cell == null:
+		return false
+	var target: UnitCard = target_cell.get_unit() as UnitCard
+	if target == null:
+		return false
+	var atk_value: int = attacker.get_dir_value(dir)
+	if atk_value <= 0:
+		return false
 	var def_dir: int = DirUtils.opposite_dir(dir)
 	var def_value: int = target.get_dir_value(def_dir)
 	var event_context: Dictionary = {"advantage": advantage}
@@ -184,10 +224,6 @@ func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false, c
 	if !advantage:
 		attacker.take_damage(dir, target, def_value)
 		BattleEventBus.emit_signal("damage_applied", target, attacker, DirUtils.opposite_dir(dir), def_value, event_context)
-	if consume_energy and !attacker.is_enemy:
-		if turn_manager != null:
-			turn_manager.spend_energy(1)
-		attacker.consume_attack()
 	return true
 
 func on_unit_died(unit: Node, killer: Node, dir: int) -> void:
@@ -462,6 +498,7 @@ func _emit_visibility(cell: Cell, state: int) -> void:
 
 func _bind_unit_refs(unit: UnitCard) -> void:
 	unit.turn_manager = turn_manager # direct set (was set_turn_manager)
+	unit.set_flip_trigger_id(unit.flip_trigger_id)
 
 func _swap_units(unit: UnitCard, target: UnitCard, consume_energy: bool) -> bool:
 	var from_cell: Cell = get_parent_cell_of_unit(unit)
@@ -491,17 +528,3 @@ func _swap_units(unit: UnitCard, target: UnitCard, consume_energy: bool) -> bool
 	BattleEventBus.emit_signal("unit_moved", unit_a, from_cell, to_cell, {"swap": true})
 	BattleEventBus.emit_signal("unit_moved", unit_b, to_cell, from_cell, {"swap": true})
 	return true
-
-func _execute_charge_attack(unit: UnitCard, context: Dictionary) -> void:
-	var attacker_cell: Cell = get_parent_cell_of_unit(unit)
-	var neighbors: Array[Cell] = get_neighbor_cells_array(attacker_cell)
-	for dir in range(4):
-		if dir < 0 or dir >= neighbors.size():
-			continue
-		var target_cell: Cell = neighbors[dir]
-		if target_cell == null:
-			continue
-		if target_cell.get_unit() == null:
-			continue
-		resolve_attack_dir(unit, dir, true, false)
-	BattleEventBus.emit_signal("effect_triggered", "charge", unit, context)

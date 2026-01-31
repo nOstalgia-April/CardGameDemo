@@ -3,6 +3,9 @@ class_name UnitCard
 
 signal died(unit: Node, killer: Node, dir: int)
 
+const FlipEffectRegistry = preload("res://scripts/effects/flip_effect_registry.gd")
+const FlipTriggerRegistry = preload("res://scripts/triggers/flip_trigger_registry.gd")
+
 @export_group("Visual")
 @export var player_color: Color = Color(0.2, 0.45, 1.0, 0.35)
 @export var enemy_color: Color = Color(1.0, 0.25, 0.25, 0.35)
@@ -23,9 +26,11 @@ var custom_resolver: UnitResolver = null
 var death_behavior: String = ""
 var death_transform: Dictionary = {}
 var effect_id: String = ""
+var flip_trigger_id: String = ""
 
 @onready var card_bg: Panel = $CardBg
 @onready var color_rect: ColorRect = $CardBg/ColorRect
+@onready var art: TextureRect = $CardBg/Art
 @onready var hover_border: Panel = $HoverBorder
 @onready var dir_n: Control = $DirNums/N
 @onready var dir_e: Control = $DirNums/E
@@ -51,14 +56,19 @@ var _dead: bool = false
 var attacks_left: int = 0
 var unit_id: int = -1
 var _bump_tween: Tween = null
+var _bump_origin: Vector2 = Vector2.ZERO
+var _bump_origin_set: bool = false
 var _flip_highlight_active: bool = false
 var swap_ready: bool = false
-var knockback_on_hit: bool = false
-var knockback_on_hurt: bool = false
 var death_used: bool = false
 var _ui_ready: bool = false
 var turn_manager: TurnManager = null
 var _select_sfx_requester: String = ""
+var _active_effects: Dictionary = {}
+var _flipped: bool = false
+var _flip_trigger: FlipTrigger = FlipTriggerRegistry.create("none")
+var _card_art: Texture2D = null
+var _card_art_flipped: Texture2D = null
 
 func _ready() -> void:
 	_apply_faction_color()
@@ -70,6 +80,7 @@ func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 	_bind_event_bus()
+	_flip_trigger.bind(self)
 	_ui_ready = true
 
 func set_is_enemy(flag: bool) -> void:
@@ -101,12 +112,29 @@ func set_card_data(display_name: String, n: int, e: int, s: int, w: int, enemy: 
 func set_direction_numbers(numbers: DirectionNumbers, enemy: bool = false) -> void:
 	set_card_data("", numbers.get_value("n"), numbers.get_value("e"), numbers.get_value("s"), numbers.get_value("w"), enemy)
 
+func set_art(texture: Texture2D, flipped: Texture2D = null) -> void:
+	_card_art = texture
+	_card_art_flipped = flipped
+	if _flipped and _card_art_flipped != null:
+		art.texture = _card_art_flipped
+	else:
+		art.texture = _card_art
+
 func get_direction_numbers() -> DirectionNumbers:
 	return DirectionNumbers.new(value_n, value_e, value_s, value_w)
 
 func take_damage(dir: int, attacker: Node, value: int) -> Dictionary:
 	var def_before: int = get_dir_value(dir)
 	if def_before <= 0 and value > 0:
+		if try_death_transform():
+			return {
+				"def_before": def_before,
+				"def_after": get_dir_value(dir),
+				"damage": value,
+				"attacker": attacker,
+				"destroyed": false,
+				"transformed": true,
+			}
 		die(attacker, dir)
 		return {
 			"def_before": def_before,
@@ -133,6 +161,7 @@ func attack(dir: int, advantage: bool = false) -> bool:
 	return bool(context.get("accepted", false))
 
 func play_bump_animation(direction: int) -> Tween:
+	_ensure_centered_in_slot()
 	var bump_vector: Vector2 = Vector2.ZERO
 	match direction:
 		Dir.N:
@@ -147,8 +176,12 @@ func play_bump_animation(direction: int) -> Tween:
 		return null
 	if _bump_tween != null:
 		_bump_tween.kill()
+		if _bump_origin_set:
+			position = _bump_origin
+	_bump_origin = position
+	_bump_origin_set = true
 	_bump_tween = create_tween()
-	var original_position: Vector2 = position
+	var original_position: Vector2 = _bump_origin
 	_bump_tween.set_trans(Tween.TRANS_QUAD)
 	_bump_tween.set_ease(Tween.EASE_OUT)
 	_bump_tween.tween_property(self, "position", original_position + bump_vector, bump_duration_forward)
@@ -157,12 +190,33 @@ func play_bump_animation(direction: int) -> Tween:
 	return _bump_tween
 
 func _on_bump_finished() -> void:
+	if _bump_origin_set:
+		position = _bump_origin
 	_bump_tween = null
+
+func _ensure_centered_in_slot() -> void:
+	var slot: Control = get_parent() as Control
+	if slot == null:
+		return
+	var slot_size: Vector2 = slot.size
+	if slot_size.x <= 0.0 or slot_size.y <= 0.0:
+		return
+	var base_size: Vector2 = custom_minimum_size
+	if base_size.x <= 0.0 or base_size.y <= 0.0:
+		base_size = size
+	if base_size.x <= 0.0 or base_size.y <= 0.0:
+		return
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	size = base_size
+	scale = Vector2.ONE
+	position = (slot_size - base_size) * 0.5
 
 func die(killer: Node, dir: int) -> void:
 	if _dead:
 		return
 	_dead = true
+	_clear_trigger()
+	_clear_effects()
 	SoundManager.request_loop_sfx("UnitSelecting", _select_sfx_requester, false)
 	SoundManager.play_sfx("UnitOnDeath")
 	emit_signal("died", self, killer, dir)
@@ -360,10 +414,6 @@ func _gui_input(event: InputEvent) -> void:
 		else:
 			_end_select()
 			accept_event()
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-		if event.pressed:
-			flip() # direct flip (was _try_flip)
-			accept_event()
 
 func _begin_select() -> void:
 	if _selecting:
@@ -455,36 +505,23 @@ func _get_target_cell(candidates: Array[Cell]) -> Cell:
 	return null
 
 func flip(context: Dictionary = {}) -> bool:
-	if turn_manager != null and !turn_manager.use_flip():
+	await get_tree().process_frame
+	if _flipped:
 		return false
 	if effect_id != "":
-		apply_effect(effect_id, context)
-	SoundManager.play_sfx('CardFlip')
+		await FlipEffectRegistry.apply(effect_id, self, context)
+		BattleEventBus.emit_signal("effect_triggered", effect_id, self, context)
+	SoundManager.play_sfx('UnitOnFlip')
 	BattleEventBus.emit_signal("flip_used", self, context)
+	_flipped = true
 	_on_flip()
 	return true
-
-func apply_effect(effect_id: String, context: Dictionary = {}) -> void:
-	if effect_id == "":
-		return
-	match effect_id:
-		"rotate":
-			rotate_numbers(true)
-			_rotate_adjacent_units(false)
-		"swap":
-			swap_ready = true
-		"knockback":
-			knockback_on_hit = true
-			knockback_on_hurt = true
-		"heal_adjacent":
-			_heal_adjacent_edges()
-		"heal_self":
-			heal_full()
-	BattleEventBus.emit_signal("effect_triggered", effect_id, self, context)
 
 func _on_flip() -> void:
 	# 占位：翻牌逻辑后续在这里实现
 	_flip_highlight_active = true
+	if _card_art_flipped != null:
+		art.texture = _card_art_flipped
 	_update_border()
 
 func set_flipped(active: bool) -> void:
@@ -510,6 +547,12 @@ func try_death_transform() -> bool:
 	_apply_dir_value(Dir.E, e)
 	_apply_dir_value(Dir.S, s)
 	_apply_dir_value(Dir.W, w)
+	if death_transform.has("effect_id"):
+		effect_id = str(death_transform.get("effect_id", effect_id))
+	if death_transform.has("trigger_id"):
+		flip_trigger_id = str(death_transform.get("trigger_id", flip_trigger_id))
+		_apply_flip_trigger()
+	_on_flip()
 	return true
 
 func _rotate_adjacent_units(clockwise: bool) -> void:
@@ -548,3 +591,34 @@ func _heal_adjacent_edges() -> void:
 			continue
 		var opp: int = DirUtils.opposite_dir(i)
 		unit.heal_dir(opp)
+
+func _register_effect(effect_id: String, effect: FlipEffect) -> void:
+	if _active_effects.has(effect_id):
+		var existing: FlipEffect = _active_effects.get(effect_id, null)
+		if existing != null:
+			existing.cleanup()
+	_active_effects[effect_id] = effect
+
+func set_flip_trigger_id(trigger_id: String) -> void:
+	flip_trigger_id = trigger_id
+	_apply_flip_trigger()
+
+func on_placed(context: Dictionary = {}) -> void:
+	await _flip_trigger.on_placed(context)
+
+func _apply_flip_trigger() -> void:
+	_flip_trigger.cleanup()
+	_flip_trigger = FlipTriggerRegistry.create(flip_trigger_id)
+	_flip_trigger.bind(self)
+
+func _clear_trigger() -> void:
+	_flip_trigger.cleanup()
+	_flip_trigger = FlipTriggerRegistry.create("none")
+	_flip_trigger.bind(self)
+
+func _clear_effects() -> void:
+	for key in _active_effects.keys():
+		var effect: FlipEffect = _active_effects[key]
+		if effect != null:
+			effect.cleanup()
+	_active_effects.clear()

@@ -3,6 +3,7 @@ extends Node
 const SCENES := {
 	"main": "res://main.tscn",
 	"battle": "res://tscns/battle.tscn",
+	"level_select": "res://tscns/level_select.tscn",
 }
 
 var _is_changing := false

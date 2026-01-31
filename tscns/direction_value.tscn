@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://sq6x1a4b2hoo"]
 
+[ext_resource type="FontFile" uid="uid://cuknvs6c3siwp" path="res://assets/Fonts/LongZhuTi-Regular.ttf" id="1_sieeq"]
+
 [node name="DirectionValue" type="Control" unique_id=13349579]
 custom_minimum_size = Vector2(54, 54)
 layout_mode = 3
@@ -25,6 +27,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.9490196, 0.9490196, 0.93333334, 1)
+theme_override_fonts/font = ExtResource("1_sieeq")
 theme_override_font_sizes/font_size = 36
 text = "9"
 horizontal_alignment = 1

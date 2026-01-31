@@ -57,7 +57,6 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_ivai2")
 expand_mode = 1
-stretch_mode = 3
 
 [node name="name" type="Label" parent="Control/ColorRect" unique_id=548876384]
 visible = false

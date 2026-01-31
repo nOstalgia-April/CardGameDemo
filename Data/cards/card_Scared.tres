@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://cnmoo5h2u65g1"]
+
+[ext_resource type="Texture2D" uid="uid://bl1boghhkwca3" path="res://assets/cards/players/card_3b.png" id="1_d5ibn"]
+[ext_resource type="Script" uid="uid://eflwu57wg7p0" path="res://scripts/data/card_data.gd" id="1_xw4vl"]
+[ext_resource type="Texture2D" uid="uid://bqpli1r5s00v7" path="res://assets/cards/players/card_3a.png" id="2_gq2dk"]
+
+[resource]
+script = ExtResource("1_xw4vl")
+card_key = "Scared"
+index = 4
+display_name = "惊吓"
+price = 1
+n = 2
+e = 8
+s = 8
+w = 2
+effect_id = "knockback"
+desc = "翻牌：造成/受到伤害会击退"
+card_art = ExtResource("1_d5ibn")
+card_art_flipped = ExtResource("2_gq2dk")

@@ -6,8 +6,9 @@ extends Node2D
 @onready var root: Control = %Root
 
 @export_group("Data")
-@export var card_infos_path: String = "res://assets/Data/cardinfos.csv"
-@export var enemy_infos_path: String = "res://assets/Data/enemyinfos.csv"
+@export var card_infos_path: String = "res://Data/cards"
+@export var enemy_infos_path: String = "res://Data/enemies"
+@export var level_index: int = 1
 @export var enemy_unit_scene: PackedScene
 @export_group("")
 
@@ -19,6 +20,7 @@ extends Node2D
 
 const CardDataRepoScript = preload("res://scripts/data/card_data_repo.gd")
 const EnemyDataRepoScript = preload("res://scripts/data/enemy_data_repo.gd")
+const LevelLoaderScript = preload("res://scripts/data/level_loader.gd")
 
 var card_repo
 var enemy_repo
@@ -30,17 +32,21 @@ var is_shaking: bool = false
 var base_position: Vector2 = Vector2.ZERO
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _battle_over: bool = false
+var _current_level: LevelData = null
 
 func _ready() -> void:
 	SoundManager.play_bgm(BGM)
 	_rng.randomize()
+	_sync_root_layout()
 	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
 	BattleEventBus.connect("turn_started", Callable(self, "_on_turn_started"))
 	BattleEventBus.connect("unit_died", Callable(self, "_on_unit_died"))
+	if GameState != null and GameState.current_level_index > 0:
+		level_index = GameState.current_level_index
 	_init_repos()
-	populate_hand_with_all_cards()
 	enemy_infos = enemy_repo.get_all()
-	spawn_enemy_at_center("社畜")
+	_load_and_spawn_level()
+	_populate_hand_for_level()
 	if turn_manager != null:
 		turn_manager.start_turn()
 
@@ -84,13 +90,24 @@ func _check_victory() -> void:
 
 func _handle_victory() -> void:
 	_battle_over = true
+	if GameState != null:
+		GameState.unlock_next_level(level_index)
 	SoundManager.play_sfx("Victory")
 	BattleEventBus.emit_signal("battle_victory", {})
 
 func _handle_defeated() -> void:
 	_battle_over = true
-	# SoundManager.play_sfx("Defeated") # placeholder
+	SoundManager.play_sfx("Defeated")
 	BattleEventBus.emit_signal("battle_defeated", {})
+
+func restart_level() -> void:
+	GameState.set_current_level(level_index)
+	BattleEventBus.go("battle")
+
+func _sync_root_layout() -> void:
+	var viewport_size: Vector2 = get_viewport_rect().size
+	root.position = Vector2.ZERO
+	root.size = viewport_size
 
 # 触发屏幕震动
 # intensity: 震动强度（像素），如果为 0 则使用默认值
@@ -118,82 +135,92 @@ func populate_hand_with_all_cards() -> void:
 	var infos: Dictionary = card_repo.get_all()
 	if infos.is_empty():
 		return
-	var rows: Array[Dictionary] = []
+	var cards: Array[CardData] = []
 	for key in infos.keys():
-		var row: Dictionary = infos[key] as Dictionary
-		rows.append(row)
-	rows.sort_custom(_sort_by_index)
-	for row in rows:
+		var card_data: CardData = infos[key] as CardData
+		cards.append(card_data)
+	cards.sort_custom(_sort_card_by_index)
+	for data in cards:
 		var card: Card = hand_view.add_card()
-		_apply_row_to_card(card, row)
+		_apply_data_to_card(card, data)
 
-func _sort_by_index(a: Dictionary, b: Dictionary) -> bool:
-	var a_index: int = int(a.get("index", 0))
-	var b_index: int = int(b.get("index", 0))
-	return a_index < b_index
+func _populate_hand_for_level() -> void:
+	if _current_level != null and !_current_level.initial_hand_cards.is_empty():
+		hand_view.clear_cards()
+		var infos: Dictionary = card_repo.get_all()
+		for card_key in _current_level.initial_hand_cards:
+			var data: CardData = infos.get(card_key, null) as CardData
+			if data == null:
+				continue
+			var card: Card = hand_view.add_card()
+			_apply_data_to_card(card, data)
+		return
+	populate_hand_with_all_cards()
 
-func _apply_row_to_card(card: Card, row: Dictionary) -> void:
-	var display_name: String = str(row.get("base_displayName", ""))
+func _sort_card_by_index(a: CardData, b: CardData) -> bool:
+	return a.index < b.index
+
+func _apply_data_to_card(card: Card, data: CardData) -> void:
+	var display_name: String = data.display_name
 	var numbers: DirectionNumbers = DirectionNumbers.new(
-		int(row.get("base_n", 0)),
-		int(row.get("base_e", 0)),
-		int(row.get("base_s", 0)),
-		int(row.get("base_w", 0))
+		data.n,
+		data.e,
+		data.s,
+		data.w
 	)
 	card.set_card_data(display_name, numbers.get_value("n"), numbers.get_value("e"), numbers.get_value("s"), numbers.get_value("w")) # direct set (was set_card_data_numbers)
-	var index: int = int(row.get("index", 0))
-	_apply_effect_to_card(card, index)
-
-func _apply_effect_to_card(card: Card, index: int) -> void:
-	var effect_id: String = ""
-	var desc: String = ""
-	match index:
-		1:
-			effect_id = "charge"
-			desc = "冲锋：放置时消耗一次翻牌，并对四周发动一次优势攻击"
-		2:
-			effect_id = "rotate"
-			desc = "翻牌：自身顺时针旋转，邻格逆时针旋转"
-		3:
-			effect_id = "swap"
-			desc = "翻牌：下一次左键可与目标换位"
-		4:
-			effect_id = "knockback"
-			desc = "翻牌：造成/受到伤害会击退"
-		5:
-			effect_id = "heal_adjacent"
-			desc = "翻牌：治疗相邻棋子接壤数字至满额"
-		6:
-			effect_id = "heal_self"
-			desc = "翻牌：治疗自身四维至满额"
-	if effect_id != "":
-		card.card_effect_id = effect_id
-		card.set_desc_text(desc)
+	card.card_id = data.index
+	card.card_effect_id = data.effect_id
+	card.set_desc_text(data.desc)
+	card.set_art(data.card_art, data.card_art_flipped)
 
 func spawn_enemy_at_center(enemy_key: String) -> void:
 	var cell: Cell = _get_center_cell()
-	var unit: UnitCard = create_enemy_unit(enemy_key)
-	if unit == null or cell == null:
+	var data: EnemyData = enemy_infos.get(enemy_key, null) as EnemyData
+	if data == null or cell == null:
 		return
-	spawn_unit_at_cell(unit, cell)
+	var unit: UnitCard = create_enemy_unit(enemy_key, data)
+	if unit == null:
+		return
+	spawn_unit_at_cell(unit, cell, data.card_art, data.card_art_flipped)
 
-func create_enemy_unit(enemy_key: String) -> UnitCard:
-	var row: Dictionary = enemy_infos.get(enemy_key, {}) as Dictionary
-	if row.is_empty():
-		return null
+func _load_and_spawn_level() -> void:
+	var level: LevelData = LevelLoaderScript.load_by_index(level_index)
+	if level == null:
+		return
+	_current_level = level
+	for entry in level.enemy_spawns:
+		var enemy_key: String = str(entry.get("enemy_key", ""))
+		if enemy_key == "":
+			continue
+		var data: EnemyData = enemy_infos.get(enemy_key, null) as EnemyData
+		if data == null:
+			continue
+		var pos: Vector2i = entry.get("pos", Vector2i(0, 0))
+		var cell: Cell = board.get_cell_at(pos)
+		if cell == null:
+			continue
+		var unit: UnitCard = create_enemy_unit(enemy_key, data)
+		if unit == null:
+			continue
+		spawn_unit_at_cell(unit, cell, data.card_art, data.card_art_flipped)
+
+func create_enemy_unit(enemy_key: String, data: EnemyData) -> UnitCard:
 	if enemy_unit_scene == null:
 		return null
 	var unit: UnitCard = enemy_unit_scene.instantiate() as UnitCard
 	if unit == null:
 		return null
-	var display_name: String = str(row.get("base_displayName", enemy_key))
+	var display_name: String = data.display_name if data.display_name != "" else enemy_key
 	var numbers: DirectionNumbers = DirectionNumbers.new(
-		int(row.get("base_n", 0)),
-		int(row.get("base_e", 0)),
-		int(row.get("base_s", 0)),
-		int(row.get("base_w", 0))
+		data.n,
+		data.e,
+		data.s,
+		data.w
 	)
 	unit.set_direction_numbers(numbers, true)
+	unit.effect_id = data.flip_effect_id
+	unit.flip_trigger_id = data.flip_trigger_id
 	if enemy_key == "社畜":
 		var resolver: AttackOrMoveResolver = load("res://scripts/resolvers/attack_or_move_resolver.gd").new()
 		resolver.debug_log = true
@@ -204,21 +231,24 @@ func create_enemy_unit(enemy_key: String) -> UnitCard:
 	return unit
 
 func _apply_death_transform(unit: UnitCard, transform_key: String) -> void:
-	var row: Dictionary = enemy_infos.get(transform_key, {}) as Dictionary
-	if row.is_empty():
+	var data: EnemyData = enemy_infos.get(transform_key, null) as EnemyData
+	if data == null:
 		return
 	unit.death_behavior = "transform"
 	unit.death_transform = {
-		"display_name": str(row.get("base_displayName", transform_key)),
-		"n": int(row.get("base_n", 0)),
-		"e": int(row.get("base_e", 0)),
-		"s": int(row.get("base_s", 0)),
-		"w": int(row.get("base_w", 0)),
+		"display_name": data.display_name if data.display_name != "" else transform_key,
+		"n": data.n,
+		"e": data.e,
+		"s": data.s,
+		"w": data.w,
+		"effect_id": data.flip_effect_id,
+		"trigger_id": data.flip_trigger_id,
 	}
 
-func spawn_unit_at_cell(unit: UnitCard, cell: Cell) -> bool:
+func spawn_unit_at_cell(unit: UnitCard, cell: Cell, art: Texture2D = null, art_flipped: Texture2D = null) -> bool:
 	var placed: bool = board.place_existing_unit(unit, cell)
 	if placed:
+		unit.set_art(art, art_flipped)
 		return true
 	unit.queue_free()
 	return false

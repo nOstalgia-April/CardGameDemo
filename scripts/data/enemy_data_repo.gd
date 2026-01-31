@@ -1,38 +1,50 @@
 extends RefCounted
 
-var file_path: String = "res://assets/enemyinfos.csv"
+const EnemyDataScript = preload("res://scripts/data/enemy_data.gd")
+
+var folder_path: String = "res://Data/enemies"
 var infos: Dictionary = {}
 
 func _init(path: String = "") -> void:
 	if path != "":
-		file_path = path
-	infos = read_csv_as_nested_dict(file_path)
+		folder_path = path
+	infos = _load_folder(folder_path)
 
 func reload(path: String = "") -> void:
 	if path != "":
-		file_path = path
-	infos = read_csv_as_nested_dict(file_path)
+		folder_path = path
+	infos = _load_folder(folder_path)
 
 func get_all() -> Dictionary:
 	return infos
 
-func read_csv_as_nested_dict(path: String) -> Dictionary:
+func get_enemy(enemy_key: String) -> EnemyData:
+	return infos.get(enemy_key, null) as EnemyData
+
+func _load_folder(path: String) -> Dictionary:
 	var data: Dictionary = {}
-	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
-	if file == null:
+	var dir: DirAccess = DirAccess.open(path)
+	if dir == null:
 		return data
-	var headers: PackedStringArray = []
-	var first_line: bool = true
-	while not file.eof_reached():
-		var values: PackedStringArray = file.get_csv_line()
-		if first_line:
-			headers = values
-			first_line = false
-		elif values.size() >= 2:
-			var key: String = values[0]
-			var row_dict: Dictionary = {}
-			for i in range(0, headers.size()):
-				row_dict[headers[i]] = values[i]
-			data[key] = row_dict
-	file.close()
+	dir.list_dir_begin()
+	var file_name: String = dir.get_next()
+	while file_name != "":
+		if dir.current_is_dir():
+			file_name = dir.get_next()
+			continue
+		if !(file_name.ends_with(".tres") or file_name.ends_with(".res")):
+			file_name = dir.get_next()
+			continue
+		var res_path: String = path.path_join(file_name)
+		var res: Resource = ResourceLoader.load(res_path)
+		var enemy: EnemyData = res as EnemyData
+		if enemy == null:
+			file_name = dir.get_next()
+			continue
+		var key: String = enemy.enemy_key
+		if key == "":
+			key = file_name.get_basename()
+		data[key] = enemy
+		file_name = dir.get_next()
+	dir.list_dir_end()
 	return data

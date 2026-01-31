@@ -37,9 +37,12 @@ var hovered_card: Control = null
 var dragging_card: Control = null
 var _dragging_inside_hand: bool = false
 var _current_energy: int = 0
+var _base_hand_scale: Vector2 = Vector2.ONE
 
 func _ready() -> void:
 	z_index = hand_z_index
+	if is_instance_valid(hand_root):
+		_base_hand_scale = hand_root.scale
 	_apply_hand_scale()
 	BattleEventBus.resource_changed.connect(_on_resource_changed)
 	if card_scene == null:
@@ -112,6 +115,11 @@ func _update_layout(delta: float) -> void:
 	var count := cards.size()
 	var area_size := hand_area.size
 	var area_pos := hand_area.position
+	if area_size.x <= 0.0 or area_size.y <= 0.0:
+		area_size = size
+		area_pos = Vector2.ZERO
+		if area_size.x <= 0.0 or area_size.y <= 0.0:
+			area_size = custom_minimum_size
 
 	var max_width: float = min(hand_width, area_size.x)
 	var spacing := 0.0
@@ -119,7 +127,8 @@ func _update_layout(delta: float) -> void:
 		spacing = min(default_spacing, max_width / float(count - 1))
 	var total_width := spacing * float(count - 1)
 
-	var center_x := area_pos.x + area_size.x * 0.5
+	var left_x := area_pos.x + (area_size.x - max_width) * 0.5
+	var center_x := left_x + max_width * 0.5
 	var base_y := area_pos.y + area_size.y - bottom_padding
 
 	var angle_span := fan_angle_deg
@@ -256,7 +265,7 @@ func _update_drag_hover_state() -> void:
 
 func _apply_hand_scale() -> void:
 	if is_instance_valid(hand_root):
-		hand_root.scale = Vector2.ONE * hand_scale
+		hand_root.scale = _base_hand_scale * hand_scale
 
 func _on_resource_changed(energy: int, _flips_left: int, _context: Dictionary) -> void:
 	_current_energy = energy
