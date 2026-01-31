@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://d03rlp4ewyrs1"]
+
+[node name="VictoryScreen" type="Control" unique_id=1816913603]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1369721155]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=512337633]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VictoryLabel" type="Label" parent="VBoxContainer" unique_id=826140103]
+layout_mode = 2
+text = "VICTORY"
+horizontal_alignment = 1
+
+[node name="InfoLabel" type="Label" parent="VBoxContainer" unique_id=326548973]
+layout_mode = 2
+text = "下一关已解锁"
+horizontal_alignment = 1
+
+[node name="PressKeyLabel" type="Label" parent="VBoxContainer" unique_id=1376986330]
+layout_mode = 2
+text = "按任意键返回关卡选择界面"
+horizontal_alignment = 1
