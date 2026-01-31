@@ -75,5 +75,3 @@ func _emit_resource_changed() -> void:
 
 func _on_unit_placed(_unit: Node, _cell: Node, _context: Dictionary) -> void:
 	print(turn_index)
-	if turn_index == 1:
-		end_turn()
