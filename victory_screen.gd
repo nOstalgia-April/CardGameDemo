@@ -30,6 +30,16 @@ func open():
 	victory_label.visible = true
 	victory_sound.play()
 
+	# 设置Label的锚点到中心并调整位置
+	victory_label.set_anchors_preset(Control.PRESET_CENTER)
+	victory_label.offset_left = -victory_label.size.x / 2
+	victory_label.offset_top = -victory_label.size.y / 2
+	victory_label.offset_right = victory_label.size.x / 2
+	victory_label.offset_bottom = victory_label.size.y / 2
+	
+	# 设置旋转中心
+	victory_label.pivot_offset = Vector2(victory_label.size.x / 2, victory_label.size.y / 2)
+
 	# 添加旋转动画
 	var tween = create_tween()
 	tween.set_loops()
@@ -51,6 +61,10 @@ func open():
 
 	# 第七步：允许输入
 	can_input = true
+
+
+
+
 
 func _input(event):
 	if can_input:
