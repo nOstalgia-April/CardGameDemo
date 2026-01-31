@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://dw67ykd6skvun"]
+
+[ext_resource type="Texture2D" uid="uid://cbwciaymyw8eo" path="res://assets/cards/players/card_7b.png" id="1_h3urc"]
+[ext_resource type="Script" uid="uid://eflwu57wg7p0" path="res://scripts/data/card_data.gd" id="1_xw4vl"]
+[ext_resource type="Texture2D" uid="uid://bambei6xk4wey" path="res://assets/cards/players/card_7a.png" id="2_c5w80"]
+
+[resource]
+script = ExtResource("1_xw4vl")
+card_key = "Angry"
+index = 3
+display_name = "愤怒"
+price = 2
+n = 7
+e = 7
+s = 2
+w = 2
+effect_id = "charge"
+desc = "冲锋：放置时消耗一次翻牌，并对四周发动一次优势攻击"
+card_art = ExtResource("1_h3urc")
+card_art_flipped = ExtResource("2_c5w80")

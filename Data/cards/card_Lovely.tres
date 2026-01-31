@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://bgwmtxxxxol7u"]
+
+[ext_resource type="Texture2D" uid="uid://b2aog75f5yfa8" path="res://assets/cards/players/card_1b.png" id="1_xfj7m"]
+[ext_resource type="Script" uid="uid://eflwu57wg7p0" path="res://scripts/data/card_data.gd" id="1_xw4vl"]
+[ext_resource type="Texture2D" uid="uid://cjy3tn1mq48va" path="res://assets/cards/players/card_1a.png" id="2_s01h6"]
+
+[resource]
+script = ExtResource("1_xw4vl")
+card_key = "Lovely"
+index = 5
+display_name = "可爱"
+price = 3
+n = 3
+e = 3
+s = 4
+w = 4
+effect_id = "heal_adjacent"
+desc = "翻牌：治疗相邻棋子接壤数字至满额"
+card_art = ExtResource("1_xfj7m")
+card_art_flipped = ExtResource("2_s01h6")

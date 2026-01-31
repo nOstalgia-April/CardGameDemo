@@ -1,0 +1,39 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="ChessGame"
+run/main_scene="uid://dvs0frxfwv77n"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+BattleEventBus="*uid://v2dhukdu2cxw"
+SoundManager="*uid://smbcvcot02gd"
+SceneManager="*res://globals/scene_manager.gd"
+Transition="*res://globals/transition/transition.tscn"
+GameState="*res://globals/game_state.gd"
+Cursor="*res://globals/cursor/cursor.tscn"
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=1120
+window/stretch/mode="canvas_items"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"

@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://c118fnrn8j8ep"]
+
+[ext_resource type="Script" uid="uid://od437cw38k24" path="res://globals/cursor/cursor.gd" id="1_qf7gk"]
+[ext_resource type="Texture2D" uid="uid://br5nsd6s8ld0j" path="res://assets/Mouse/cursor.png" id="2_76ls5"]
+[ext_resource type="Texture2D" uid="uid://c1ux1d7jf70xm" path="res://assets/Mouse/cursor_click.png" id="3_qgq22"]
+[ext_resource type="Texture2D" uid="uid://o8pt7g4yqs6j" path="res://assets/Mouse/cursor_shadow.png" id="4_oua8b"]
+
+[node name="Cursor" type="TextureRect" unique_id=98325400]
+z_index = 1000
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("2_76ls5")
+script = ExtResource("1_qf7gk")
+Default = ExtResource("2_76ls5")
+Clicking = ExtResource("3_qgq22")
+
+[node name="Shadow" type="TextureRect" parent="." unique_id=1800417403]
+z_index = -1
+layout_mode = 0
+offset_right = 180.0
+offset_bottom = 180.0
+mouse_filter = 2
+texture = ExtResource("4_oua8b")
+
+[node name="Hotspot" type="Control" parent="Shadow" unique_id=371740182]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = 29.0
+offset_top = 14.0
+offset_right = 77.0
+offset_bottom = 63.0
+mouse_filter = 2
