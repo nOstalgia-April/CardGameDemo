@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://sq6x1a4b2hoo" path="res://tscns/direction_value.tscn" id="3_thi6h"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4qfqs"]
-blend_mode = 1
 
 [node name="UnitCard" type="Control" unique_id=1679329416]
 layout_mode = 3
