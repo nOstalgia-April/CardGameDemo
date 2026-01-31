@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://ctwxkqyg1cwjv" path="res://tscns/energy_hud.tscn" id="9_guyid"]
 [ext_resource type="PackedScene" uid="uid://cno353yuv2xjm" path="res://tscns/flip_hud.tscn" id="10_owkka"]
 [ext_resource type="PackedScene" uid="uid://bugqndusvguwg" path="res://tscns/turn_end_button.tscn" id="11_ivtmp"]
+[ext_resource type="PackedScene" uid="uid://cw5ffs3oe5pyy" path="res://turn_announcer.tscn" id="12_jvffs"]
 
 [sub_resource type="Shader" id="Shader_dynamicwall"]
 code = "shader_type canvas_item;
@@ -145,4 +146,7 @@ offset_right = 935.0
 offset_bottom = 552.0
 turn_manager = NodePath("../../../TurnManager")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=829244223]
+[node name="UI_layer" type="CanvasLayer" parent="." unique_id=829244223]
+
+[node name="TurnAnnouncer" parent="UI_layer" unique_id=1799832488 instance=ExtResource("12_jvffs")]
+mouse_filter = 2

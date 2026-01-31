@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://cw5ffs3oe5pyy"]
 
+[ext_resource type="Script" uid="uid://ctx4n58618wer" path="res://scripts/turn_announcer.gd" id="1_pnkir"]
+
 [node name="TurnAnnouncer" type="Control" unique_id=1799832488]
 layout_mode = 3
 anchors_preset = 15
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_pnkir")
 
 [node name="Banner" type="Panel" parent="." unique_id=663053048]
 layout_mode = 1
