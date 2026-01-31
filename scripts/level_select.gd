@@ -11,6 +11,7 @@ extends Node2D
 @onready var hud: Control = get_node_or_null("Root/HUD") as Control
 @onready var turn_end_button: Control = get_node_or_null("Root/HUD/TurnEndButton") as Control
 @onready var message_label: Label = %MessageLabel
+@onready var portrait: Sprite2D = get_node_or_null("Portrait") as Sprite2D
 
 var turn_end_button_ui: TextureButton = null
 
@@ -18,11 +19,21 @@ var _selected_cell: Cell = null
 var _selected_level_index: int = 0
 var _message_timer: Timer = null
 
+# Boss立绘相关变量
+var start_x: float = -350.0
+var end_x: float = 323.0
+var boss_textures: Dictionary = {
+	1: "res://art/characters/octopus_boss.png"
+}
+
 func _ready() -> void:
 	_lock_battle_logic()
 	_setup_message_label()
 	_init_cells()
 	SoundManager.play_bgm(BGM)
+	# 初始化Boss立绘位置（隐藏）
+	if portrait != null:
+		portrait.position.x = start_x
 
 func _lock_battle_logic() -> void:
 	if hand_view != null:
@@ -125,6 +136,8 @@ func _select_cell(cell: Cell, level_index: int) -> void:
 	SoundManager.play_sfx("UnitMove")
 	if turn_end_button_ui != null:
 		turn_end_button_ui.visible = true
+	# 显示Boss立绘
+	show_boss(level_index)
 
 func _clear_selection() -> void:
 	if _selected_cell != null and is_instance_valid(_selected_cell):
@@ -173,3 +186,32 @@ func _on_message_timeout() -> void:
 	tween.tween_callback(func() -> void:
 		message_label.visible = false
 	)
+
+# 显示Boss立绘函数
+func show_boss(level_index: int) -> void:
+	if portrait == null:
+		return
+	# 检查字典中是否有该关卡的Boss图片
+	if not boss_textures.has(level_index):
+		# 没有图片则隐藏
+		portrait.position.x = start_x
+		return
+	# 加载并设置Boss图片
+	var texture_path: String = boss_textures[level_index]
+	var boss_texture = load(texture_path)
+	if boss_texture != null:
+		portrait.texture = boss_texture
+	# 杀死正在运行的tween
+	if portrait.has_meta("tween"):
+		var old_tween: Tween = portrait.get_meta("tween")
+		if is_instance_valid(old_tween):
+			old_tween.kill()
+	# 重置位置到起点
+	portrait.position.x = start_x
+	# 创建滑入动画
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(portrait, "position:x", end_x, 0.5)
+	# 保存tween引用以便后续杀死
+	portrait.set_meta("tween", tween)
