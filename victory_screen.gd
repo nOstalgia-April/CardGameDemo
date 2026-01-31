@@ -2,7 +2,7 @@ extends Control
 
 signal return_to_level_select
 
-@onready var victory_label = $VBoxContainer/VictoryLabel
+@onready var victory_label = $VBoxContainer/VictoryLabel as Label
 @onready var info_label = $VBoxContainer/InfoLabel
 @onready var press_key_label = $VBoxContainer/PressKeyLabel
 @onready var animation_player = $AnimationPlayer
@@ -29,6 +29,12 @@ func open():
 	# 第二步：显示 VictoryLabel 并播放胜利音乐
 	victory_label.visible = true
 	victory_sound.play()
+
+	# 添加旋转动画
+	var tween = create_tween()
+	tween.set_loops()
+	tween.tween_property(victory_label, "rotation_degrees", 15, 0.5)
+	tween.tween_property(victory_label, "rotation_degrees", -15, 0.5)
 
 	# 第三步：等待 2.0 秒
 	await get_tree().create_timer(2.0).timeout
