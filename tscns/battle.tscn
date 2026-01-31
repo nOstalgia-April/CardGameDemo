@@ -170,5 +170,16 @@ confirm_button = NodePath("../Root/HUD/TurnEndButton/NextTurn")
 
 [node name="VictoryScreen" parent="CanvasLayer" unique_id=1816913603 instance=ExtResource("15_78w4g")]
 
+[node name="VBoxContainer" parent="CanvasLayer/VictoryScreen" index="1" unique_id=512337633]
+anchors_preset = -1
+
+[node name="VictoryLabel" parent="CanvasLayer/VictoryScreen/VBoxContainer" index="0" unique_id=826140103]
+theme_override_font_sizes/font_size = 100
+text = "胜利！"
+
+[node name="InfoLabel" parent="CanvasLayer/VictoryScreen/VBoxContainer" index="1" unique_id=326548973]
+theme_override_font_sizes/font_size = 80
+text = "下一关已解锁！"
+
 [editable path="Root/HUD/TurnEndButton"]
 [editable path="CanvasLayer/VictoryScreen"]
