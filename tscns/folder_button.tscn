@@ -17,7 +17,6 @@ offset_top = 737.0
 offset_right = 478.0
 offset_bottom = 1250.0
 texture_normal = ExtResource("2_h5ihb")
-metadata/_edit_lock_ = true
 
 [node name="CoverImage" type="TextureRect" parent="FancyBackButton" unique_id=875395263]
 unique_name_in_owner = true
@@ -28,3 +27,4 @@ offset_right = 462.0
 offset_bottom = 482.0
 mouse_filter = 2
 texture = ExtResource("3_back_cover")
+metadata/_edit_lock_ = true

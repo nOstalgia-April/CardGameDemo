@@ -28,6 +28,8 @@ func _ready() -> void:
 	_bind_event_bus()
 	texture_button.mouse_entered.connect(_on_texture_button_mouse_entered)
 	texture_button.mouse_exited.connect(_on_texture_button_mouse_exited)
+	# 默认隐藏按钮，由turn_hint_controller控制显示
+	texture_button.visible = false
 	_apply_mode()
 
 func _on_button_pressed() -> void:
@@ -40,6 +42,7 @@ func _bind_event_bus() -> void:
 
 func _on_turn_started(turn_index: int, _context: Dictionary) -> void:
 	if mode == Mode.NEXT_TURN:
+		# 第一回合隐藏按钮，由turn_hint_controller控制
 		texture_button.visible = turn_index > 1
 
 func _on_texture_button_pressed() -> void:
@@ -67,3 +70,9 @@ func _apply_mode() -> void:
 	texture_button.texture_normal = textures.get("normal", texture_button.texture_normal)
 	texture_button.texture_hover = textures.get("hover", texture_button.texture_hover)
 	texture_button.texture_pressed = textures.get("pressed", texture_button.texture_pressed)
+
+func show_button() -> void:
+	texture_button.visible = true
+
+func hide_button() -> void:
+	texture_button.visible = false

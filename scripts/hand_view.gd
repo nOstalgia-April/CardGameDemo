@@ -28,9 +28,9 @@ class_name HandView
 @export var follow_speed: float = 12.0
 @export_group("")
 
-@onready var hand_root: Control = $HandRoot
-@onready var hand_area: Control = $HandRoot/HandArea
-@onready var card_container: Control = $HandRoot/CardContainer
+@onready var hand_root: Control = self
+@onready var hand_area: Control = $HandArea
+@onready var card_container: Control = $CardContainer
 
 var cards: Array[Control] = []
 var hovered_card: Control = null
@@ -40,6 +40,7 @@ var _current_energy: int = 0
 var _base_hand_scale: Vector2 = Vector2.ONE
 
 func _ready() -> void:
+	_sanitize_anchors()
 	z_index = hand_z_index
 	if is_instance_valid(hand_root):
 		_base_hand_scale = hand_root.scale
@@ -49,6 +50,25 @@ func _ready() -> void:
 		card_scene = preload("res://tscns/card.tscn")
 	for i in range(initial_card_count):
 		add_card()
+
+func _sanitize_anchors() -> void:
+	if anchor_left >= 0.0 and anchor_left <= 1.0 \
+		and anchor_right >= 0.0 and anchor_right <= 1.0 \
+		and anchor_top >= 0.0 and anchor_top <= 1.0 \
+		and anchor_bottom >= 0.0 and anchor_bottom <= 1.0:
+		return
+	var parent_control: Control = get_parent_control()
+	if parent_control == null:
+		return
+	var rect := get_global_rect()
+	var parent_rect := parent_control.get_global_rect()
+	var local_pos := rect.position - parent_rect.position
+	var local_size := rect.size
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	offset_left = local_pos.x
+	offset_top = local_pos.y
+	offset_right = local_pos.x + local_size.x
+	offset_bottom = local_pos.y + local_size.y
 
 func add_card() -> Card:
 	var card: Card = card_scene.instantiate() as Card
@@ -113,8 +133,9 @@ func _update_layout(delta: float) -> void:
 		return
 
 	var count := cards.size()
-	var area_size := hand_area.size
-	var area_pos := hand_area.position
+	var g := hand_area.get_global_rect()
+	var area_pos: Vector2 = card_container.get_global_transform().affine_inverse() * g.position
+	var area_size := g.size
 	if area_size.x <= 0.0 or area_size.y <= 0.0:
 		area_size = size
 		area_pos = Vector2.ZERO
@@ -142,7 +163,7 @@ func _update_layout(delta: float) -> void:
 	var active_hover: Control = dragging_card if dragging_card != null and _dragging_inside_hand else hovered_card
 	if active_hover != null:
 		hovered_index = cards.find(active_hover)
-
+	
 	for i in range(count):
 		var card := cards[i]
 		if !is_instance_valid(card):

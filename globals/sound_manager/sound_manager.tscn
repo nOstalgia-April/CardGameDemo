@@ -4,7 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://cyrlruihu4s6" path="res://Music/SFX/computer_click.ogg" id="2_0xjot"]
 [ext_resource type="AudioStream" uid="uid://hvh1oqnyx4in" path="res://Music/SFX/AttackAdvantage.ogg" id="2_nr15h"]
 [ext_resource type="AudioStream" uid="uid://sc0g1lryj82y" path="res://Music/SFX/Attack.ogg" id="3_trcv1"]
-[ext_resource type="AudioStream" uid="uid://co8r2uvts1bnb" path="res://Music/SFX/computer_hover.ogg" id="3_x6p0s"]
+[ext_resource type="AudioStream" uid="uid://cea1okvkpepmj" path="res://Music/SFX/computer_hover.ogg" id="3_x6p0s"]
 [ext_resource type="AudioStream" uid="uid://cusyhxs4sqa1u" path="res://Music/SFX/unit_on_flip.ogg" id="5_qu4yp"]
 [ext_resource type="AudioStream" uid="uid://bib7c0frenmo1" path="res://Music/SFX/handview_NoCost_error.ogg" id="6_i5rk7"]
 [ext_resource type="AudioStream" uid="uid://dnq4fsc2uvfx0" path="res://Music/SFX/unit_on_placed.ogg" id="8_hgqfu"]
@@ -17,6 +17,9 @@
 [ext_resource type="AudioStream" uid="uid://c68xiirm1cprh" path="res://Music/SFX/Defeated.ogg" id="16_defeated"]
 [ext_resource type="AudioStream" uid="uid://danu4wst2gkr" path="res://Music/SFX/unit_move.ogg" id="17_unit_move"]
 [ext_resource type="AudioStream" uid="uid://bnrxbqo4ofhxa" path="res://Music/SFX/ui_back.ogg" id="18_ui_back"]
+[ext_resource type="AudioStream" uid="uid://cisw6u5871m1x" path="res://Music/SFX/main_play_press.ogg" id="19_main_play"]
+[ext_resource type="AudioStream" uid="uid://weahkflk70kv" path="res://Music/SFX/level_start.ogg" id="20_level_start"]
+[ext_resource type="AudioStream" uid="uid://bmqyice8f3dd0" path="res://Music/SFX/main_play_splat.ogg" id="21_main_play_splat"]
 
 [node name="SoundManager" type="Node" unique_id=392211674]
 script = ExtResource("1_s8vuo")
@@ -42,7 +45,16 @@ stream = ExtResource("6_i5rk7")
 [node name="ComputerClick" type="AudioStreamPlayer" parent="SFX" unique_id=223170940]
 stream = ExtResource("2_0xjot")
 
-[node name="ComputerHover" type="AudioStreamPlayer" parent="SFX" unique_id=623269577]
+[node name="MainPlayPress" type="AudioStreamPlayer" parent="SFX" unique_id=777777701]
+stream = ExtResource("19_main_play")
+
+[node name="LevelStart" type="AudioStreamPlayer" parent="SFX" unique_id=777777702]
+stream = ExtResource("20_level_start")
+
+[node name="MainPlaySplat" type="AudioStreamPlayer" parent="SFX" unique_id=777777703]
+stream = ExtResource("21_main_play_splat")
+
+[node name="ComputerHover" type="AudioStreamPlayer" parent="SFX" unique_id=1808085334]
 stream = ExtResource("3_x6p0s")
 
 [node name="UnitBreakShield" type="AudioStreamPlayer" parent="SFX" unique_id=667965227]
@@ -73,4 +85,4 @@ stream = ExtResource("17_unit_move")
 stream = ExtResource("18_ui_back")
 
 [node name="BGMPlayer" type="AudioStreamPlayer" parent="." unique_id=452265197]
-volume_db = -10.0
+volume_db = -13.0

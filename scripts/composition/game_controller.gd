@@ -4,6 +4,8 @@ extends Node2D
 @onready var board: Board = %Board
 @onready var turn_manager: TurnManager = %TurnManager
 @onready var root: Control = %Root
+@onready var victory_screen: Control = null
+@onready var victory_canvas_layer: CanvasLayer = null
 
 @export_group("Data")
 @export var card_infos_path: String = "res://Data/cards"
@@ -16,7 +18,8 @@ extends Node2D
 @export var shake_intensity_default: float = 12.0
 @export var shake_duration_default: float = 0.15
 @export_group("")
-@export var BGM : AudioStream
+@export var battle_intro: AudioStream
+@export var battle_loop_player_path: NodePath
 
 const CardDataRepoScript = preload("res://scripts/data/card_data_repo.gd")
 const EnemyDataRepoScript = preload("res://scripts/data/enemy_data_repo.gd")
@@ -35,11 +38,11 @@ var _battle_over: bool = false
 var _current_level: LevelData = null
 
 func _ready() -> void:
-	SoundManager.play_bgm(BGM)
 	_rng.randomize()
 	_sync_root_layout()
 	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
 	BattleEventBus.connect("turn_started", Callable(self, "_on_turn_started"))
+	BattleEventBus.connect("unit_placed", Callable(self, "_on_unit_placed"))
 	BattleEventBus.connect("unit_died", Callable(self, "_on_unit_died"))
 	if GameState != null and GameState.current_level_index > 0:
 		level_index = GameState.current_level_index
@@ -47,8 +50,42 @@ func _ready() -> void:
 	enemy_infos = enemy_repo.get_all()
 	_load_and_spawn_level()
 	_populate_hand_for_level()
+	_play_battle_audio()
 	if turn_manager != null:
 		turn_manager.start_turn()
+	
+	# 创建CanvasLayer并加载victory_screen
+	_create_victory_canvas_layer()
+
+func _play_battle_audio() -> void:
+	SoundManager.play_sfx("LevelStart")
+	if battle_intro != null:
+		SoundManager.play_bgm(battle_intro)
+		var intro_length: float = battle_intro.get_length()
+		if intro_length > 0.0:
+			await get_tree().create_timer(intro_length).timeout
+	var loop_player := get_node_or_null(battle_loop_player_path) as AudioStreamPlayer
+	if loop_player != null:
+		loop_player.play()
+
+func _create_victory_canvas_layer() -> void:
+	# 创建CanvasLayer用于胜利界面
+	victory_canvas_layer = CanvasLayer.new()
+	victory_canvas_layer.layer = 100  # 设置较高的层级确保在最上层
+	root.add_child(victory_canvas_layer)
+	
+	# 加载并添加victory_screen到CanvasLayer中
+	var victory_scene := preload("res://victory_screen.tscn")
+	victory_screen = victory_scene.instantiate()
+	victory_canvas_layer.add_child(victory_screen)
+	victory_screen.hide()
+	# 连接返回信号
+	if victory_screen.has_signal("return_to_level_select"):
+		victory_screen.connect("return_to_level_select", _on_victory_return)
+
+func _on_victory_return() -> void:
+	# 返回关卡选择界面
+	BattleEventBus.go("level_select")
 
 func _process(delta: float) -> void:
 	if !is_shaking:
@@ -77,6 +114,13 @@ func _on_turn_started(turn_index: int, _context: Dictionary) -> void:
 	if board.find_units("player").is_empty():
 		_handle_defeated()
 
+func _on_unit_placed(_unit: Node, _cell: Node, _context: Dictionary) -> void:
+	if turn_manager.turn_index == 1:
+		call_deferred("_end_first_turn_later")
+
+func _end_first_turn_later() -> void:
+	turn_manager.end_turn()
+
 func _on_unit_died(_unit: Node, _killer: Node, _dir: int, _context: Dictionary) -> void:
 	if _battle_over:
 		return
@@ -93,7 +137,12 @@ func _handle_victory() -> void:
 	if GameState != null:
 		GameState.unlock_next_level(level_index)
 	SoundManager.play_sfx("Victory")
-	BattleEventBus.emit_signal("battle_victory", {})
+	# 显示胜利界面
+	if victory_screen != null:
+		victory_screen.call("open")
+	else:
+		# 如果没有victory_screen，直接切换场景
+		BattleEventBus.go("level_select")
 
 func _handle_defeated() -> void:
 	_battle_over = true
@@ -219,15 +268,18 @@ func create_enemy_unit(enemy_key: String, data: EnemyData) -> UnitCard:
 		data.w
 	)
 	unit.set_direction_numbers(numbers, true)
+	unit.display_name = display_name
+	unit.description = data.desc
 	unit.effect_id = data.flip_effect_id
 	unit.flip_trigger_id = data.flip_trigger_id
+	if data.resolver_script != null:
+		var resolver_instance: UnitResolver = data.resolver_script.new() as UnitResolver
+		if resolver_instance != null:
+			if resolver_instance is AttackOrMoveResolver:
+				(resolver_instance as AttackOrMoveResolver).debug_log = true
+			unit.custom_resolver = resolver_instance
 	if enemy_key == "社畜":
-		var resolver: AttackOrMoveResolver = load("res://scripts/resolvers/attack_or_move_resolver.gd").new()
-		resolver.debug_log = true
-		unit.custom_resolver = resolver
 		_apply_death_transform(unit, "社畜二阶段")
-	else:
-		unit.custom_resolver = AdjacentAttackResolver.new()
 	return unit
 
 func _apply_death_transform(unit: UnitCard, transform_key: String) -> void:
@@ -235,15 +287,7 @@ func _apply_death_transform(unit: UnitCard, transform_key: String) -> void:
 	if data == null:
 		return
 	unit.death_behavior = "transform"
-	unit.death_transform = {
-		"display_name": data.display_name if data.display_name != "" else transform_key,
-		"n": data.n,
-		"e": data.e,
-		"s": data.s,
-		"w": data.w,
-		"effect_id": data.flip_effect_id,
-		"trigger_id": data.flip_trigger_id,
-	}
+	unit.death_transform = data
 
 func spawn_unit_at_cell(unit: UnitCard, cell: Cell, art: Texture2D = null, art_flipped: Texture2D = null) -> bool:
 	var placed: bool = board.place_existing_unit(unit, cell)

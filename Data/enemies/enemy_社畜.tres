@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bevv4jboabiaf"]
 
-[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1_ojj6d"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="1_ojj6d"]
+[ext_resource type="Script" uid="uid://buroj5wequ5ns" path="res://scripts/resolvers/attack_or_move_resolver.gd" id="2_resolver"]
 
 [resource]
 script = ExtResource("1_ojj6d")
@@ -10,6 +11,4 @@ n = 15
 e = 8
 s = 10
 w = 11
-card_art = null
-card_art_flipped = null
-card_art_flipped = null
+resolver_script = ExtResource("2_resolver")

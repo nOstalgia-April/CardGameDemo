@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bgodyml4oj3gt"]
+
+[ext_resource type="Script" uid="uid://buroj5wequ5ns" path="res://scripts/resolvers/attack_or_move_resolver.gd" id="1_l8c01"]
+[ext_resource type="Texture2D" uid="uid://b32c72it8hy64" path="res://assets/cards/enemy/m1a.png" id="1_loam1"]
+[ext_resource type="Texture2D" uid="uid://4lut7gnf50th" path="res://assets/cards/enemy/m2a.png" id="2_bly37"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="4_gloie"]
+
+[resource]
+script = ExtResource("4_gloie")
+enemy_key = "小怪2"
+display_name = "小怪"
+desc = "1231"
+n = 6
+e = 6
+s = 6
+w = 6
+resolver_script = ExtResource("1_l8c01")
+card_art = ExtResource("1_loam1")
+card_art_flipped = ExtResource("2_bly37")

@@ -6,7 +6,7 @@
 script = ExtResource("1_levdata")
 level_name = "第1关"
 enemy_spawns = Array[Dictionary]([{
-"enemy_key": "社畜",
+"enemy_key": "小怪1",
 "pos": Vector2i(1, 1)
 }])
-initial_hand_cards = Array[String](["Jealous", "Sad", "Angry"])
+initial_hand_cards = Array[String](["Angry", "Happy"])

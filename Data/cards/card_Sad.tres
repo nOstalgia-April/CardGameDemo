@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="CardData" format=3 uid="uid://b4beukdkmek5x"]
 
-[ext_resource type="Texture2D" uid="uid://b4jb5mst282pc" path="res://assets/cards/players/card_6b.png" id="1_1vxly"]
+[ext_resource type="Texture2D" uid="uid://b1wtwfj5tw2d8" path="res://assets/cards/players/6b1.png" id="1_1vxly"]
 [ext_resource type="Script" uid="uid://eflwu57wg7p0" path="res://scripts/data/card_data.gd" id="1_xw4vl"]
-[ext_resource type="Texture2D" uid="uid://bsux6d70q5wtl" path="res://assets/cards/players/card_6a.png" id="2_0y3im"]
+[ext_resource type="Texture2D" uid="uid://de3g72j8sa18l" path="res://assets/cards/players/6a1.png" id="2_0y3im"]
 
 [resource]
 script = ExtResource("1_xw4vl")
@@ -10,10 +10,10 @@ card_key = "Sad"
 index = 2
 display_name = "难过"
 price = 1
-n = 4
-e = 5
-s = 3
-w = 2
+n = 6
+e = 3
+s = 5
+w = 7
 effect_id = "rotate"
 desc = "翻牌：自身顺时针旋转，邻格逆时针旋转"
 card_art = ExtResource("1_1vxly")

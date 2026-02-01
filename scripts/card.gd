@@ -17,8 +17,8 @@ var follow_target: CanvasItem = null
 
 @onready var desc_panel: Panel = $DescPanel
 @onready var desc_label: Label = $DescPanel/DescLabel
-@onready var name_label: Label = $Control/ColorRect/name
-@onready var item_img: TextureRect = $Control/ColorRect/itemImg
+@onready var name_label: Label = $Control/name
+@onready var item_img: TextureRect = $Control/itemImg
 @onready var dir_n: Control = $DirNums/N
 @onready var dir_e: Control = $DirNums/E
 @onready var dir_s: Control = $DirNums/S

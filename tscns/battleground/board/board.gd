@@ -70,16 +70,13 @@ func _on_unit_knockback_requested(unit: Node, dir: int, context: Dictionary) -> 
 	var target_cell: Cell = get_neighbor_cells(from_cell).get(dir, null) as Cell
 	if target_cell == null or target_cell.is_occupied():
 		return
-	var moved: bool = target_cell.place_existing_unit(u)
+	var moved: bool = move_unit(u, target_cell, false, {"knockback": true})
 	if !moved:
 		return
-	SoundManager.play_sfx("UnitMove")
-	_bind_unit_refs(u)
-	if u.is_enemy:
-		update_visibility()
-	else:
-		on_player_unit_moved(from_cell, target_cell)
-	BattleEventBus.emit_signal("unit_moved", u, from_cell, target_cell, {"knockback": true})
+	if !target_cell.is_visited_by_player():
+		target_cell.mark_visited()
+		if u.is_enemy:
+			update_visibility()
 	context["accepted"] = true
 
 func _on_unit_cell_requested(unit: Node, context: Dictionary) -> void:
@@ -110,11 +107,14 @@ func place_card_on_cell(card: Card, cell: Cell, context: Dictionary = {}) -> Uni
 			return null
 	var display_name: String = card.card_display_name
 	var numbers: DirectionNumbers = card.get_direction_numbers()
+	var desc_text: String = card.card_desc_text
 	var placed: bool = cell.spawn_unit_numbers(display_name, numbers, false)
 	if !placed:
 		return null
 	var unit: UnitCard = cell.get_unit() as UnitCard
 	if unit != null:
+		unit.display_name = display_name
+		unit.description = desc_text
 		unit.effect_id = effect_id
 		unit.flip_trigger_id = "on_place" if effect_id == "charge" else "input"
 		_bind_unit_refs(unit)
@@ -153,9 +153,9 @@ func try_unit_action(unit: UnitCard, target_cell: Cell, consume_energy: bool = t
 		return resolve_attack_on_cell(unit, target_cell, false, consume_energy)
 	if target_unit != null:
 		return false
-	return move_unit(unit, target_cell, consume_energy)
+	return move_unit(unit, target_cell, consume_energy, {})
 
-func move_unit(unit: UnitCard, target_cell: Cell, consume_energy: bool = true) -> bool:
+func move_unit(unit: UnitCard, target_cell: Cell, consume_energy: bool = true, context: Dictionary = {}) -> bool:
 	if target_cell.is_occupied():
 		return false
 	var from_cell: Cell = get_parent_cell_of_unit(unit)
@@ -176,7 +176,7 @@ func move_unit(unit: UnitCard, target_cell: Cell, consume_energy: bool = true) -
 		update_visibility() # direct refresh (was on_enemy_updated)
 	else:
 		on_player_unit_moved(from_cell, target_cell)
-	BattleEventBus.emit_signal("unit_moved", unit, from_cell, target_cell, {})
+	BattleEventBus.emit_signal("unit_moved", unit, from_cell, target_cell, context)
 	return true
 
 func resolve_attack_on_cell(attacker: UnitCard, target_cell: Cell, advantage: bool = false, consume_energy: bool = true) -> bool:
@@ -256,10 +256,12 @@ func resolve_enemy_turn() -> void:
 	if _resolving_enemy_turn:
 		return
 	_resolving_enemy_turn = true
+	await get_tree().create_timer(0.05).timeout
 	var enemies: Array[UnitCard] = find_units("enemy")
 	for unit in enemies:
 		if unit == null or !is_instance_valid(unit):
 			continue
+		await get_tree().create_timer(0.1).timeout
 		await unit.resolve_turn()
 	_resolving_enemy_turn = false
 
@@ -283,7 +285,7 @@ func get_neighbor_cells_array(cell: Cell) -> Array[Cell]:
 		neighbors.get(3, null) as Cell,
 	]
 
-func highlight_cells(cells: Array, color: Color = Color(1, 1, 1, 0.9)) -> void:
+func highlight_cells(cells: Array, color: Color = Color(1, 1, 1, 0.9), force_color: bool = false) -> void:
 	clear_available_cells(true) # direct clear (was clear_highlight)
 	var cell_list: Array[Cell] = []
 	for entry in cells:
@@ -292,7 +294,7 @@ func highlight_cells(cells: Array, color: Color = Color(1, 1, 1, 0.9)) -> void:
 			continue
 		cell_list.append(cell)
 	available_cells = cell_list
-	_apply_available_cells(color)
+	_apply_available_cells(color, force_color)
 
 func update_visibility() -> void:
 	var cells: Array[Cell] = _get_all_cells()
@@ -391,9 +393,11 @@ func clear_available_cells(recompute: bool = true) -> void:
 	if recompute:
 		update_visibility()
 
-func _apply_available_cells(color: Color = Color(1, 1, 1, 0.9)) -> void:
+func _apply_available_cells(color: Color = Color(1, 1, 1, 0.9), force_color: bool = false) -> void:
 	for cell in available_cells:
-		if _cell_has_enemy(cell):
+		if force_color:
+			cell.set_highlight(true, color)
+		elif _cell_has_enemy(cell):
 			cell.set_highlight(true, enemy_cell_highlight_color)
 		else:
 			cell.set_highlight(true, color)

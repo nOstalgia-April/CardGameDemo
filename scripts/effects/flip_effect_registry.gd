@@ -7,6 +7,7 @@ const _EFFECTS: Dictionary = {
 	"knockback": preload("res://scripts/effects/knockback_effect.gd"),
 	"heal_adjacent": preload("res://scripts/effects/heal_adjacent_effect.gd"),
 	"heal_self": preload("res://scripts/effects/heal_self_effect.gd"),
+	"swap": preload("res://scripts/effects/swap_effect.gd"),
 }
 
 static func apply(effect_id: String, unit: UnitCard, context: Dictionary = {}) -> void:

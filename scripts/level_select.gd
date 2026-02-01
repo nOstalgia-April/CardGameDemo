@@ -31,7 +31,10 @@ func _lock_battle_logic() -> void:
 		hud.visible = true
 		for child in hud.get_children():
 			if child != turn_end_button and child != null:
-				(child as CanvasItem).visible = false
+				# 安全地检查child是否为CanvasItem类型
+				var canvas_item: CanvasItem = child as CanvasItem
+				if canvas_item != null:
+					canvas_item.visible = false
 	var turn_manager: Node = get_node_or_null("TurnManager")
 	if turn_manager != null:
 		turn_manager.process_mode = Node.PROCESS_MODE_DISABLED

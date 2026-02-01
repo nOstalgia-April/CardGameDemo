@@ -1,14 +1,17 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1_ojj6d"]
+[ext_resource type="Script" path="res://scripts/resolvers/adjacent_attack_resolver.gd" id="2_resolver"]
 
 [resource]
 script = ExtResource("1_ojj6d")
 enemy_key = "小怪"
 display_name = "小怪"
+desc = ""
 n = 5
 e = 6
 s = 3
 w = 2
+resolver_script = ExtResource("2_resolver")
 card_art = null
 card_art_flipped = null

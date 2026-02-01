@@ -24,12 +24,24 @@ const FlipTriggerRegistry = preload("res://scripts/triggers/flip_trigger_registr
 var is_enemy: bool = false
 var custom_resolver: UnitResolver = null
 var death_behavior: String = ""
-var death_transform: Dictionary = {}
-var effect_id: String = ""
-var flip_trigger_id: String = ""
+var death_transform: EnemyData = null
+var _effect_id: String = ""
+var _flip_trigger_id: String = ""
+var effect_id: String:
+	get:
+		return _effect_id
+	set(value):
+		_effect_id = value
+var flip_trigger_id: String:
+	get:
+		return _flip_trigger_id
+	set(value):
+		_flip_trigger_id = value
+		_apply_flip_trigger()
+var display_name: String = ""
+var description: String = ""
 
 @onready var card_bg: Panel = $CardBg
-@onready var color_rect: ColorRect = $CardBg/ColorRect
 @onready var art: TextureRect = $CardBg/Art
 @onready var hover_border: Panel = $HoverBorder
 @onready var dir_n: Control = $DirNums/N
@@ -80,7 +92,7 @@ func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 	_bind_event_bus()
-	_flip_trigger.bind(self)
+	_apply_flip_trigger()
 	_ui_ready = true
 
 func set_is_enemy(flag: bool) -> void:
@@ -95,6 +107,7 @@ func set_enemy_highlight(active: bool) -> void:
 
 func set_card_data(display_name: String, n: int, e: int, s: int, w: int, enemy: bool = false) -> void:
 	is_enemy = enemy
+	self.display_name = display_name
 	_apply_faction_color()
 	_update_border()
 	_reset_attacks()
@@ -111,6 +124,16 @@ func set_card_data(display_name: String, n: int, e: int, s: int, w: int, enemy: 
 
 func set_direction_numbers(numbers: DirectionNumbers, enemy: bool = false) -> void:
 	set_card_data("", numbers.get_value("n"), numbers.get_value("e"), numbers.get_value("s"), numbers.get_value("w"), enemy)
+
+func apply_enemy_data(data: EnemyData, enemy: bool = true) -> void:
+	if data == null:
+		return
+	var display_name: String = data.display_name if data.display_name != "" else data.enemy_key
+	set_card_data(display_name, data.n, data.e, data.s, data.w, enemy)
+	description = data.desc
+	set_art(data.card_art, data.card_art_flipped)
+	effect_id = data.flip_effect_id
+	flip_trigger_id = data.flip_trigger_id
 
 func set_art(texture: Texture2D, flipped: Texture2D = null) -> void:
 	_card_art = texture
@@ -249,10 +272,8 @@ func consume_attack() -> void:
 func _apply_faction_color() -> void:
 	if !is_instance_valid(card_bg):
 		return
-	if card_bg.has_theme_stylebox_override("panel"):
-		card_bg.remove_theme_stylebox_override("panel")
-	if is_instance_valid(color_rect):
-		color_rect.color = enemy_color if is_enemy else player_color
+	#if card_bg.has_theme_stylebox_override("panel"):
+		#card_bg.remove_theme_stylebox_override("panel")
 
 func _setup_border() -> void:
 	if !is_instance_valid(hover_border):
@@ -393,16 +414,21 @@ func heal_dir(dir: int) -> void:
 			_apply_dir_value(Dir.W, base_w)
 
 func _on_mouse_entered() -> void:
-	if is_enemy:
-		return
 	_hover_active = true
 	_update_border()
+	var context := {
+		"global_rect": get_global_rect(),
+		"name": display_name,
+		"desc": description,
+	}
+	BattleEventBus.emit_signal("unit_hover_started", context)
 
 func _on_mouse_exited() -> void:
 	if _selecting:
 		return
 	_hover_active = false
 	_update_border()
+	BattleEventBus.emit_signal("unit_hover_ended")
 
 func _gui_input(event: InputEvent) -> void:
 	if is_enemy:
@@ -531,27 +557,11 @@ func set_flipped(active: bool) -> void:
 func try_death_transform() -> bool:
 	if death_behavior != "transform":
 		return false
-	if death_used or death_transform.is_empty():
+	if death_used or death_transform == null:
 		return false
 	death_used = true
 	_dead = false
-	var n: int = int(death_transform.get("n", value_n))
-	var e: int = int(death_transform.get("e", value_e))
-	var s: int = int(death_transform.get("s", value_s))
-	var w: int = int(death_transform.get("w", value_w))
-	base_n = n
-	base_e = e
-	base_s = s
-	base_w = w
-	_apply_dir_value(Dir.N, n)
-	_apply_dir_value(Dir.E, e)
-	_apply_dir_value(Dir.S, s)
-	_apply_dir_value(Dir.W, w)
-	if death_transform.has("effect_id"):
-		effect_id = str(death_transform.get("effect_id", effect_id))
-	if death_transform.has("trigger_id"):
-		flip_trigger_id = str(death_transform.get("trigger_id", flip_trigger_id))
-		_apply_flip_trigger()
+	apply_enemy_data(death_transform, true)
 	_on_flip()
 	return true
 
@@ -601,7 +611,6 @@ func _register_effect(effect_id: String, effect: FlipEffect) -> void:
 
 func set_flip_trigger_id(trigger_id: String) -> void:
 	flip_trigger_id = trigger_id
-	_apply_flip_trigger()
 
 func on_placed(context: Dictionary = {}) -> void:
 	await _flip_trigger.on_placed(context)

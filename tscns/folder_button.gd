@@ -17,6 +17,7 @@ var _is_level_select: bool = false
 func _ready() -> void:
 	_is_level_select = _detect_level_select()
 	fancy_back_button.texture_normal = BACK_TEXTURE if _is_level_select else REMAKE_TEXTURE
+	_apply_click_mask()
 	if cover_image != null:
 		_cover_origin = cover_image.position
 	if fancy_back_button != null:
@@ -49,6 +50,19 @@ func _tween_cover_to(target: Vector2) -> void:
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_BACK)
 	tween.tween_property(cover_image, "position", target, hover_duration)
+
+func _apply_click_mask() -> void:
+	if fancy_back_button == null:
+		return
+	var tex: Texture2D = fancy_back_button.texture_normal
+	if tex == null:
+		return
+	var img: Image = tex.get_image()
+	if img == null:
+		return
+	var mask := BitMap.new()
+	mask.create_from_image_alpha(img, 0.1)
+	fancy_back_button.texture_click_mask = mask
 
 func _detect_level_select() -> bool:
 	var scene: Node = get_tree().current_scene

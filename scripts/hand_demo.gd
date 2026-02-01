@@ -1,6 +1,6 @@
 extends Control
 
-@onready var hand_view: HandView = $VBox/HandView
+@onready var hand_view: HandView = $HandView
 @onready var add_button: Button = $VBox/AddCardButton
 
 func _ready() -> void:

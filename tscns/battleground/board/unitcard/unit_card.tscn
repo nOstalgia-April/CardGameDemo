@@ -1,11 +1,8 @@
 [gd_scene format=3 uid="uid://gcpxx4boco1g"]
 
 [ext_resource type="Script" uid="uid://dam8gx2a3m0nd" path="res://tscns/battleground/board/unitcard/unit_card.gd" id="1_e167a"]
-[ext_resource type="Texture2D" uid="uid://b7id5pfe8dtrt" path="res://icon.svg" id="2_cq4gm"]
+[ext_resource type="Texture2D" uid="uid://b13wjgrnsindt" path="res://assets/cards/enemy/zy1.png" id="2_e167a"]
 [ext_resource type="PackedScene" uid="uid://sq6x1a4b2hoo" path="res://tscns/direction_value.tscn" id="3_thi6h"]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4qfqs"]
-blend_mode = 1
 
 [node name="UnitCard" type="Control" unique_id=1679329416]
 layout_mode = 3
@@ -13,7 +10,8 @@ anchors_preset = 0
 offset_right = 140.0
 offset_bottom = 180.0
 script = ExtResource("1_e167a")
-player_color = Color(0.2, 0.4509804, 1, 0.34901962)
+player_color = Color(0.2, 0.4509804, 1, 0)
+enemy_color = Color(1, 0.2509804, 0.2509804, 0)
 
 [node name="CardBg" type="Panel" parent="." unique_id=1168027749]
 layout_mode = 1
@@ -24,18 +22,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="ColorRect" type="ColorRect" parent="CardBg" unique_id=1213949098]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(1, 0.26666668, 0.50980395, 0.29803923)
-
 [node name="Art" type="TextureRect" parent="CardBg" unique_id=1127650245]
-material = SubResource("CanvasItemMaterial_4qfqs")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,7 +30,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_cq4gm")
+texture = ExtResource("2_e167a")
 expand_mode = 1
 
 [node name="DirNums" type="Control" parent="." unique_id=1838042777]
