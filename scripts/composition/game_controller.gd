@@ -4,7 +4,12 @@ extends Node2D
 @onready var board: Board = %Board
 @onready var turn_manager: TurnManager = %TurnManager
 @onready var root: Control = %Root
+@onready var turn_announcer: Control = %TurnAnnouncer
+@onready var turn_announcer_banner: Control = %TurnAnnouncer.get_node("Banner") as Control
+@onready var turn_announcer_single: Control = %TurnAnnouncer.get_node("Banner/SingleCenter") as Control
+@onready var turn_announcer_single_label: Label = %TurnAnnouncer.get_node("Banner/SingleCenter/SingleLabel") as Label
 @onready var victory_screen: Control = null
+@onready var defeat_screen: Control = null
 @onready var victory_canvas_layer: CanvasLayer = null
 
 @export_group("Data")
@@ -36,14 +41,19 @@ var base_position: Vector2 = Vector2.ZERO
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _battle_over: bool = false
 var _current_level: LevelData = null
+var _turn_banner_tween: Tween = null
 
 func _ready() -> void:
 	_rng.randomize()
 	_sync_root_layout()
 	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
 	BattleEventBus.connect("turn_started", Callable(self, "_on_turn_started"))
+	BattleEventBus.connect("turn_banner_requested", Callable(self, "_on_turn_banner_requested"))
 	BattleEventBus.connect("unit_placed", Callable(self, "_on_unit_placed"))
 	BattleEventBus.connect("unit_died", Callable(self, "_on_unit_died"))
+	if turn_announcer != null:
+		turn_announcer.visible = false
+		turn_announcer.modulate = Color(1, 1, 1, 0)
 	if GameState != null and GameState.current_level_index > 0:
 		level_index = GameState.current_level_index
 	_init_repos()
@@ -79,13 +89,21 @@ func _create_victory_canvas_layer() -> void:
 	victory_screen = victory_scene.instantiate()
 	victory_canvas_layer.add_child(victory_screen)
 	victory_screen.hide()
-	# 连接返回信号
 	if victory_screen.has_signal("return_to_level_select"):
 		victory_screen.connect("return_to_level_select", _on_victory_return)
+	var defeat_scene := preload("res://defeat_screen.tscn")
+	defeat_screen = defeat_scene.instantiate()
+	victory_canvas_layer.add_child(defeat_screen)
+	defeat_screen.hide()
+	if defeat_screen.has_signal("restart_level"):
+		defeat_screen.connect("restart_level", _on_defeat_restart)
 
 func _on_victory_return() -> void:
 	# 返回关卡选择界面
 	BattleEventBus.go("level_select")
+
+func _on_defeat_restart() -> void:
+	restart_level()
 
 func _process(delta: float) -> void:
 	if !is_shaking:
@@ -113,6 +131,38 @@ func _on_turn_started(turn_index: int, _context: Dictionary) -> void:
 		return
 	if board.find_units("player").is_empty():
 		_handle_defeated()
+
+func _on_turn_banner_requested(text: String, context: Dictionary) -> void:
+	if _battle_over:
+		BattleEventBus.emit_signal("turn_banner_finished", context)
+		return
+	if context.get("play_sfx", false):
+		SoundManager.play_sfx("RoundEnd")
+	await _play_turn_banner(text, context)
+	BattleEventBus.emit_signal("turn_banner_finished", context)
+
+func _play_turn_banner(text: String, context: Dictionary = {}) -> void:
+	if turn_announcer == null or turn_announcer_banner == null or turn_announcer_single == null or turn_announcer_single_label == null:
+		return
+	turn_announcer_single.visible = true
+	turn_announcer_single_label.text = text
+	if _turn_banner_tween != null and _turn_banner_tween.is_running():
+		_turn_banner_tween.kill()
+	turn_announcer.visible = true
+	turn_announcer.modulate = Color(1, 1, 1, 0)
+	turn_announcer_banner.scale = Vector2(1, 1)
+	if context.get("expand", false):
+		turn_announcer_banner.pivot_offset = turn_announcer_banner.size * 0.5
+		turn_announcer_banner.scale = Vector2(0.5, 1)
+	var tween := create_tween()
+	_turn_banner_tween = tween
+	if context.get("expand", false):
+		tween.tween_property(turn_announcer_banner, "scale:x", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(turn_announcer, "modulate:a", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.6)
+	tween.tween_property(turn_announcer, "modulate:a", 0.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished
+	turn_announcer.visible = false
 
 func _on_unit_placed(_unit: Node, _cell: Node, _context: Dictionary) -> void:
 	if turn_manager.turn_index == 1:
@@ -148,6 +198,8 @@ func _handle_defeated() -> void:
 	_battle_over = true
 	SoundManager.play_sfx("Defeated")
 	BattleEventBus.emit_signal("battle_defeated", {})
+	if defeat_screen != null:
+		defeat_screen.call("open")
 
 func restart_level() -> void:
 	GameState.set_current_level(level_index)

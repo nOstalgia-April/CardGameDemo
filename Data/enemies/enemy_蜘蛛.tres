@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://cruqf26057npd"]
+
+[ext_resource type="Texture2D" uid="uid://0k2mng8wq3g6" path="res://assets/cards/enemy/zy2.png" id="1_81rr7"]
+[ext_resource type="Texture2D" uid="uid://b13wjgrnsindt" path="res://assets/cards/enemy/zy1.png" id="2_yacc7"]
+[ext_resource type="Script" uid="uid://buroj5wequ5ns" path="res://scripts/resolvers/attack_or_move_resolver.gd" id="3_t4gre"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="4_q1him"]
+
+[resource]
+script = ExtResource("4_q1him")
+enemy_key = "章鱼"
+display_name = "章鱼小姐"
+desc = "因为他很焦虑，他很紧张，所以他就什么都做不了，然后因为他什么都做不了，他就更紧张更焦虑了，所以就只能紧紧的抱住自己，那个章鱼就是他焦虑的具象化，整个上半身都变成了章鱼，触手从袖子里钻出来，紧紧地缠住了他自己
+[Mask off]
+-数字之和为偶数时
+发动一次优势攻击"
+n = 15
+e = 16
+s = 15
+w = 17
+resolver_script = ExtResource("3_t4gre")
+card_art = ExtResource("1_81rr7")
+card_art_flipped = ExtResource("2_yacc7")

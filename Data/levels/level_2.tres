@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://hkdafs0kqr1g"]
 
 [ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="1_kg3rt"]
+[ext_resource type="Texture2D" uid="uid://be0ba8djiy6fp" path="res://assets/Portraits/敌人立绘2_社畜牛马_击败前_主体.png" id="2_portrait"]
 
 [resource]
 script = ExtResource("1_kg3rt")
@@ -11,3 +12,4 @@ enemy_spawns = Array[Dictionary]([{
 "pos": Vector2i(1, 1)
 }])
 initial_hand_cards = Array[String](["Angry", "Happy", "Jealous"])
+portrait = ExtResource("2_portrait")

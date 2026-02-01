@@ -118,7 +118,7 @@ func set_desc_text(text: String) -> void:
 func set_art(texture: Texture2D, flipped: Texture2D = null) -> void:
 	card_art = texture
 	card_art_flipped = flipped
-	item_img.texture = card_art
+	_apply_art_for_hover()
 
 func get_card_art() -> Texture2D:
 	return card_art
@@ -185,6 +185,15 @@ func set_hover_visuals(hovered: bool) -> void:
 		_apply_hover_dir_layouts(true)
 	else:
 		_restore_dir_layouts(true)
+	_apply_art_for_hover()
+
+func _apply_art_for_hover() -> void:
+	if !is_instance_valid(item_img):
+		return
+	if _hovered_visual and card_art_flipped != null:
+		item_img.texture = card_art_flipped
+	else:
+		item_img.texture = card_art
 
 func _on_button_mouse_entered() -> void:
 	set_hover_visuals(true)

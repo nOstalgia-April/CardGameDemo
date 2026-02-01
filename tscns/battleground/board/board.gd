@@ -256,7 +256,7 @@ func resolve_enemy_turn() -> void:
 	if _resolving_enemy_turn:
 		return
 	_resolving_enemy_turn = true
-	await get_tree().create_timer(0.05).timeout
+	await get_tree().create_timer(0.1).timeout
 	var enemies: Array[UnitCard] = find_units("enemy")
 	for unit in enemies:
 		if unit == null or !is_instance_valid(unit):

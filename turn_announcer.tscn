@@ -19,14 +19,14 @@ offset_bottom = -67.44
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="Banner" unique_id=87225564]
+[node name="SingleCenter" type="CenterContainer" parent="Banner" unique_id=87225564]
 layout_mode = 0
 offset_left = 17.0
 offset_top = -22.0
 offset_right = 1617.0
 offset_bottom = 126.0
 
-[node name="Label" type="Label" parent="Banner/CenterContainer" unique_id=895021169]
+[node name="SingleLabel" type="Label" parent="Banner/SingleCenter" unique_id=56059384]
 layout_mode = 2
 theme_override_font_sizes/font_size = 108
 text = "敌方回合"

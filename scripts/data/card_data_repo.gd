@@ -2,6 +2,14 @@ extends RefCounted
 class_name CardDataRepo
 
 const CardDataScript = preload("res://scripts/data/card_data.gd")
+const FALLBACK_CARD_PATHS: Array[String] = [
+	"res://Data/cards/card_Angry.tres",
+	"res://Data/cards/card_Happy.tres",
+	"res://Data/cards/card_Jealous.tres",
+	"res://Data/cards/card_Lovely.tres",
+	"res://Data/cards/card_Sad.tres",
+	"res://Data/cards/card_Scared.tres"
+]
 
 var folder_path: String = "res://Data/cards"
 var infos: Dictionary = {}
@@ -26,7 +34,7 @@ func _load_folder(path: String) -> Dictionary:
 	var data: Dictionary = {}
 	var dir: DirAccess = DirAccess.open(path)
 	if dir == null:
-		return data
+		return _load_fallback()
 	dir.list_dir_begin()
 	var file_name: String = dir.get_next()
 	while file_name != "":
@@ -48,4 +56,19 @@ func _load_folder(path: String) -> Dictionary:
 		data[key] = card
 		file_name = dir.get_next()
 	dir.list_dir_end()
+	if data.is_empty():
+		return _load_fallback()
+	return data
+
+func _load_fallback() -> Dictionary:
+	var data: Dictionary = {}
+	for res_path in FALLBACK_CARD_PATHS:
+		var res: Resource = ResourceLoader.load(res_path)
+		var card: CardData = res as CardData
+		if card == null:
+			continue
+		var key: String = card.card_key
+		if key == "":
+			key = res_path.get_file().get_basename()
+		data[key] = card
 	return data

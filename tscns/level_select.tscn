@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cyx5jl4c8qdsd" path="res://tscns/battle.tscn" id="1_battle"]
 [ext_resource type="Script" uid="uid://d12vnvyigvo2s" path="res://scripts/level_select.gd" id="2_level_select_script"]
-[ext_resource type="AudioStream" uid="uid://b8u3i7d2pwnae" path="res://Music/BGM/room_music.ogg" id="3_5fc7b"]
+[ext_resource type="AudioStream" uid="uid://ovg385cour1v" path="res://Music/SFX/room_loop.ogg" id="3_5fc7b"]
 
 [node name="LevelSelect" unique_id=1204178272 instance=ExtResource("1_battle")]
 script = ExtResource("2_level_select_script")

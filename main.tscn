@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://dvs0frxfwv77n"]
 
 [ext_resource type="Script" uid="uid://dbddlvynv31ob" path="res://scripts/main_menu.gd" id="1_2n4lq"]
-[ext_resource type="AudioStream" uid="uid://b8u3i7d2pwnae" path="res://Music/BGM/room_music.ogg" id="2_h2yge"]
+[ext_resource type="AudioStream" uid="uid://to0mdqyksvmu" path="res://Music/SFX/room_intro.ogg" id="2_h2yge"]
+[ext_resource type="AudioStream" uid="uid://ovg385cour1v" path="res://Music/SFX/room_loop.ogg" id="3_h2yge"]
 [ext_resource type="Texture2D" uid="uid://deir3b0nk55xd" path="res://assets/Main/background.PNG" id="3_lquwl"]
 [ext_resource type="Texture2D" uid="uid://bh071idd6uwgd" path="res://assets/Main/PlayButton/0.png" id="4_dg77c"]
 [ext_resource type="Texture2D" uid="uid://nfm1sxeiqk5v" path="res://assets/Main/PlayButton/1.PNG" id="5_272bh"]
@@ -13,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://crjy02f0oceb8" path="res://assets/Main/PlayButton/7.PNG" id="11_play7"]
 [ext_resource type="Texture2D" uid="uid://bl3uqg6l3rwq8" path="res://assets/Main/Info/InfoButton.png" id="12_ycdy4"]
 [ext_resource type="Texture2D" uid="uid://bt5xkdcedkhv1" path="res://assets/Main/Info/InfoBoard.PNG" id="13_w48qg"]
+[ext_resource type="Texture2D" uid="uid://ki4qsn1peoyp" path="res://assets/Main/Info/ui_x.png" id="14_w48qg"]
 
 [sub_resource type="Animation" id="Animation_lquwl"]
 length = 0.001
@@ -60,7 +62,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2n4lq")
-BGM = ExtResource("2_h2yge")
+BGMIntro = ExtResource("2_h2yge")
+BGMLoop = ExtResource("3_h2yge")
 
 [node name="BG" type="TextureRect" parent="." unique_id=1331325595]
 layout_mode = 1
@@ -93,7 +96,6 @@ offset_bottom = 455.0
 texture_normal = ExtResource("12_ycdy4")
 
 [node name="AboutInfoLayer" type="CanvasLayer" parent="." unique_id=2141734920]
-visible = false
 
 [node name="InfoPanel" type="Panel" parent="AboutInfoLayer" unique_id=619059719]
 anchors_preset = 15
@@ -122,5 +124,13 @@ theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/normal_font_size = 64
 text = "13233423141234123412351325123412341234
 "
+
+[node name="ExitButton" type="TextureButton" parent="AboutInfoLayer/InfoPanel" unique_id=273289239]
+layout_mode = 0
+offset_left = 1272.0
+offset_top = 162.0
+offset_right = 1336.0
+offset_bottom = 226.0
+texture_hover = ExtResource("14_w48qg")
 
 [connection signal="pressed" from="StartBattleButton" to="." method="_on_start_pressed"]

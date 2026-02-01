@@ -3,7 +3,7 @@ class_name EnemyData
 
 @export var enemy_key: String = ""
 @export var display_name: String = ""
-@export var desc: String = ""
+@export_multiline var desc: String = ""
 @export var n: int = 0
 @export var e: int = 0
 @export var s: int = 0

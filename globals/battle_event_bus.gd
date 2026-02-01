@@ -8,6 +8,8 @@ signal damage_applied(attacker: Node, target: Node, dir: int, value: int, contex
 signal unit_died(unit: Node, killer: Node, dir: int, context: Dictionary)
 signal turn_started(turn_index: int, context: Dictionary)
 signal turn_ended(turn_index: int, context: Dictionary)
+signal turn_banner_requested(text: String, context: Dictionary)
+signal turn_banner_finished(context: Dictionary)
 signal resource_changed(energy: int, flips: int, context: Dictionary)
 
 signal cell_visibility_changed(cell: Node, state: int)

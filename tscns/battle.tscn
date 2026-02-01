@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cut5772wtvpsw" path="res://tscns/folder_button.tscn" id="13_folder_button"]
 [ext_resource type="PackedScene" uid="uid://bsu4iagqsokc3" path="res://tscns/tooltip_manager.tscn" id="14_tooltip"]
 [ext_resource type="PackedScene" uid="uid://cipthh08jmhxp" path="res://tscns/turn_hint_controller.tscn" id="15_turn_hint"]
+[ext_resource type="PackedScene" uid="uid://cw5ffs3oe5pyy" path="res://turn_announcer.tscn" id="16_turn_announcer"]
 
 [sub_resource type="Shader" id="Shader_dynamicwall"]
 code = "shader_type canvas_item;
@@ -129,20 +130,24 @@ offset_bottom = 80.0
 metadata/_edit_use_anchors_ = true
 
 [node name="EnergyHUD" parent="Root/HUD" unique_id=985602427 instance=ExtResource("10_guyid")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 3.0575
+anchor_top = 1.0357143
+anchor_right = 3.0575
+anchor_bottom = 1.0357143
 offset_bottom = 56.0
 grow_horizontal = 1
 grow_vertical = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="FlipHUD" parent="Root/HUD" unique_id=314267766 instance=ExtResource("11_owkka")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.09
+anchor_top = -2.6785715
+anchor_right = 1.09
+anchor_bottom = -2.6785715
 offset_left = 1.0
 offset_top = 200.0
 offset_right = 1.0
@@ -169,6 +174,11 @@ confirm_button = NodePath("../TurnEndButton")
 
 [node name="TooltipManager" parent="Root" unique_id=1651306355 instance=ExtResource("14_tooltip")]
 layout_mode = 1
+
+[node name="TurnAnnouncer" parent="Root" unique_id=1234567890 instance=ExtResource("16_turn_announcer")]
+unique_name_in_owner = true
+layout_mode = 3
+z_index = 20
 
 [node name="BackButton" parent="." unique_id=136421909 instance=ExtResource("13_folder_button")]
 offset_left = -46.0

@@ -5,6 +5,8 @@ class_name CardTooltipManager
 @onready var name_label: Label = $TooltipPanel/VBoxContainer/NameLabel
 @onready var desc_label: Label = $TooltipPanel/VBoxContainer/DescLabel
 
+const FIXED_TOOLTIP_CELL: Vector2i = Vector2i(1, 1)
+
 func _ready() -> void:
 	_setup_styles()
 	if tooltip_panel != null:
@@ -73,9 +75,14 @@ func _on_unit_hover_started(context: Dictionary) -> void:
 	var card_size: Vector2 = global_rect.size
 	var board := _get_board_node()
 	if board != null:
+		var fixed_rect: Rect2 = _get_fixed_cell_rect(board)
+		if fixed_rect != Rect2():
+			global_rect = fixed_rect
+			card_global_pos = global_rect.position
+			card_size = global_rect.size
 		var bounds: Dictionary = _get_board_bounds(board)
 		var center_pos: Vector2i = bounds.get("center", Vector2i.ZERO)
-		var card_pos: Vector2i = _get_card_cell_position(board, global_rect.get_center())
+		var card_pos: Vector2i = FIXED_TOOLTIP_CELL if global_rect == fixed_rect and fixed_rect != Rect2() else _get_card_cell_position(board, global_rect.get_center())
 		var relative_pos: Vector2i = card_pos - center_pos
 
 		match relative_pos:
@@ -141,6 +148,12 @@ func _get_card_cell_position(board: Board, card_center: Vector2) -> Vector2i:
 		if cell_global_rect.has_point(card_center):
 			return board.get_cell_pos(cell)
 	return Vector2i.ZERO
+
+func _get_fixed_cell_rect(board: Board) -> Rect2:
+	var fixed_cell: Cell = board.get_cell_at(FIXED_TOOLTIP_CELL)
+	if fixed_cell == null:
+		return Rect2()
+	return Rect2(fixed_cell.global_position, fixed_cell.size)
 
 func _find_board_recursive(node: Node) -> Board:
 	if node is Board:

@@ -36,7 +36,12 @@ func end_turn() -> void:
 		return
 	_resolving_turn = true
 	BattleEventBus.emit_signal("turn_ended", turn_index, {})
-	#SoundManager.play_sfx("RoundEnd")
+	BattleEventBus.emit_signal("turn_banner_requested", "敌方回合", {
+		"team": "enemy",
+		"play_sfx": true,
+		"expand": true,
+	})
+	await BattleEventBus.turn_banner_finished
 	await board.resolve_enemy_turn()
 	_resolving_turn = false
 	start_turn()

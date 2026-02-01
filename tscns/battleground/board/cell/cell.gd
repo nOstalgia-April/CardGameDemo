@@ -14,6 +14,19 @@ enum CellState { HIDDEN, AVAILABLE, VISITED }
 @export var color_visited: Color = Color(1.0, 1.0, 1.0, 0.502)
 @export var highlight_color: Color = Color(1, 1, 1, 0.9)
 
+@export_group("Level Number")
+@export var number_textures: Array[Texture2D] = [
+	preload("res://assets/Number/ui_1.png"),
+	preload("res://assets/Number/ui_2.png"),
+	preload("res://assets/Number/ui_3.png"),
+	preload("res://assets/Number/ui_4.png"),
+	preload("res://assets/Number/ui_5.png"),
+	preload("res://assets/Number/ui_6.png"),
+	preload("res://assets/Number/ui_7.png"),
+	preload("res://assets/Number/ui_8.png"),
+	preload("res://assets/Number/ui_9.png")
+]
+
 @export_group("Unit")
 @export var unit_scene: PackedScene = preload("res://tscns/battleground/board/unitcard/unit_card.tscn")
 @export var unit_z_index: int = 5
@@ -26,6 +39,7 @@ var state: CellState = CellState.AVAILABLE
 @onready var hover_texture_rect: TextureRect = $Root/Hover
 @onready var occupant_slot: Control = $Root/OccupantSlot
 @onready var input_button: Button = $Root/Input
+@onready var level_number_rect: TextureRect = $Root/LevelNumber
 var visited_by_player: bool = false
 
 func _ready() -> void:
@@ -189,3 +203,12 @@ func _set_state_internal(new_state: CellState) -> void:
 
 func _on_input_pressed() -> void:
 	BattleEventBus.emit_signal("cell_pressed", self, {})
+
+func set_level_number(level_index: int, unlocked: bool) -> void:
+	if level_number_rect == null:
+		return
+	if unlocked and level_index >= 1 and level_index <= number_textures.size():
+		level_number_rect.texture = number_textures[level_index - 1]
+		level_number_rect.visible = true
+	else:
+		level_number_rect.visible = false

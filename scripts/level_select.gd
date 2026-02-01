@@ -11,18 +11,23 @@ extends Node2D
 @onready var hud: Control = get_node_or_null("Root/HUD") as Control
 @onready var turn_end_button: Control = get_node_or_null("Root/HUD/TurnEndButton") as Control
 @onready var message_label: Label = %MessageLabel
+@onready var portrait: Sprite2D = get_node_or_null("Portrait") as Sprite2D
 
 var turn_end_button_ui: TextureButton = null
 
 var _selected_cell: Cell = null
 var _selected_level_index: int = 0
 var _message_timer: Timer = null
+var _portrait_start_x: float = -350.0
+var _portrait_end_x: float = 323.0
 
 func _ready() -> void:
 	_lock_battle_logic()
 	_setup_message_label()
 	_init_cells()
 	SoundManager.play_bgm(BGM)
+	if portrait != null:
+		portrait.position.x = _portrait_start_x
 
 func _lock_battle_logic() -> void:
 	if hand_view != null:
@@ -67,6 +72,14 @@ func _init_cells() -> void:
 		level_index += 1
 
 func _ensure_level_label(cell: Cell, level_index: int, unlocked: bool) -> void:
+	if cell.has_method("set_level_number"):
+		cell.call("set_level_number", level_index, unlocked)
+		var root_for_number: Control = cell.get_node_or_null("Root") as Control
+		if root_for_number != null:
+			var label_for_number: Label = root_for_number.get_node_or_null("LevelNumber") as Label
+			if label_for_number != null:
+				label_for_number.visible = false
+		return
 	var root: Control = cell.get_node_or_null("Root") as Control
 	var label: Label = null
 	if root != null:
@@ -113,7 +126,6 @@ func _on_cell_gui_input(event: InputEvent, cell: Cell) -> void:
 
 func _on_cell_pressed(cell: Cell) -> void:
 	if _is_cell_locked(cell):
-		_clear_selection()
 		_show_message("请先通过上一关")
 		return
 	var level_index: int = int(cell.get_meta("level_index", 0))
@@ -128,6 +140,7 @@ func _select_cell(cell: Cell, level_index: int) -> void:
 	SoundManager.play_sfx("UnitMove")
 	if turn_end_button_ui != null:
 		turn_end_button_ui.visible = true
+	_show_portrait_for_level(level_index)
 
 func _clear_selection() -> void:
 	if _selected_cell != null and is_instance_valid(_selected_cell):
@@ -136,6 +149,9 @@ func _clear_selection() -> void:
 	_selected_level_index = 0
 	if turn_end_button_ui != null:
 		turn_end_button_ui.visible = false
+	if portrait != null:
+		portrait.position.x = _portrait_start_x
+		portrait.texture = null
 
 func _is_cell_locked(cell: Cell) -> bool:
 	var level_index: int = int(cell.get_meta("level_index", 0))
@@ -176,3 +192,23 @@ func _on_message_timeout() -> void:
 	tween.tween_callback(func() -> void:
 		message_label.visible = false
 	)
+
+func _show_portrait_for_level(level_index: int) -> void:
+	if portrait == null:
+		return
+	var level: LevelData = LevelLoader.load_by_index(level_index)
+	if level == null or level.portrait == null:
+		portrait.position.x = _portrait_start_x
+		portrait.texture = null
+		return
+	portrait.texture = level.portrait
+	if portrait.has_meta("tween"):
+		var old_tween: Tween = portrait.get_meta("tween")
+		if is_instance_valid(old_tween):
+			old_tween.kill()
+	portrait.position.x = _portrait_start_x
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(portrait, "position:x", _portrait_end_x, 0.5)
+	portrait.set_meta("tween", tween)

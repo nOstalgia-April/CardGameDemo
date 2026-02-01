@@ -1,17 +1,15 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dr3rn8bfgv1ta"]
 
-[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1_ojj6d"]
-[ext_resource type="Script" path="res://scripts/resolvers/adjacent_attack_resolver.gd" id="2_resolver"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="1_ojj6d"]
+[ext_resource type="Script" uid="uid://by11idswtvv2u" path="res://scripts/resolvers/adjacent_attack_resolver.gd" id="2_resolver"]
 
 [resource]
 script = ExtResource("1_ojj6d")
 enemy_key = "社畜二阶段"
-display_name = "社畜"
-desc = ""
+display_name = "社会人"
+desc = "想上班想得发疯了"
 n = 16
 e = 12
 s = 15
 w = 14
 resolver_script = ExtResource("2_resolver")
-card_art = null
-card_art_flipped = null

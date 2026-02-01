@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://cgnoj5h1iiyck"]
+
+[ext_resource type="Texture2D" uid="uid://be0ba8djiy6fp" path="res://assets/Portraits/敌人立绘2_社畜牛马_击败前_主体.png" id="1_ew30e"]
+[ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="2_sq5ft"]
+
+[resource]
+script = ExtResource("2_sq5ft")
+level_name = "第2关"
+level_index = 2
+enemy_spawns = Array[Dictionary]([{
+"enemy_key": "社畜",
+"pos": Vector2i(0, 1)
+}])
+initial_hand_cards = Array[String](["Angry", "Happy", "Jealous", ""])
+portrait = ExtResource("1_ew30e")

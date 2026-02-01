@@ -9,7 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://bib7c0frenmo1" path="res://Music/SFX/handview_NoCost_error.ogg" id="6_i5rk7"]
 [ext_resource type="AudioStream" uid="uid://dnq4fsc2uvfx0" path="res://Music/SFX/unit_on_placed.ogg" id="8_hgqfu"]
 [ext_resource type="AudioStream" uid="uid://cu6gy1wpy7pp3" path="res://Music/SFX/unit_break_sheild.ogg" id="12_m0av4"]
-[ext_resource type="AudioStream" uid="uid://dpkea5ddb4utj" path="res://Music/SFX/round_end.ogg" id="13_0xjot"]
+[ext_resource type="AudioStream" uid="uid://dpkea5ddb4utj" path="res://Music/SFX/turn_end.ogg" id="13_0xjot"]
 [ext_resource type="AudioStream" uid="uid://cpqkg2xk7cn8q" path="res://Music/SFX/unit_on_death.ogg" id="13_servx"]
 [ext_resource type="AudioStream" uid="uid://cue5pi1svq4ip" path="res://Music/SFX/Victory.ogg" id="14_sq74m"]
 [ext_resource type="AudioStream" uid="uid://dgil67vtkmav8" path="res://Music/SFX/unit_selecting.ogg" id="14_x6p0s"]

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://covmdcp67imss"]
+
+[ext_resource type="Texture2D" uid="uid://da8yhed4i0ee3" path="res://assets/cards/enemy/shitou.png" id="1_socsq"]
+[ext_resource type="Texture2D" uid="uid://b13wjgrnsindt" path="res://assets/cards/enemy/zy1.png" id="2_8njx7"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="4_x5d4i"]
+
+[resource]
+script = ExtResource("4_x5d4i")
+enemy_key = "石头"
+display_name = "石头"
+desc = "无法攻击"
+n = 3
+e = 5
+s = 3
+w = 5
+card_art = ExtResource("1_socsq")
+card_art_flipped = ExtResource("2_8njx7")
