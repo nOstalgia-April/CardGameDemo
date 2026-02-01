@@ -2,6 +2,7 @@ extends Node
 
 const SCENES := {
 	"main": "res://main.tscn",
+	"main_menu": "res://main.tscn",
 	"battle": "res://tscns/battle.tscn",
 	"level_select": "res://tscns/level_select.tscn",
 }

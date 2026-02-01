@@ -3,13 +3,16 @@ extends RefCounted
 const EnemyDataScript = preload("res://scripts/data/enemy_data.gd")
 const FALLBACK_ENEMY_PATHS: Array[String] = [
 	"res://Data/enemies/enemy_小怪.tres",
-	"res://Data/enemies/enemy_小怪1.tres",
-	"res://Data/enemies/enemy_小怪2.tres",
+	"res://Data/enemies/level_1/enemy_小怪1.tres",
+	"res://Data/enemies/level_2/enemy_小怪2.tres",
+	"res://Data/enemies/level_1/enemy_社畜.tres",
+	"res://Data/enemies/level_1/enemy_社畜二阶段.tres",
 	"res://Data/enemies/enemy_社畜.tres",
 	"res://Data/enemies/enemy_社畜二阶段.tres",
 	"res://Data/enemies/enemy_章鱼.tres",
 	"res://Data/enemies/enemy_蜘蛛.tres",
-	"res://Data/enemies/enemy_石头.tres"
+	"res://Data/enemies/enemy_石头.tres",
+	"res://Data/enemies/level_4/enemy_长矛.tres"
 ]
 
 var folder_path: String = "res://Data/enemies"
@@ -19,11 +22,15 @@ func _init(path: String = "") -> void:
 	if path != "":
 		folder_path = path
 	infos = _load_folder(folder_path)
+	if infos.is_empty():
+		infos = _load_fallback()
 
 func reload(path: String = "") -> void:
 	if path != "":
 		folder_path = path
 	infos = _load_folder(folder_path)
+	if infos.is_empty():
+		infos = _load_fallback()
 
 func get_all() -> Dictionary:
 	return infos
@@ -35,30 +42,43 @@ func _load_folder(path: String) -> Dictionary:
 	var data: Dictionary = {}
 	var dir: DirAccess = DirAccess.open(path)
 	if dir == null:
-		return _load_fallback()
+		return {}
+	
+	var subdirs: Array[String] = []
+	var files: Array[String] = []
+
 	dir.list_dir_begin()
 	var file_name: String = dir.get_next()
 	while file_name != "":
 		if dir.current_is_dir():
-			file_name = dir.get_next()
-			continue
-		if !(file_name.ends_with(".tres") or file_name.ends_with(".res")):
-			file_name = dir.get_next()
-			continue
-		var res_path: String = path.path_join(file_name)
-		var res: Resource = ResourceLoader.load(res_path)
-		var enemy: EnemyData = res as EnemyData
-		if enemy == null:
-			file_name = dir.get_next()
-			continue
-		var key: String = enemy.enemy_key
-		if key == "":
-			key = file_name.get_basename()
-		data[key] = enemy
+			if file_name != "." and file_name != "..":
+				subdirs.append(file_name)
+		else:
+			var ext_file_name = file_name
+			if file_name.ends_with(".remap"):
+				ext_file_name = file_name.trim_suffix(".remap")
+				
+			if ext_file_name.ends_with(".tres") or ext_file_name.ends_with(".res"):
+				files.append(ext_file_name)
 		file_name = dir.get_next()
 	dir.list_dir_end()
-	if data.is_empty():
-		return _load_fallback()
+	
+	# First load files in current directory
+	for f in files:
+		var res_path: String = path.path_join(f)
+		var res: Resource = ResourceLoader.load(res_path)
+		var enemy: EnemyData = res as EnemyData
+		if enemy != null:
+			var key: String = enemy.enemy_key
+			if key == "":
+				key = f.get_basename()
+			data[key] = enemy
+			
+	# Then load subdirectories (overwriting parent files if keys collide)
+	for d in subdirs:
+		var sub_path = path.path_join(d)
+		data.merge(_load_folder(sub_path), true)
+		
 	return data
 
 func _load_fallback() -> Dictionary:

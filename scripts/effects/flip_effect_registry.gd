@@ -8,6 +8,10 @@ const _EFFECTS: Dictionary = {
 	"heal_adjacent": preload("res://scripts/effects/heal_adjacent_effect.gd"),
 	"heal_self": preload("res://scripts/effects/heal_self_effect.gd"),
 	"swap": preload("res://scripts/effects/swap_effect.gd"),
+	"change_portrait": preload("res://scripts/effects/change_portrait_effect.gd"),
+	"transform": preload("res://scripts/effects/transform_effect.gd"),
+	"shuffle_hand": preload("res://scripts/effects/shuffle_hand_effect.gd"),
+	"advantage_attack": preload("res://scripts/effects/advantage_attack_effect.gd"),
 }
 
 static func apply(effect_id: String, unit: UnitCard, context: Dictionary = {}) -> void:

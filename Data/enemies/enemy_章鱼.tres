@@ -4,19 +4,25 @@
 [ext_resource type="Texture2D" uid="uid://b13wjgrnsindt" path="res://assets/cards/enemy/zy1.png" id="2_8y5fu"]
 [ext_resource type="Script" uid="uid://buroj5wequ5ns" path="res://scripts/resolvers/attack_or_move_resolver.gd" id="3_g2kmr"]
 [ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="4_ghp6n"]
+[ext_resource type="Texture2D" uid="uid://b6p2l6l3j5y8" path="res://assets/Portraits/enemy1.png" id="5_portrait"]
+[ext_resource type="Texture2D" uid="uid://c8p2l6l3j5y9" path="res://assets/Portraits/enemy1_defeat.png" id="6_portrait_flipped"]
 
 [resource]
 script = ExtResource("4_ghp6n")
 enemy_key = "章鱼"
 display_name = "章鱼小姐"
 desc = "因为他很焦虑，他很紧张，所以他就什么都做不了，然后因为他什么都做不了，他就更紧张更焦虑了，所以就只能紧紧的抱住自己，那个章鱼就是他焦虑的具象化，整个上半身都变成了章鱼，触手从袖子里钻出来，紧紧地缠住了他自己
-[Mask off]
--数字之和为偶数时
+[Mask change]
+-数字之和奇偶变换时
 发动一次优势攻击"
-n = 15
-e = 16
-s = 15
-w = 17
+flip_effect_id = "advantage_attack"
+flip_trigger_id = "parity_change"
 resolver_script = ExtResource("3_g2kmr")
 card_art = ExtResource("1_q6mav")
 card_art_flipped = ExtResource("2_8y5fu")
+portrait = ExtResource("5_portrait")
+portrait_flipped = ExtResource("6_portrait_flipped")
+n = 18
+e = 20
+s = 17
+w = 15

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ctwxkqyg1cwjv"]
 
-[ext_resource type="Texture2D" uid="uid://merh828y3omi" path="res://assets/UI/行动点数标志.png" id="1_i1mqa"]
+[ext_resource type="Texture2D" uid="uid://dvb785h6qgot" path="res://assets/UI/BattleHUD/Light0.png" id="1_i1mqa"]
 [ext_resource type="Script" uid="uid://lo2p3p0yxlwm" path="res://scripts/energy_label.gd" id="2_alce5"]
 
 [node name="EnergyHUD" type="Control" unique_id=985602427]
@@ -17,14 +17,15 @@ offset_right = 300.0
 offset_bottom = 300.0
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_i1mqa")
+metadata/_edit_lock_ = true
 
 [node name="EnergyLabel" type="Label" parent="." unique_id=2146052090]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = -28.0
-offset_top = 138.0
-offset_right = 149.0
-offset_bottom = 215.0
+offset_left = -12.0
+offset_top = 33.0
+offset_right = 165.0
+offset_bottom = 110.0
 theme_override_colors/font_color = Color(0.9882353, 1, 1, 1)
 theme_override_font_sizes/font_size = 56
 text = "3"

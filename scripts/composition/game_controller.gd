@@ -1,16 +1,19 @@
 extends Node2D
 
 @onready var hand_view: HandView = %HandView
-@onready var board: Board = %Board
+@onready var board: Control = %Board
 @onready var turn_manager: TurnManager = %TurnManager
 @onready var root: Control = %Root
 @onready var turn_announcer: Control = %TurnAnnouncer
 @onready var turn_announcer_banner: Control = %TurnAnnouncer.get_node("Banner") as Control
 @onready var turn_announcer_single: Control = %TurnAnnouncer.get_node("Banner/SingleCenter") as Control
 @onready var turn_announcer_single_label: Label = %TurnAnnouncer.get_node("Banner/SingleCenter/SingleLabel") as Label
+@onready var portrait: Sprite2D = $Portrait
 @onready var victory_screen: Control = null
 @onready var defeat_screen: Control = null
 @onready var victory_canvas_layer: CanvasLayer = null
+
+var _board : Board
 
 @export_group("Data")
 @export var card_infos_path: String = "res://Data/cards"
@@ -44,6 +47,7 @@ var _current_level: LevelData = null
 var _turn_banner_tween: Tween = null
 
 func _ready() -> void:
+	_board = board
 	_rng.randomize()
 	_sync_root_layout()
 	BattleEventBus.connect("screen_shake_requested", Callable(self, "_on_screen_shake_requested"))
@@ -51,6 +55,7 @@ func _ready() -> void:
 	BattleEventBus.connect("turn_banner_requested", Callable(self, "_on_turn_banner_requested"))
 	BattleEventBus.connect("unit_placed", Callable(self, "_on_unit_placed"))
 	BattleEventBus.connect("unit_died", Callable(self, "_on_unit_died"))
+	BattleEventBus.connect("unit_portrait_changed", Callable(self, "_on_unit_portrait_changed"))
 	if turn_announcer != null:
 		turn_announcer.visible = false
 		turn_announcer.modulate = Color(1, 1, 1, 0)
@@ -66,6 +71,37 @@ func _ready() -> void:
 	
 	# 创建CanvasLayer并加载victory_screen
 	_create_victory_canvas_layer()
+
+func _on_unit_portrait_changed(_unit: Node, texture: Texture2D) -> void:
+	if portrait == null:
+		return
+	if texture == null:
+		return
+	
+	# 如果是同一个 texture，就不重复播放动画了
+	if portrait.texture == texture:
+		return
+		
+	portrait.texture = texture
+	
+	# 从左侧滑入动画
+	var start_x: float = -350.0
+	var end_x: float = 0.0 # 假设 portrait 的正常位置是 0，或者需要读取当前位置
+	
+	# 由于 portrait 在场景中的初始位置可能已经调整好，我们假设当前位置就是目标位置
+	# 或者我们可以硬编码一个位置，或者读取 _ready 时记录的初始位置。
+	# 在 _ready 中没有记录 portrait 的初始位置。
+	# 让我们假设 portrait 节点本身的位置是最终位置。
+	
+	var final_pos: Vector2 = portrait.position
+	# 如果我们没有记录过原始位置，可能第一次动画后位置就变了。
+	# 所以最好只在动画开始时设置起点。
+	
+	portrait.position.x = start_x
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(portrait, "position:x", final_pos.x, 0.5)
 
 func _play_battle_audio() -> void:
 	SoundManager.play_sfx("LevelStart")
@@ -129,7 +165,7 @@ func _on_turn_started(turn_index: int, _context: Dictionary) -> void:
 		return
 	if turn_index <= 1:
 		return
-	if board.find_units("player").is_empty():
+	if _board.find_units("player").is_empty():
 		_handle_defeated()
 
 func _on_turn_banner_requested(text: String, context: Dictionary) -> void:
@@ -179,13 +215,21 @@ func _on_unit_died(_unit: Node, _killer: Node, _dir: int, _context: Dictionary) 
 func _check_victory() -> void:
 	if _battle_over:
 		return
-	if board.find_units("enemy").is_empty():
+	if _board.find_units("enemy").is_empty():
 		_handle_victory()
 
 func _handle_victory() -> void:
 	_battle_over = true
 	if GameState != null:
+		if level_index >= GameState.max_level:
+			GameState.game_cleared = true
+			SoundManager.play_sfx("Victory")
+			await get_tree().create_timer(1.0).timeout
+			BattleEventBus.go("main_menu")
+			return
+		
 		GameState.unlock_next_level(level_index)
+	
 	SoundManager.play_sfx("Victory")
 	# 显示胜利界面
 	if victory_screen != null:
@@ -290,59 +334,63 @@ func _load_and_spawn_level() -> void:
 	if level == null:
 		return
 	_current_level = level
+	if portrait != null:
+		portrait.texture = level.portrait
 	for entry in level.enemy_spawns:
-		var enemy_key: String = str(entry.get("enemy_key", ""))
+		if entry == null:
+			continue
+		var enemy_key: String = entry.enemy_key
 		if enemy_key == "":
 			continue
 		var data: EnemyData = enemy_infos.get(enemy_key, null) as EnemyData
 		if data == null:
 			continue
-		var pos: Vector2i = entry.get("pos", Vector2i(0, 0))
-		var cell: Cell = board.get_cell_at(pos)
+		var pos: Vector2i = entry.pos
+		var cell: Cell = _board.get_cell_at(pos)
 		if cell == null:
 			continue
-		var unit: UnitCard = create_enemy_unit(enemy_key, data)
+		var spawn_numbers: DirectionNumbers = DirectionNumbers.new(entry.n, entry.e, entry.s, entry.w)
+		var unit: UnitCard = create_enemy_unit(enemy_key, data, spawn_numbers)
 		if unit == null:
 			continue
 		spawn_unit_at_cell(unit, cell, data.card_art, data.card_art_flipped)
 
-func create_enemy_unit(enemy_key: String, data: EnemyData) -> UnitCard:
+func create_enemy_unit(enemy_key: String, data: EnemyData, override_stats: DirectionNumbers = null) -> UnitCard:
 	if enemy_unit_scene == null:
 		return null
 	var unit: UnitCard = enemy_unit_scene.instantiate() as UnitCard
 	if unit == null:
 		return null
 	var display_name: String = data.display_name if data.display_name != "" else enemy_key
-	var numbers: DirectionNumbers = DirectionNumbers.new(
-		data.n,
-		data.e,
-		data.s,
-		data.w
-	)
+	var numbers: DirectionNumbers
+	# 直接使用 override_stats，不再进行全-1检查。如果它是null，则使用默认值。
+	if override_stats != null:
+		numbers = override_stats
+	else:
+		numbers = DirectionNumbers.new(data.n, data.e, data.s, data.w)
+	
+	unit.apply_enemy_data(data, true)
+	
 	unit.set_direction_numbers(numbers, true)
 	unit.display_name = display_name
-	unit.description = data.desc
-	unit.effect_id = data.flip_effect_id
-	unit.flip_trigger_id = data.flip_trigger_id
-	if data.resolver_script != null:
-		var resolver_instance: UnitResolver = data.resolver_script.new() as UnitResolver
-		if resolver_instance != null:
-			if resolver_instance is AttackOrMoveResolver:
-				(resolver_instance as AttackOrMoveResolver).debug_log = true
-			unit.custom_resolver = resolver_instance
-	if enemy_key == "社畜":
-		_apply_death_transform(unit, "社畜二阶段")
+	
 	return unit
 
 func _apply_death_transform(unit: UnitCard, transform_key: String) -> void:
+	# If the unit already has a death transform set (e.g. from Resource), respect it first
+	if unit.death_transform != null:
+		return
+		
 	var data: EnemyData = enemy_infos.get(transform_key, null) as EnemyData
 	if data == null:
 		return
-	unit.death_behavior = "transform"
+	# Configure unit to use death trigger for transformation
+	unit.flip_trigger_id = "death"
+	unit.effect_id = "transform"
 	unit.death_transform = data
 
 func spawn_unit_at_cell(unit: UnitCard, cell: Cell, art: Texture2D = null, art_flipped: Texture2D = null) -> bool:
-	var placed: bool = board.place_existing_unit(unit, cell)
+	var placed: bool = _board.place_existing_unit(unit, cell)
 	if placed:
 		unit.set_art(art, art_flipped)
 		return true
@@ -350,4 +398,4 @@ func spawn_unit_at_cell(unit: UnitCard, cell: Cell, art: Texture2D = null, art_f
 	return false
 
 func _get_center_cell() -> Cell:
-	return board.get_node("GridContainer/Cell11") as Cell
+	return _board.get_node("GridContainer/Cell11") as Cell

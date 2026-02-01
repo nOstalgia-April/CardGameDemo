@@ -11,11 +11,14 @@
 [ext_resource type="PackedScene" uid="uid://bv5h3cwm21ok7" path="res://tscns/battleground/board/board.tscn" id="9_na4yj"]
 [ext_resource type="PackedScene" uid="uid://ctwxkqyg1cwjv" path="res://tscns/energy_hud.tscn" id="10_guyid"]
 [ext_resource type="PackedScene" uid="uid://cno353yuv2xjm" path="res://tscns/flip_hud.tscn" id="11_owkka"]
+[ext_resource type="Texture2D" uid="uid://b72oby5itod5p" path="res://assets/plant3.png" id="12_guyid"]
 [ext_resource type="PackedScene" uid="uid://bugqndusvguwg" path="res://tscns/turn_end_button.tscn" id="12_ivtmp"]
 [ext_resource type="PackedScene" uid="uid://cut5772wtvpsw" path="res://tscns/folder_button.tscn" id="13_folder_button"]
 [ext_resource type="PackedScene" uid="uid://bsu4iagqsokc3" path="res://tscns/tooltip_manager.tscn" id="14_tooltip"]
 [ext_resource type="PackedScene" uid="uid://cipthh08jmhxp" path="res://tscns/turn_hint_controller.tscn" id="15_turn_hint"]
 [ext_resource type="PackedScene" uid="uid://cw5ffs3oe5pyy" path="res://turn_announcer.tscn" id="16_turn_announcer"]
+[ext_resource type="PackedScene" uid="uid://cdnw7yvyf3vus" path="res://rule_board.tscn" id="17_rule_board"]
+[ext_resource type="Texture2D" uid="uid://cjcy3u1tus65q" path="res://assets/plant1.png" id="18_na4yj"]
 
 [sub_resource type="Shader" id="Shader_dynamicwall"]
 code = "shader_type canvas_item;
@@ -59,6 +62,8 @@ battle_loop_player_path = NodePath("BattleLoopPlayer")
 
 [node name="BattleLoopPlayer" type="AudioStreamPlayer" parent="." unique_id=888120991]
 stream = ExtResource("4_battle_loop")
+volume_db = -10.0
+bus = &"BGM"
 
 [node name="BG" type="Sprite2D" parent="." unique_id=43290717]
 position = Vector2(800, 560)
@@ -132,10 +137,10 @@ metadata/_edit_use_anchors_ = true
 [node name="EnergyHUD" parent="Root/HUD" unique_id=985602427 instance=ExtResource("10_guyid")]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 3.0575
-anchor_top = 1.0357143
-anchor_right = 3.0575
-anchor_bottom = 1.0357143
+anchor_left = 3.0175
+anchor_top = 1.9107143
+anchor_right = 3.0175
+anchor_bottom = 1.9107143
 offset_bottom = 56.0
 grow_horizontal = 1
 grow_vertical = 1
@@ -144,10 +149,10 @@ metadata/_edit_use_anchors_ = true
 [node name="FlipHUD" parent="Root/HUD" unique_id=314267766 instance=ExtResource("11_owkka")]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 1.09
-anchor_top = -2.6785715
-anchor_right = 1.09
-anchor_bottom = -2.6785715
+anchor_left = 1.0875
+anchor_top = -2.1785715
+anchor_right = 1.0875
+anchor_bottom = -2.1785715
 offset_left = 1.0
 offset_top = 200.0
 offset_right = 1.0
@@ -172,16 +177,30 @@ offset_right = 1276.0
 offset_bottom = 572.0
 confirm_button = NodePath("../TurnEndButton")
 
+[node name="RuleBoard" parent="Root/HUD" unique_id=1630130774 instance=ExtResource("17_rule_board")]
+z_index = 1000
+layout_mode = 1
+
 [node name="TooltipManager" parent="Root" unique_id=1651306355 instance=ExtResource("14_tooltip")]
 layout_mode = 1
 
 [node name="TurnAnnouncer" parent="Root" unique_id=1234567890 instance=ExtResource("16_turn_announcer")]
 unique_name_in_owner = true
-layout_mode = 3
 z_index = 20
+layout_mode = 1
 
 [node name="BackButton" parent="." unique_id=136421909 instance=ExtResource("13_folder_button")]
 offset_left = -46.0
 offset_top = 4.0
 offset_right = -46.0
 offset_bottom = 4.0
+
+[node name="plant1" type="Sprite2D" parent="." unique_id=44295448]
+position = Vector2(475, 714)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("18_na4yj")
+
+[node name="plant2" type="Sprite2D" parent="." unique_id=719439467]
+position = Vector2(25, 653)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("12_guyid")

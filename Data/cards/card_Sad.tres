@@ -15,6 +15,6 @@ e = 3
 s = 5
 w = 7
 effect_id = "rotate"
-desc = "翻牌：自身顺时针旋转，邻格逆时针旋转"
+desc = "翻牌：自身数字顺时针旋转，邻格逆时针旋转"
 card_art = ExtResource("1_1vxly")
 card_art_flipped = ExtResource("2_0y3im")

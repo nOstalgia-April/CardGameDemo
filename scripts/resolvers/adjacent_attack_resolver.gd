@@ -26,8 +26,14 @@ func resolve(unit: UnitCard) -> bool:
 		var target_cell: Cell = neighbors[i]
 		if target_cell == null:
 			continue
-		if target_cell.get_unit() == null:
+		var target_unit: UnitCard = target_cell.get_unit() as UnitCard
+		if target_unit == null:
 			continue
+		
+		# Prevent friendly fire: only attack if teams are different
+		if target_unit.is_enemy == unit.is_enemy:
+			continue
+			
 		var attack_context: Dictionary = {
 			"accepted": false,
 		}

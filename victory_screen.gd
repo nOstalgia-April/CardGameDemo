@@ -43,11 +43,11 @@ func open():
 	# 添加旋转动画
 	var tween = create_tween()
 	tween.set_loops()
-	tween.tween_property(victory_label, "rotation_degrees", 15, 0.5)
-	tween.tween_property(victory_label, "rotation_degrees", -15, 0.5)
+	tween.tween_property(victory_label, "rotation_degrees", 15, 0.3)
+	tween.tween_property(victory_label, "rotation_degrees", -15, 0.3)
 
-	# 第三步：等待 2.0 秒
-	await get_tree().create_timer(2.0).timeout
+	# 第三步：等待 1.2 秒
+	await get_tree().create_timer(1.2).timeout
 
 	# 第四步：隐藏 VictoryLabel
 	victory_label.visible = false

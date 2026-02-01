@@ -5,6 +5,9 @@ const _TRIGGERS: Dictionary = {
 	"input": preload("res://scripts/triggers/flip_trigger.gd"),
 	"on_place": preload("res://scripts/triggers/on_place_trigger.gd"),
 	"none": preload("res://scripts/triggers/null_flip_trigger.gd"),
+	"death": preload("res://scripts/triggers/death_trigger.gd"),
+	"turn_start": preload("res://scripts/triggers/turn_start_trigger.gd"),
+	"parity_change": preload("res://scripts/triggers/parity_change_trigger.gd"),
 }
 
 static func create(trigger_id: String) -> FlipTrigger:

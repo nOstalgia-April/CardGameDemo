@@ -1,15 +1,38 @@
 [gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://cgnoj5h1iiyck"]
 
-[ext_resource type="Texture2D" uid="uid://be0ba8djiy6fp" path="res://assets/Portraits/敌人立绘2_社畜牛马_击败前_主体.png" id="1_ew30e"]
+[ext_resource type="Script" uid="uid://cxqsplq1m2jp3" path="res://scripts/data/enemy_spawn_data.gd" id="1_sq5ft"]
+[ext_resource type="Texture2D" uid="uid://dvid8nb1tbgm6" path="res://assets/Portraits/enemy2_defeat!.png" id="2_s5x5u"]
 [ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="2_sq5ft"]
+
+[sub_resource type="Resource" id="Resource_s5x5u"]
+script = ExtResource("1_sq5ft")
+enemy_key = "小怪"
+pos = Vector2i(1, 2)
+n = 6
+e = 5
+w = 6
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_k26sd"]
+script = ExtResource("1_sq5ft")
+enemy_key = "石头"
+e = 1
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_sq5ft"]
+script = ExtResource("1_sq5ft")
+enemy_key = "小怪"
+pos = Vector2i(2, 1)
+n = 8
+e = 6
+s = 7
+w = 21
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
 
 [resource]
 script = ExtResource("2_sq5ft")
-level_name = "第2关"
-level_index = 2
-enemy_spawns = Array[Dictionary]([{
-"enemy_key": "社畜",
-"pos": Vector2i(0, 1)
-}])
-initial_hand_cards = Array[String](["Angry", "Happy", "Jealous", ""])
-portrait = ExtResource("1_ew30e")
+level_name = "第3关"
+level_index = 3
+enemy_spawns = Array[ExtResource("1_sq5ft")]([SubResource("Resource_s5x5u"), SubResource("Resource_k26sd"), SubResource("Resource_sq5ft")])
+initial_hand_cards = Array[String](["Angry", "Happy", "Jealous"])
+portrait = ExtResource("2_s5x5u")

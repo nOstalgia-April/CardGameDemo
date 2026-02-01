@@ -32,6 +32,7 @@ signal unit_hover_ended()
 signal request_scene(scene_key: String, payload: Dictionary)
 signal battle_victory(context: Dictionary)
 signal battle_defeated(context: Dictionary)
+signal unit_portrait_changed(unit: Node, texture: Texture2D)
 
 func _ready() -> void:
 	add_to_group("battle_event_bus")

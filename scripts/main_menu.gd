@@ -17,6 +17,7 @@ var _level_select_scene: PackedScene = null
 var _battle_scene: PackedScene = null
 var _preload_requested: bool = false
 var _bgm_started: bool = false
+var _pass_layer: CanvasLayer = null
 
 func _on_start_pressed() -> void:
 	await _ensure_preload_ready()
@@ -24,6 +25,11 @@ func _on_start_pressed() -> void:
 	SoundManager.play_sfx("MainPlayPress")
 
 func _ready() -> void:
+	# 强制应用中文字体主题
+	var default_theme = load("res://default_theme.tres")
+	if default_theme != null:
+		theme = default_theme
+
 	_play_room_bgm()
 	if about_info_layer != null:
 		about_info_layer.visible = false
@@ -34,13 +40,50 @@ func _ready() -> void:
 		start_battle_button.mouse_exited.connect(_on_start_unhovered)
 	if info_button != null:
 		_apply_click_mask(info_button, info_button.texture_normal)
+		info_button.pivot_offset = info_button.size * 0.5
 		info_button.pressed.connect(_on_info_pressed)
+		info_button.mouse_entered.connect(_on_info_hovered)
+		info_button.mouse_exited.connect(_on_info_unhovered)
 	if info_panel != null:
 		info_panel.mouse_filter = Control.MOUSE_FILTER_PASS
 		info_panel.gui_input.connect(_on_info_panel_gui_input)
 	if info_exit_button != null:
 		info_exit_button.pressed.connect(_on_info_exit_pressed)
 	_start_preload()
+	_check_game_cleared()
+
+func _check_game_cleared() -> void:
+	if GameState != null and GameState.game_cleared:
+		GameState.game_cleared = false
+		_show_pass_screen()
+
+func _show_pass_screen() -> void:
+	_pass_layer = CanvasLayer.new()
+	_pass_layer.layer = 200 # Topmost
+	add_child(_pass_layer)
+	
+	var bg = ColorRect.new()
+	bg.color = Color(0, 0, 0, 0.8)
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_pass_layer.add_child(bg)
+	
+	var texture_rect = TextureRect.new()
+	texture_rect.texture = load("res://assets/UI/Pass.PNG")
+	texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	texture_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_pass_layer.add_child(texture_rect)
+
+func _input(event: InputEvent) -> void:
+	if _pass_layer != null and is_instance_valid(_pass_layer):
+		if (event is InputEventMouseButton and event.pressed) or (event is InputEventKey and event.pressed):
+			_hide_pass_screen()
+			get_viewport().set_input_as_handled()
+
+func _hide_pass_screen() -> void:
+	if _pass_layer != null and is_instance_valid(_pass_layer):
+		_pass_layer.queue_free()
+		_pass_layer = null
 
 func _play_room_bgm() -> void:
 	if _bgm_started:
@@ -68,6 +111,19 @@ func _on_start_unhovered() -> void:
 func _on_info_pressed() -> void:
 	_set_info_visible(about_info_layer != null and !about_info_layer.visible)
 	SoundManager.play_sfx("ComputerClick")
+
+func _on_info_hovered() -> void:
+	SoundManager.play_sfx("UiWoodClick")
+	if info_button != null:
+		var tween = create_tween()
+		tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(info_button, "scale", Vector2(1.1, 1.1), 0.1)
+
+func _on_info_unhovered() -> void:
+	if info_button != null:
+		var tween = create_tween()
+		tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(info_button, "scale", Vector2(1.0, 1.0), 0.1)
 
 func _on_info_exit_pressed() -> void:
 	_set_info_visible(false)

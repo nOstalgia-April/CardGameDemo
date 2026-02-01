@@ -11,11 +11,13 @@ select_color = Color(1, 0.2, 0.2, 1)
 BGM = ExtResource("3_5fc7b")
 
 [node name="HandView" parent="Root" parent_id_path=PackedInt32Array(286232410) index="0" unique_id=140155012]
-anchors_preset = -1
 anchor_left = 75.0
 anchor_top = -1.0
 anchor_right = 75.0
 anchor_bottom = -1.0
+
+[node name="B_Board" parent="Root/HUD" parent_id_path=PackedInt32Array(2047279455) index="5" unique_id=1343037791]
+visible = true
 
 [node name="MessageLabel" type="Label" parent="Root" parent_id_path=PackedInt32Array(286232410) index="3" unique_id=2117369923]
 unique_name_in_owner = true

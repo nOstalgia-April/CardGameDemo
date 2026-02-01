@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://bduq48kpv04tt"]
+
+[ext_resource type="Texture2D" uid="uid://c47l5054r2mfw" path="res://assets/UI/B_Board/u_b.png" id="1_relse"]
+[ext_resource type="Texture2D" uid="uid://ew0i7gjq17tf" path="res://assets/UI/B_Board/u_back.png" id="2_lufgc"]
+[ext_resource type="Texture2D" uid="uid://bkj7lfswbh2c6" path="res://assets/UI/B_Board/u_back (1).png" id="3_fl3pf"]
+[ext_resource type="Texture2D" uid="uid://bqp6osa8xvc53" path="res://assets/UI/B_Board/u_.png" id="4_0uayj"]
+[ext_resource type="Script" uid="uid://bvitk704jhe5c" path="res://b_board.gd" id="5_script"]
+
+[node name="B_Board" type="Control" unique_id=1343037791]
+layout_mode = 3
+anchor_right = 0.35700002
+anchor_bottom = 0.13100001
+offset_right = -0.2000122
+offset_bottom = 0.27998352
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_script")
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=1293332759]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture_normal = ExtResource("1_relse")
+
+[node name="Normal" type="Control" parent="TextureButton" unique_id=1330196139]
+mouse_filter = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ArrowIMG" type="TextureRect" parent="TextureButton/Normal" unique_id=1014280874]
+layout_mode = 0
+offset_left = 76.0
+offset_top = -3.0
+offset_right = 173.0
+offset_bottom = 104.0
+texture = ExtResource("2_lufgc")
+
+[node name="Panel" type="CenterContainer" parent="TextureButton/Normal" unique_id=365640997]
+layout_mode = 0
+offset_left = 155.0
+offset_top = 5.0
+offset_right = 474.0
+offset_bottom = 99.0
+
+[node name="Label" type="Label" parent="TextureButton/Normal/Panel" unique_id=421798851]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.7764706)
+theme_override_font_sizes/font_size = 64
+text = "第几关"
+
+[node name="Hover" type="Control" parent="TextureButton" unique_id=24110691]
+mouse_filter = 2
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ArrowIMG" type="TextureRect" parent="TextureButton/Hover" unique_id=91392011]
+layout_mode = 0
+offset_left = 47.0
+offset_top = 5.0
+offset_right = 251.0
+offset_bottom = 115.0
+texture = ExtResource("3_fl3pf")
+stretch_mode = 2
+
+[node name="Label" type="TextureRect" parent="TextureButton/Hover" unique_id=2074763487]
+layout_mode = 0
+offset_left = 8.0
+offset_top = -3.0
+offset_right = 517.0
+offset_bottom = 144.0
+texture = ExtResource("4_0uayj")
+expand_mode = 1
+stretch_mode = 2
+metadata/_edit_lock_ = true

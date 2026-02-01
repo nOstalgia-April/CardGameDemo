@@ -77,10 +77,10 @@ metadata/_edit_lock_ = true
 
 [node name="StartBattleButton" type="TextureButton" parent="." unique_id=907230738]
 layout_mode = 0
-offset_left = 54.0
-offset_top = 234.0
-offset_right = 629.0
-offset_bottom = 880.0
+offset_left = -4.0
+offset_top = 136.0
+offset_right = 571.00006
+offset_bottom = 782.0
 texture_normal = ExtResource("4_dg77c")
 texture_hover = ExtResource("5_272bh")
 
@@ -89,13 +89,14 @@ libraries/ = SubResource("AnimationLibrary_272bh")
 
 [node name="InfoButton" type="TextureButton" parent="." unique_id=1732704038]
 layout_mode = 0
-offset_left = 422.0
-offset_top = 291.0
-offset_right = 586.0
-offset_bottom = 455.0
+offset_left = 382.0
+offset_top = 237.0
+offset_right = 546.0
+offset_bottom = 401.0
 texture_normal = ExtResource("12_ycdy4")
 
 [node name="AboutInfoLayer" type="CanvasLayer" parent="." unique_id=2141734920]
+visible = false
 
 [node name="InfoPanel" type="Panel" parent="AboutInfoLayer" unique_id=619059719]
 anchors_preset = 15
@@ -117,13 +118,29 @@ custom_minimum_size = Vector2(500, 500)
 layout_mode = 0
 offset_left = 305.0
 offset_top = 377.0
-offset_right = 805.0
+offset_right = 1322.0
 offset_bottom = 877.0
-mouse_filter = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/normal_font_size = 64
-text = "13233423141234123412351325123412341234
-"
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[b]● 音乐音效[/b]
+  └─ 不可改名 (B站同名) : changen4me@163.com
+     [i]影视、游戏配乐，歌曲制作[/i]
+
+[b]● 程序 / 策划[/b]
+  ├─ 常常 : 625204207@qq.com
+     [i]“主要负责玩法设计，关卡设计，策划组织。很高兴能做出比第一次gamejam更多更有趣的内容”[/i]
+  └─ 蜻蜓队长 : roserdudu6@gmail.com
+	[i]“各位老师都很厉害，被带飞了”[/i]
+[b]● 美术[/b]
+  ├─ 电线杆 (xhs:9582279255) : 626261883@qq.com
+     [i]“尝试了跟平时不一样的美术风格，画的很开心（已燃尽.ver）！”[/i]
+  ├─ 毛 (xhs:63821644259) : 1328086131@qq.com
+     [i]“咕咕嘎嘎，咕嘎...（三天画了23张还是人吗”[/i]
+  ├─ Ub : 3535227096@qq.com
+[i]“好舒适啊第一次搞ggj就遇到如此给力给力的朋友们”[/i]
+  └─ nice (xhs:26213930740) : 2891416324@qq.com
+     [i]“没想到自己画的东西真的被放进了游戏里，好激动！”[/i]"
 
 [node name="ExitButton" type="TextureButton" parent="AboutInfoLayer/InfoPanel" unique_id=273289239]
 layout_mode = 0

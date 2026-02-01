@@ -1,6 +1,8 @@
 extends Control
 class_name Board
 
+const MouseTooltip = preload("res://tscns/ui/mouse_tooltip.tscn")
+
 @onready var grid: GridContainer = $GridContainer
 var cell_map: Dictionary = {}
 var first_placement_done: bool = false
@@ -57,7 +59,12 @@ func _on_unit_action_requested(unit: Node, target_cell: Node, context: Dictionar
 
 func _on_unit_attack_requested(unit: Node, dir: int, advantage: bool, context: Dictionary) -> void:
 	var attacker: UnitCard = unit as UnitCard
-	var ok: bool = resolve_attack_dir(attacker, dir, advantage)
+	var is_ranged: bool = context.get("ranged", false)
+	var ok: bool
+	if is_ranged:
+		ok = resolve_ranged_attack_dir(attacker, dir, advantage)
+	else:
+		ok = resolve_attack_dir(attacker, dir, advantage)
 	context["accepted"] = ok
 
 func _on_unit_knockback_requested(unit: Node, dir: int, context: Dictionary) -> void:
@@ -98,10 +105,19 @@ func place_card_on_cell(card: Card, cell: Cell, context: Dictionary = {}) -> Uni
 	if cell.is_occupied(): # direct occupancy check (was is_cell_empty)
 		return null
 	if !can_place_on(cell):
+		SoundManager.play_sfx("HandviewNoCostError")
+		var tooltip = MouseTooltip.instantiate()
+		add_child(tooltip)
+		tooltip.global_position = get_global_mouse_position()
 		return null
 	var effect_id: String = card.card_effect_id
 	if turn_manager != null:
 		if !turn_manager.can_spend_energy(1):
+			SoundManager.play_sfx("HandviewNoCostError")
+			var tooltip = MouseTooltip.instantiate()
+			tooltip.set_text("你已经消耗掉所有费用\r切换回合吧")
+			add_child(tooltip)
+			tooltip.global_position = get_global_mouse_position()
 			return null
 		if effect_id == "charge" and !turn_manager.can_use_flip():
 			return null
@@ -226,13 +242,49 @@ func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -
 		BattleEventBus.emit_signal("damage_applied", target, attacker, DirUtils.opposite_dir(dir), def_value, event_context)
 	return true
 
+func resolve_ranged_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -> bool:
+	var current_cell: Cell = get_parent_cell_of_unit(attacker)
+	var atk_value: int = attacker.get_dir_value(dir)
+	if atk_value <= 0:
+		return false
+	
+	# Find first target in direction
+	while true:
+		var neighbors: Dictionary = get_neighbor_cells(current_cell)
+		var next_cell: Cell = neighbors.get(dir, null) as Cell
+		if next_cell == null:
+			return false # Hit wall/edge
+			
+		var target: UnitCard = next_cell.get_unit() as UnitCard
+		if target != null:
+			if target.is_enemy == attacker.is_enemy:
+				return false # Blocked by friendly
+			else:
+				# Found enemy target
+				var def_dir: int = DirUtils.opposite_dir(dir)
+				var event_context: Dictionary = {"advantage": advantage, "ranged": true}
+				
+				BattleEventBus.emit_signal("attack_started", attacker, target, dir, event_context)
+				BattleEventBus.emit_signal("screen_shake_requested", 0.0, 0.0, event_context)
+				
+				target.take_damage(def_dir, attacker, atk_value)
+				BattleEventBus.emit_signal("damage_applied", attacker, target, dir, atk_value, event_context)
+				
+				# Ranged attacks do not trigger counter-attacks (one-way)
+				return true
+				
+		current_cell = next_cell
+		
+	return false
+
 func on_unit_died(unit: Node, killer: Node, dir: int) -> void:
 	if !is_instance_valid(unit):
 		return
 	var u: UnitCard = unit as UnitCard
-	if u != null and u.try_death_transform():
-		update_visibility()
-		return
+	# Death transformation is now handled by UnitCard's take_damage calling FlipTrigger.on_death
+	# If UnitCard emits "died", it means it really died (destroyed).
+	# So we don't need to check try_death_transform() here anymore.
+	
 	if cleanup_delay > 0.0:
 		var timer: SceneTreeTimer = get_tree().create_timer(cleanup_delay)
 		await timer.timeout

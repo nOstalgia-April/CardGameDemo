@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dfsjro2rh6jp0"]
+
+[ext_resource type="Texture2D" uid="uid://xmgpv0ngjd2l" path="res://assets/cards/enemy/zzl.png" id="1_22exw"]
+[ext_resource type="Texture2D" uid="uid://bbmhf64tqiguh" path="res://assets/cards/enemy/cq.png" id="2_1dqkv"]
+[ext_resource type="Script" uid="uid://6dbkq3w1x6lr" path="res://scripts/resolvers/attack_ranged_or_move_resolver.gd" id="4_7rwga"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="4_kyu7l"]
+
+[sub_resource type="Resource" id="Resource_hmcdt"]
+script = ExtResource("4_kyu7l")
+enemy_key = "长矛"
+display_name = "长矛"
+desc = "向四周发起远程攻击"
+resolver_script = ExtResource("4_7rwga")
+card_art = ExtResource("2_1dqkv")
+card_art_flipped = ExtResource("2_1dqkv")
+n = 6
+e = 6
+s = 3
+w = 3
+
+[resource]
+script = ExtResource("4_kyu7l")
+enemy_key = "蜘蛛卵_长矛"
+display_name = "蜘蛛卵"
+desc = "无法攻击
+
+看起来会孵化出什么的样子......"
+flip_effect_id = "transform"
+flip_trigger_id = "death"
+card_art = ExtResource("1_22exw")
+card_art_flipped = ExtResource("2_1dqkv")
+death_transform = SubResource("Resource_hmcdt")

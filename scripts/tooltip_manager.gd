@@ -1,9 +1,10 @@
 extends Control
 class_name CardTooltipManager
 
+@onready var desc_label: Label = $TooltipPanel/VBoxContainer/Margin/DescLabel
+
 @onready var tooltip_panel: Panel = $TooltipPanel
 @onready var name_label: Label = $TooltipPanel/VBoxContainer/NameLabel
-@onready var desc_label: Label = $TooltipPanel/VBoxContainer/DescLabel
 
 const FIXED_TOOLTIP_CELL: Vector2i = Vector2i(1, 1)
 
@@ -65,10 +66,8 @@ func _on_unit_hover_started(context: Dictionary) -> void:
 	var content: Control = $TooltipPanel/VBoxContainer
 	var content_size: Vector2 = content.get_combined_minimum_size()
 	var padded_size: Vector2 = content_size + Vector2(30, 30)
-	tooltip_panel.size = Vector2(
-		max(tooltip_panel.size.x, padded_size.x),
-		max(tooltip_panel.size.y, padded_size.y)
-	)
+	tooltip_panel.size = Vector2.ZERO # Reset to allow shrinking
+	tooltip_panel.size = padded_size
 
 	var global_rect: Rect2 = context.get("global_rect", Rect2())
 	var card_global_pos: Vector2 = global_rect.position

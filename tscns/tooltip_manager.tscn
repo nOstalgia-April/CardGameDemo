@@ -39,10 +39,16 @@ vertical_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="TooltipPanel/VBoxContainer" unique_id=625504011]
 layout_mode = 2
 
-[node name="DescLabel" type="Label" parent="TooltipPanel/VBoxContainer" unique_id=667473163]
-custom_minimum_size = Vector2(100, 25)
+[node name="Margin" type="MarginContainer" parent="TooltipPanel/VBoxContainer" unique_id=1416327324]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="DescLabel" type="Label" parent="TooltipPanel/VBoxContainer/Margin" unique_id=667473163]
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 24
 text = "Card Description"
 horizontal_alignment = 1
 vertical_alignment = 1

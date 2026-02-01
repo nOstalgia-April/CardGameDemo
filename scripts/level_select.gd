@@ -5,17 +5,19 @@ extends Node2D
 
 @export var BGM: AudioStream
 
-@onready var board: Board = %Board
+@onready var board: Control = %Board
 @onready var grid: GridContainer = board.get_node("GridContainer") as GridContainer
 @onready var hand_view: HandView = %HandView
 @onready var hud: Control = get_node_or_null("Root/HUD") as Control
 @onready var turn_end_button: Control = get_node_or_null("Root/HUD/TurnEndButton") as Control
+@onready var rule_board: Control = get_node_or_null("Root/HUD/RuleBoard") as Control
 @onready var message_label: Label = %MessageLabel
 @onready var portrait: Sprite2D = get_node_or_null("Portrait") as Sprite2D
 
 var turn_end_button_ui: TextureButton = null
+var level_select_cell_scene: PackedScene = preload("res://tscns/level_select_cell.tscn")
 
-var _selected_cell: Cell = null
+var _selected_cell: Control = null
 var _selected_level_index: int = 0
 var _message_timer: Timer = null
 var _portrait_start_x: float = -350.0
@@ -35,7 +37,7 @@ func _lock_battle_logic() -> void:
 	if hud != null:
 		hud.visible = true
 		for child in hud.get_children():
-			if child != turn_end_button and child != null:
+			if child != turn_end_button and child != rule_board and child != null:
 				# 安全地检查child是否为CanvasItem类型
 				var canvas_item: CanvasItem = child as CanvasItem
 				if canvas_item != null:
@@ -55,23 +57,63 @@ func _lock_battle_logic() -> void:
 
 func _init_cells() -> void:
 	if grid == null:
+		print("[LevelSelect] _init_cells: Grid is null!")
 		return
+	
+	# 替换战斗用的 Cell 为 LevelSelectCell
+	var existing_children = grid.get_children()
+	for child in existing_children:
+		if not child.has_method("setup"): # 简单的检测是否为 LevelSelectCell
+			print("[LevelSelect] Replacing cell ", child.name, " with LevelSelectCell")
+			var new_cell = level_select_cell_scene.instantiate()
+			new_cell.name = child.name
+			var idx = child.get_index()
+			child.get_parent().remove_child(child)
+			child.queue_free()
+			grid.add_child(new_cell)
+			grid.move_child(new_cell, idx)
+
 	var cells: Array = grid.get_children()
+	print("[LevelSelect] _init_cells: Found ", cells.size(), " cells")
 	cells.sort_custom(func(a, b): return a.name.naturalnocasecmp_to(b.name) < 0)
 	var max_unlocked: int = GameState.max_unlocked_level if GameState != null else 1
 	var level_index: int = 1
 	for entry in cells:
-		var cell: Cell = entry as Cell
+		var cell: Control = entry as Control
 		if cell == null:
 			continue
 		cell.set_meta("level_index", level_index)
 		var unlocked: bool = level_index <= max_unlocked
-		cell.set_state(Cell.CellState.AVAILABLE if unlocked else Cell.CellState.HIDDEN)
-		_ensure_level_label(cell, level_index, unlocked)
+		if cell.has_method("set_state"):
+			# 兼容旧 Cell 逻辑，虽然我们已经替换了，但以防万一
+			cell.set_state(Cell.CellState.AVAILABLE if unlocked else Cell.CellState.HIDDEN)
+		
+		# Determine style
+		var style: String = "default"
+		var level_data: LevelData = LevelLoader.load_by_index(level_index)
+		
+		if not unlocked:
+			style = "default"
+		elif level_index == GameState.max_level:
+			style = "super_red"
+		elif unlocked and level_index < max_unlocked:
+			# Completed level
+			style = "green"
+
+		_ensure_level_label(cell, level_index, unlocked, style)
 		_bind_cell_input(cell)
 		level_index += 1
 
-func _ensure_level_label(cell: Cell, level_index: int, unlocked: bool) -> void:
+func _ensure_level_label(cell: Control, level_index: int, unlocked: bool, style: String = "default") -> void:
+	print("[LevelSelect] _ensure_level_label: cell=", cell.name, " index=", level_index, " unlocked=", unlocked, " style=", style)
+	if cell.has_method("setup"):
+		print("[LevelSelect] Calling setup on ", cell.name)
+		var is_even: bool = (level_index % 2) == 0
+		cell.call("setup", level_index, is_even, unlocked, style)
+		return
+	else:
+		print("[LevelSelect] Cell ", cell.name, " does not have setup method!")
+	
 	if cell.has_method("set_level_number"):
 		cell.call("set_level_number", level_index, unlocked)
 		var root_for_number: Control = cell.get_node_or_null("Root") as Control
@@ -100,7 +142,12 @@ func _ensure_level_label(cell: Cell, level_index: int, unlocked: bool) -> void:
 	label.text = str(level_index)
 	label.visible = unlocked
 
-func _bind_cell_input(cell: Cell) -> void:
+func _bind_cell_input(cell: Control) -> void:
+	if cell.has_signal("pressed"):
+		if not cell.is_connected("pressed", _on_cell_pressed):
+			cell.connect("pressed", _on_cell_pressed)
+		return
+
 	var root: Control = cell.get_node_or_null("Root") as Control
 	if root == null:
 		return
@@ -108,35 +155,44 @@ func _bind_cell_input(cell: Cell) -> void:
 	root.mouse_exited.connect(_on_cell_mouse_exited.bind(cell))
 	root.gui_input.connect(_on_cell_gui_input.bind(cell))
 
-func _on_cell_mouse_entered(cell: Cell) -> void:
+func _on_cell_mouse_entered(cell: Control) -> void:
 	if _is_cell_locked(cell):
 		return
 	if _selected_cell == cell:
 		return
-	cell.set_highlight(true, hover_color)
+	SoundManager.play_sfx("UiBlockPassby")
+	if cell.has_method("set_highlight"):
+		cell.call("set_highlight", true, hover_color)
 
-func _on_cell_mouse_exited(cell: Cell) -> void:
+func _on_cell_mouse_exited(cell: Control) -> void:
 	if _selected_cell == cell:
 		return
-	cell.set_highlight(false)
+	if cell.has_method("set_highlight"):
+		cell.call("set_highlight", false)
 
-func _on_cell_gui_input(event: InputEvent, cell: Cell) -> void:
+func _on_cell_gui_input(event: InputEvent, cell: Control) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_on_cell_pressed(cell)
 
-func _on_cell_pressed(cell: Cell) -> void:
+func _on_cell_pressed(cell: Control) -> void:
 	if _is_cell_locked(cell):
 		_show_message("请先通过上一关")
 		return
 	var level_index: int = int(cell.get_meta("level_index", 0))
 	_select_cell(cell, level_index)
 
-func _select_cell(cell: Cell, level_index: int) -> void:
+func _select_cell(cell: Control, level_index: int) -> void:
 	if _selected_cell != null and is_instance_valid(_selected_cell):
-		_selected_cell.set_highlight(false)
+		if _selected_cell.has_method("set_highlight"):
+			_selected_cell.call("set_highlight", false)
+		elif _selected_cell.has_method("set_selected"):
+			_selected_cell.call("set_selected", false)
 	_selected_cell = cell
 	_selected_level_index = level_index
-	_selected_cell.set_highlight(true, select_color)
+	if _selected_cell.has_method("set_highlight"):
+		_selected_cell.call("set_highlight", true, select_color)
+	elif _selected_cell.has_method("set_selected"):
+		_selected_cell.call("set_selected", true)
 	SoundManager.play_sfx("UnitMove")
 	if turn_end_button_ui != null:
 		turn_end_button_ui.visible = true
@@ -144,7 +200,10 @@ func _select_cell(cell: Cell, level_index: int) -> void:
 
 func _clear_selection() -> void:
 	if _selected_cell != null and is_instance_valid(_selected_cell):
-		_selected_cell.set_highlight(false)
+		if _selected_cell.has_method("set_highlight"):
+			_selected_cell.call("set_highlight", false)
+		elif _selected_cell.has_method("set_selected"):
+			_selected_cell.call("set_selected", false)
 	_selected_cell = null
 	_selected_level_index = 0
 	if turn_end_button_ui != null:
@@ -153,7 +212,7 @@ func _clear_selection() -> void:
 		portrait.position.x = _portrait_start_x
 		portrait.texture = null
 
-func _is_cell_locked(cell: Cell) -> bool:
+func _is_cell_locked(cell: Control) -> bool:
 	var level_index: int = int(cell.get_meta("level_index", 0))
 	var max_unlocked: int = GameState.max_unlocked_level if GameState != null else 1
 	return level_index <= 0 or level_index > max_unlocked

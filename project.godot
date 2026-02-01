@@ -10,15 +10,20 @@ config_version=5
 
 [application]
 
-config/name="ChessGame"
+config/name="Psycho Healer"
 run/main_scene="uid://dvs0frxfwv77n"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://g5vvumunei08"
+buses/default_layout="res://default_bus_layout.tres"
+
 [autoload]
 
-BattleEventBus="*uid://v2dhukdu2cxw"
-SoundManager="*uid://smbcvcot02gd"
+BattleEventBus="*res://globals/battle_event_bus.gd"
+SoundManager="*res://globals/sound_manager/sound_manager.tscn"
 SceneManager="*res://globals/scene_manager.gd"
 Transition="*res://globals/transition/transition.tscn"
 GameState="*res://globals/game_state.gd"
@@ -29,6 +34,10 @@ Cursor="*res://globals/cursor/cursor.tscn"
 window/size/viewport_width=1600
 window/size/viewport_height=1120
 window/stretch/mode="canvas_items"
+
+[gui]
+
+theme/custom="res://default_theme.tres"
 
 [physics]
 

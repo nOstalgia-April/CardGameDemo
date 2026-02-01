@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://ci6jrmj74843b"]
+
+[ext_resource type="Script" uid="uid://cxqsplq1m2jp3" path="res://scripts/data/enemy_spawn_data.gd" id="1_3fcjy"]
+[ext_resource type="Texture2D" uid="uid://phi0wrtynqvp" path="res://assets/Portraits/enemy1.png" id="2_3fcjy"]
+[ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="3_a44ta"]
+
+[sub_resource type="Resource" id="Resource_umcu0"]
+script = ExtResource("1_3fcjy")
+enemy_key = "章鱼"
+pos = Vector2i(2, 2)
+n = 19
+e = 23
+s = 25
+w = 21
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_3fcjy"]
+script = ExtResource("1_3fcjy")
+enemy_key = "石头"
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_a44ta"]
+script = ExtResource("1_3fcjy")
+enemy_key = "石头"
+pos = Vector2i(0, 2)
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_w7edm"]
+script = ExtResource("1_3fcjy")
+enemy_key = "石头"
+pos = Vector2i(2, 0)
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[resource]
+script = ExtResource("3_a44ta")
+level_name = "第7关"
+level_index = 7
+enemy_spawns = Array[ExtResource("1_3fcjy")]([SubResource("Resource_umcu0"), SubResource("Resource_3fcjy"), SubResource("Resource_a44ta"), SubResource("Resource_w7edm")])
+initial_hand_cards = Array[String](["Lovely", "Jealous", "Happy", "Scared", "Sad"])
+portrait = ExtResource("2_3fcjy")
+is_boss = true

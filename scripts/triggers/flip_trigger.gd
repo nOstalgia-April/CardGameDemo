@@ -25,3 +25,6 @@ func _on_gui_input(event: InputEvent) -> void:
 
 func on_placed(_context: Dictionary = {}) -> void:
 	await unit.get_tree().process_frame
+
+func on_death(_context: Dictionary = {}) -> bool:
+	return false

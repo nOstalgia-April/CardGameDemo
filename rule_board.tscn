@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cdnw7yvyf3vus"]
+
+[ext_resource type="Texture2D" uid="uid://d12dqt85rpjxe" path="res://assets/UI/B_Board/u_expand.png" id="1_nr0g0"]
+[ext_resource type="Script" uid="uid://bytdg8r4bcit" path="res://scripts/rule_board.gd" id="1_script"]
+
+[node name="RuleBoard" type="Control" unique_id=1630130774]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=597776563]
+layout_mode = 0
+offset_left = -11.0
+offset_top = -580.0
+offset_right = 570.0
+offset_bottom = 95.0
+texture_normal = ExtResource("1_nr0g0")
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="TextureButton" unique_id=691288534]
+layout_mode = 0
+offset_left = 154.0
+offset_top = 577.0
+offset_right = 411.0
+offset_bottom = 644.0
+theme_override_font_sizes/font_size = 48
+text = "游戏规则"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="Label2" type="Label" parent="TextureButton" unique_id=209876489]
+layout_mode = 0
+offset_left = 157.0
+offset_top = 12.0
+offset_right = 413.0
+offset_bottom = 101.0
+theme_override_font_sizes/font_size = 64
+text = "游戏规则"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="CenterContainer" type="CenterContainer" parent="TextureButton" unique_id=1427839619]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.059000004
+anchor_right = 0.87600005
+anchor_bottom = 0.93900007
+offset_left = 55.720997
+offset_top = 134.0
+offset_right = -18.956024
+offset_bottom = -22.825073
+
+[node name="Rule" type="Label" parent="TextureButton/CenterContainer" unique_id=1211243614]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "当棋子相撞时, 相撞的两个数字会彼此抵消
+
+当棋子某个方向数字归零时
+该方向将 失去保护 ,下一次攻击会直接 摧毁 棋子
+
+棋子每回合只能攻击一次
+
+每回合有一次翻牌棋子的机会，可以触发棋子的特殊效果"
+autowrap_mode = 3
+metadata/_edit_lock_ = true

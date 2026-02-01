@@ -2,6 +2,7 @@ extends Control
 class_name UnitCard
 
 signal died(unit: Node, killer: Node, dir: int)
+signal values_changed(unit: Node)
 
 const FlipEffectRegistry = preload("res://scripts/effects/flip_effect_registry.gd")
 const FlipTriggerRegistry = preload("res://scripts/triggers/flip_trigger_registry.gd")
@@ -81,6 +82,8 @@ var _flipped: bool = false
 var _flip_trigger: FlipTrigger = FlipTriggerRegistry.create("none")
 var _card_art: Texture2D = null
 var _card_art_flipped: Texture2D = null
+var _portrait: Texture2D = null
+var _portrait_flipped: Texture2D = null
 
 func _ready() -> void:
 	_apply_faction_color()
@@ -131,17 +134,36 @@ func apply_enemy_data(data: EnemyData, enemy: bool = true) -> void:
 	var display_name: String = data.display_name if data.display_name != "" else data.enemy_key
 	set_card_data(display_name, data.n, data.e, data.s, data.w, enemy)
 	description = data.desc
-	set_art(data.card_art, data.card_art_flipped)
+	# Only update art if the new data actually has art defined.
+	# This allows "data-only" updates (like phase 2 stats) to inherit the previous form's art (flipped or not).
+	if data.card_art != null or data.card_art_flipped != null:
+		set_art(data.card_art, data.card_art_flipped)
+	
+	if data.portrait != null or data.portrait_flipped != null:
+		_portrait = data.portrait
+		_portrait_flipped = data.portrait_flipped
+	
 	effect_id = data.flip_effect_id
 	flip_trigger_id = data.flip_trigger_id
+	death_transform = data.death_transform
+	
+	if data.resolver_script != null:
+		custom_resolver = data.resolver_script.new()
+	else:
+		custom_resolver = null
 
 func set_art(texture: Texture2D, flipped: Texture2D = null) -> void:
 	_card_art = texture
 	_card_art_flipped = flipped
+	
+	if !is_instance_valid(art):
+		return
+		
 	if _flipped and _card_art_flipped != null:
 		art.texture = _card_art_flipped
 	else:
-		art.texture = _card_art
+		if _card_art != null:
+			art.texture = _card_art
 
 func get_direction_numbers() -> DirectionNumbers:
 	return DirectionNumbers.new(value_n, value_e, value_s, value_w)
@@ -149,7 +171,7 @@ func get_direction_numbers() -> DirectionNumbers:
 func take_damage(dir: int, attacker: Node, value: int) -> Dictionary:
 	var def_before: int = get_dir_value(dir)
 	if def_before <= 0 and value > 0:
-		if try_death_transform():
+		if _flip_trigger.on_death({"attacker": attacker, "dir": dir}):
 			return {
 				"def_before": def_before,
 				"def_after": get_dir_value(dir),
@@ -361,6 +383,8 @@ func _apply_dir_value(dir: int, value: int) -> void:
 			_set_dir_value(dir_w, value)
 	if prev_value > 0 and value <= 0:
 		SoundManager.play_sfx("UnitBreakShield")
+	
+	emit_signal("values_changed", self)
 
 func get_dir_value(dir: int) -> int:
 	match dir:
@@ -531,39 +555,49 @@ func _get_target_cell(candidates: Array[Cell]) -> Cell:
 	return null
 
 func flip(context: Dictionary = {}) -> bool:
-	await get_tree().process_frame
-	if _flipped:
-		return false
+	# 切换翻转状态
+	_flipped = !_flipped
+	
 	if effect_id != "":
 		await FlipEffectRegistry.apply(effect_id, self, context)
 		BattleEventBus.emit_signal("effect_triggered", effect_id, self, context)
 	SoundManager.play_sfx('UnitOnFlip')
 	BattleEventBus.emit_signal("flip_used", self, context)
-	_flipped = true
 	_on_flip()
+	_update_portrait_on_flip()
 	return true
 
 func _on_flip() -> void:
-	# 占位：翻牌逻辑后续在这里实现
-	_flip_highlight_active = true
-	if _card_art_flipped != null:
-		art.texture = _card_art_flipped
+	_flip_highlight_active = _flipped
+	if _flipped:
+		if _card_art_flipped != null:
+			art.texture = _card_art_flipped
+	else:
+		if _card_art != null:
+			art.texture = _card_art
 	_update_border()
+
+func _update_portrait_on_flip() -> void:
+	print("[UnitCard] _update_portrait_on_flip: _flipped=", _flipped, " _portrait=", _portrait, " _portrait_flipped=", _portrait_flipped)
+	var target_texture: Texture2D = null
+	
+	if _flipped:
+		if _portrait_flipped != null:
+			target_texture = _portrait_flipped
+		elif _portrait != null:
+			# Fallback: 如果没有翻转立绘，使用正面立绘
+			target_texture = _portrait
+	else:
+		if _portrait != null:
+			target_texture = _portrait
+			
+	if target_texture != null:
+		print("[UnitCard] Emitting unit_portrait_changed with ", target_texture)
+		BattleEventBus.emit_signal("unit_portrait_changed", self, target_texture)
 
 func set_flipped(active: bool) -> void:
 	_flip_highlight_active = active
 	_update_border()
-
-func try_death_transform() -> bool:
-	if death_behavior != "transform":
-		return false
-	if death_used or death_transform == null:
-		return false
-	death_used = true
-	_dead = false
-	apply_enemy_data(death_transform, true)
-	_on_flip()
-	return true
 
 func _rotate_adjacent_units(clockwise: bool) -> void:
 	var cell: Cell = _get_parent_cell() as Cell
