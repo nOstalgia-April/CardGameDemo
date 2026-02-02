@@ -1,0 +1,14 @@
+TextureRect
+Sprite2D
+TextureButton
+Parallax2D
+MarginContainer
+CenterContainer
+Panel
+Container
+PanelContainer
+Label
+Control
+RichTextLabel
+CanvasLayer
+AnimationPlayer
