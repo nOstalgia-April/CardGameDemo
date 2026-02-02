@@ -1,0 +1,159 @@
+[gd_scene format=3 uid="uid://dvs0frxfwv77n"]
+
+[ext_resource type="Script" uid="uid://dbddlvynv31ob" path="res://scripts/main_menu.gd" id="1_2n4lq"]
+[ext_resource type="AudioStream" uid="uid://to0mdqyksvmu" path="res://Music/SFX/room_intro.ogg" id="2_h2yge"]
+[ext_resource type="AudioStream" uid="uid://ovg385cour1v" path="res://Music/SFX/room_loop.ogg" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://c4u4pw7ukt0iy" path="res://main_bg.tscn" id="4_2cqfq"]
+[ext_resource type="Texture2D" uid="uid://nfm1sxeiqk5v" path="res://assets/Main/PlayButton/1.PNG" id="5_272bh"]
+[ext_resource type="Texture2D" uid="uid://chxd2vfxdx41e" path="res://assets/Main/PlayButton/2.PNG" id="6_play2"]
+[ext_resource type="Texture2D" uid="uid://blni8f0a6ta1n" path="res://assets/Main/PlayButton/3.PNG" id="7_play3"]
+[ext_resource type="Texture2D" uid="uid://dc3t2ujixseeq" path="res://assets/Main/PlayButton/4.PNG" id="8_play4"]
+[ext_resource type="Texture2D" uid="uid://5qxa41ym5fw5" path="res://assets/Main/PlayButton/5.PNG" id="9_play5"]
+[ext_resource type="Texture2D" uid="uid://cg63pm4ltevi6" path="res://assets/Main/PlayButton/6.PNG" id="10_play6"]
+[ext_resource type="Texture2D" uid="uid://crjy02f0oceb8" path="res://assets/Main/PlayButton/7.PNG" id="11_play7"]
+[ext_resource type="Texture2D" uid="uid://dc0ka0ws011oy" path="res://assets/IMG_2676.PNG" id="12_yaehf"]
+[ext_resource type="Texture2D" uid="uid://bl3uqg6l3rwq8" path="res://assets/Main/Info/InfoButton.png" id="12_ycdy4"]
+[ext_resource type="Script" uid="uid://b5rsnrlnwmnr5" path="res://normal.gd" id="13_074og"]
+[ext_resource type="Texture2D" uid="uid://bt5xkdcedkhv1" path="res://assets/Main/Info/InfoBoard.PNG" id="13_w48qg"]
+[ext_resource type="Texture2D" uid="uid://ki4qsn1peoyp" path="res://assets/Main/Info/ui_x.png" id="14_w48qg"]
+
+[sub_resource type="Animation" id="Animation_lquwl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture_hover")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("5_272bh")]
+}
+
+[sub_resource type="Animation" id="Animation_7mycd"]
+resource_name = "hover"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture_hover")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0666667, 0.1333333, 0.2, 0.2666667, 0.3333333, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("5_272bh"), ExtResource("6_play2"), ExtResource("7_play3"), ExtResource("8_play4"), ExtResource("9_play5"), ExtResource("10_play6"), ExtResource("11_play7")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_272bh"]
+_data = {
+&"RESET": SubResource("Animation_lquwl"),
+&"hover": SubResource("Animation_7mycd")
+}
+
+[node name="Main" type="Control" unique_id=1098102689]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2n4lq")
+BGMIntro = ExtResource("2_h2yge")
+BGMLoop = ExtResource("3_h2yge")
+
+[node name="BG2" parent="." unique_id=1267159186 instance=ExtResource("4_2cqfq")]
+position = Vector2(800, 560)
+
+[node name="StartBattleButton" type="TextureButton" parent="." unique_id=907230738]
+layout_mode = 0
+offset_left = -18.0
+offset_top = 121.0
+offset_right = 557.00006
+offset_bottom = 767.0
+texture_hover = ExtResource("5_272bh")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="StartBattleButton" unique_id=1102744823]
+libraries/ = SubResource("AnimationLibrary_272bh")
+
+[node name="Normal" type="TextureRect" parent="StartBattleButton" unique_id=1409978098]
+layout_mode = 0
+offset_left = 58.0
+offset_top = 108.0
+offset_right = 1020.0
+offset_bottom = 804.0
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("12_yaehf")
+script = ExtResource("13_074og")
+metadata/_edit_lock_ = true
+
+[node name="InfoButton" type="TextureButton" parent="." unique_id=1732704038]
+layout_mode = 0
+offset_left = 1362.0
+offset_top = 925.0
+offset_right = 1526.0
+offset_bottom = 1089.0
+texture_normal = ExtResource("12_ycdy4")
+
+[node name="AboutInfoLayer" type="CanvasLayer" parent="." unique_id=2141734920]
+visible = false
+
+[node name="InfoPanel" type="Panel" parent="AboutInfoLayer" unique_id=619059719]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BG" type="TextureRect" parent="AboutInfoLayer/InfoPanel" unique_id=379629637]
+layout_mode = 0
+offset_right = 1600.0
+offset_bottom = 1120.0
+mouse_filter = 2
+texture = ExtResource("13_w48qg")
+
+[node name="TeamInfo" type="RichTextLabel" parent="AboutInfoLayer/InfoPanel" unique_id=417470517]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 0
+offset_left = 305.0
+offset_top = 377.0
+offset_right = 1322.0
+offset_bottom = 877.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[b]● 音乐音效[/b]
+  └─ 不可改名 (B站同名) : changen4me@163.com
+     [i]影视、游戏配乐，歌曲制作[/i]
+
+[b]● 程序 / 策划[/b]
+  ├─ 常常 : 625204207@qq.com
+     [i]“主要负责玩法设计，关卡设计，策划组织。很高兴能做出比第一次gamejam更多更有趣的内容”[/i]
+  └─ 蜻蜓队长 : roserdudu6@gmail.com
+	[i]“各位老师都很厉害，被带飞了”[/i]
+[b]● 美术[/b]
+  ├─ 电线杆 (xhs:9582279255) : 626261883@qq.com
+     [i]“尝试了跟平时不一样的美术风格，画的很开心（已燃尽.ver）！”[/i]
+  ├─ 毛 (xhs:63821644259) : 1328086131@qq.com
+     [i]“咕咕嘎嘎，咕嘎...（三天画了23张还是人吗”[/i]
+  ├─ Ub : 3535227096@qq.com
+[i]“好舒适啊第一次搞ggj就遇到如此给力给力的朋友们”[/i]
+  └─ nice (xhs:26213930740) : 2891416324@qq.com
+     [i]“没想到自己画的东西真的被放进了游戏里，好激动！”[/i]"
+
+[node name="ExitButton" type="TextureButton" parent="AboutInfoLayer/InfoPanel" unique_id=273289239]
+layout_mode = 0
+offset_left = 1272.0
+offset_top = 162.0
+offset_right = 1336.0
+offset_bottom = 226.0
+texture_hover = ExtResource("14_w48qg")
+
+[connection signal="mouse_entered" from="StartBattleButton" to="StartBattleButton/Normal" method="_on_start_battle_button_mouse_entered"]
+[connection signal="mouse_exited" from="StartBattleButton" to="StartBattleButton/Normal" method="_on_start_battle_button_mouse_exited"]
+[connection signal="pressed" from="StartBattleButton" to="." method="_on_start_pressed"]

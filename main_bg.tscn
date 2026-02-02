@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://c4u4pw7ukt0iy"]
+
+[ext_resource type="Texture2D" uid="uid://t5c6oc17r3l4" path="res://assets/Main/123123/Bottom.PNG" id="2_j8pem"]
+[ext_resource type="Texture2D" uid="uid://cxfs28erf7vt4" path="res://assets/Main/123123/微信图片_20260201234729_2184_222.png" id="3_xmfxj"]
+[ext_resource type="Texture2D" uid="uid://0g5fn6uo285l" path="res://assets/Main/123123/微信图片_20260201234755_2190_222.png" id="4_wo2jb"]
+[ext_resource type="Texture2D" uid="uid://d1nc2ems37n25" path="res://assets/Main/123123/微信图片_20260201234738_2185_222.png" id="5_03pds"]
+[ext_resource type="Texture2D" uid="uid://cr6fudp0ehkus" path="res://assets/Main/123123/微信图片_20260201234807_2191_222.png" id="6_i0loy"]
+[ext_resource type="Texture2D" uid="uid://be3pf5pcysqv6" path="res://assets/Main/123123/Fore.PNG" id="6_j8pem"]
+
+[node name="BG" type="Node2D" unique_id=1267159186]
+
+[node name="Bottom" type="Sprite2D" parent="." unique_id=1680342717]
+texture = ExtResource("2_j8pem")
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=274906649]
+texture = ExtResource("3_xmfxj")
+
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=1653446216]
+position = Vector2(313, -218)
+texture = ExtResource("5_03pds")
+
+[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=385466167]
+texture = ExtResource("4_wo2jb")
+
+[node name="Sprite2D5" type="Sprite2D" parent="." unique_id=119902145]
+texture = ExtResource("6_i0loy")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2136970717]
+texture = ExtResource("6_j8pem")

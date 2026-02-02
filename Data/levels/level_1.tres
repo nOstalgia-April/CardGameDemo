@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://tvnyox0m5p0a"]
+
+[ext_resource type="Script" uid="uid://cxqsplq1m2jp3" path="res://scripts/data/enemy_spawn_data.gd" id="1_3y3vq"]
+[ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="1_levdata"]
+[ext_resource type="Texture2D" uid="uid://ceqy0blcxkkvw" path="res://assets/Portraits/matou.png" id="2_3y3vq"]
+
+[sub_resource type="Resource" id="Resource_spawn1"]
+script = ExtResource("1_3y3vq")
+enemy_key = "社畜"
+pos = Vector2i(0, 1)
+s = 1
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[resource]
+script = ExtResource("1_levdata")
+level_name = "第1关"
+enemy_spawns = Array[ExtResource("1_3y3vq")]([SubResource("Resource_spawn1")])
+initial_hand_cards = Array[String](["Happy", "Angry"])
+portrait = ExtResource("2_3y3vq")

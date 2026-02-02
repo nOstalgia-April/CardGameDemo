@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://bsr61pl5vkon3"]
+
+[ext_resource type="PackedScene" uid="uid://cyx5jl4c8qdsd" path="res://tscns/battle.tscn" id="1_battle"]
+[ext_resource type="Script" uid="uid://d12vnvyigvo2s" path="res://scripts/level_select.gd" id="2_level_select_script"]
+[ext_resource type="AudioStream" uid="uid://ovg385cour1v" path="res://Music/SFX/room_loop.ogg" id="3_5fc7b"]
+
+[node name="LevelSelect" unique_id=1204178272 instance=ExtResource("1_battle")]
+script = ExtResource("2_level_select_script")
+hover_color = Color(1, 1, 1, 0.9)
+select_color = Color(1, 0.2, 0.2, 1)
+BGM = ExtResource("3_5fc7b")
+
+[node name="HandView" parent="Root" parent_id_path=PackedInt32Array(286232410) index="0" unique_id=140155012]
+anchor_left = 75.0
+anchor_top = -1.0
+anchor_right = 75.0
+anchor_bottom = -1.0
+
+[node name="MessageLabel" type="Label" parent="Root" parent_id_path=PackedInt32Array(286232410) index="3" unique_id=2117369923]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -40.0
+offset_right = 220.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "请先通过上一关"
+horizontal_alignment = 1
+vertical_alignment = 1

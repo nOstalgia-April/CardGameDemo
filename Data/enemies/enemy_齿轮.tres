@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://cb02yagt4lfsw"]
+
+[ext_resource type="Texture2D" uid="uid://bpbnsh0mijwi6" path="res://assets/cards/enemy/cl1 (1).png" id="1_41f0q"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://nbhlobga6f4q" path="res://assets/cards/enemy/cl2.png" id="2_5xv7d"]
+[ext_resource type="Script" uid="uid://crwxdsjygsuel" path="res://scripts/resolvers/gear_resolver.gd" id="2_resolver"]
+[ext_resource type="Resource" uid="uid://36rewwgn0q1u" path="res://Data/enemies/enemy_齿轮_revealed.tres" id="3_transform"]
+
+[sub_resource type="Resource" id="Resource_resolver"]
+script = ExtResource("2_resolver")
+
+[resource]
+script = ExtResource("1_script")
+enemy_key = "齿轮"
+display_name = "齿轮"
+desc = "无法攻击
+
+回合结束时：自身顺时针旋转，相邻棋子逆时针旋转
+
+【Mask off】
+-免死一次
+方向相反，数值归零"
+flip_effect_id = "transform"
+flip_trigger_id = "death"
+resolver_script = SubResource("Resource_resolver")
+card_art = ExtResource("1_41f0q")
+card_art_flipped = ExtResource("2_5xv7d")
+death_transform = ExtResource("3_transform")
+n = 2
+e = 2
+s = 2
+w = 2

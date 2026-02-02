@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://ihm3f7ekdj0l"]
+
+[ext_resource type="Texture2D" uid="uid://dg1alybmw275d" path="res://assets/cards/players/2b1.png" id="1_vpw1w"]
+[ext_resource type="Script" uid="uid://eflwu57wg7p0" path="res://scripts/data/card_data.gd" id="1_xw4vl"]
+[ext_resource type="Texture2D" uid="uid://cpnsj4tdg7ih0" path="res://assets/cards/players/2a1.png" id="2_w7nti"]
+
+[resource]
+script = ExtResource("1_xw4vl")
+card_key = "Happy"
+index = 1
+display_name = "高兴"
+price = 1
+n = 4
+e = 4
+s = 3
+w = 6
+effect_id = "heal_self"
+desc = "翻牌：治疗自身四维至满额"
+card_art = ExtResource("1_vpw1w")
+card_art_flipped = ExtResource("2_w7nti")

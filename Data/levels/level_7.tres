@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://cp5jbyj6cwd48"]
+
+[ext_resource type="Script" uid="uid://cxqsplq1m2jp3" path="res://scripts/data/enemy_spawn_data.gd" id="1_3fcjy"]
+[ext_resource type="Texture2D" uid="uid://yilxmf1d0yn8" path="res://assets/Portraits/enemy3_red.png" id="2_3fcjy"]
+[ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="3_a44ta"]
+
+[sub_resource type="Resource" id="Resource_thrqp"]
+script = ExtResource("1_3fcjy")
+enemy_key = "蜘蛛"
+pos = Vector2i(2, 0)
+n = 15
+e = 16
+s = 15
+w = 17
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_cvxjk"]
+script = ExtResource("1_3fcjy")
+enemy_key = "蜘蛛卵_小怪"
+pos = Vector2i(1, 1)
+n = 1
+e = 1
+s = 1
+w = 1
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_2krys"]
+script = ExtResource("1_3fcjy")
+enemy_key = "蜘蛛卵_长矛"
+pos = Vector2i(0, 2)
+n = 2
+e = 2
+s = 2
+w = 2
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_umcu0"]
+script = ExtResource("1_3fcjy")
+enemy_key = "蜘蛛卵_小怪"
+pos = Vector2i(2, 1)
+e = 3
+s = 3
+w = 3
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[resource]
+script = ExtResource("3_a44ta")
+level_name = "第7关"
+level_index = 7
+enemy_spawns = Array[ExtResource("1_3fcjy")]([SubResource("Resource_thrqp"), SubResource("Resource_cvxjk"), SubResource("Resource_2krys"), SubResource("Resource_umcu0")])
+initial_hand_cards = Array[String](["Lovely", "Jealous", "Angry", "Happy", "Scared", "Sad"])
+portrait = ExtResource("2_3fcjy")

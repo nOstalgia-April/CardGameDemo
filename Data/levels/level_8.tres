@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://6p4gmv0oxifn"]
+
+[ext_resource type="Script" uid="uid://cxqsplq1m2jp3" path="res://scripts/data/enemy_spawn_data.gd" id="1_jhui0"]
+[ext_resource type="Texture2D" uid="uid://bdi7rxuvo0yda" path="res://assets/Portraits/enemy0_left.png" id="2_jhui0"]
+[ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="3_a4f02"]
+
+[sub_resource type="Resource" id="Resource_thrqp"]
+script = ExtResource("1_jhui0")
+enemy_key = "蜘蛛卵_小怪"
+n = 4
+e = 3
+s = 4
+w = 3
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_cvxjk"]
+script = ExtResource("1_jhui0")
+enemy_key = "齿轮"
+pos = Vector2i(1, 1)
+n = 8
+e = 8
+s = 8
+w = 8
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_2krys"]
+script = ExtResource("1_jhui0")
+enemy_key = "蜘蛛卵_小怪"
+pos = Vector2i(0, 2)
+n = 5
+e = 3
+s = 4
+w = 2
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_umcu0"]
+script = ExtResource("1_jhui0")
+enemy_key = "石头"
+pos = Vector2i(2, 1)
+e = 3
+w = 3
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[resource]
+script = ExtResource("3_a4f02")
+level_name = "第7关"
+level_index = 7
+enemy_spawns = Array[ExtResource("1_jhui0")]([SubResource("Resource_thrqp"), SubResource("Resource_cvxjk"), SubResource("Resource_2krys"), SubResource("Resource_umcu0")])
+initial_hand_cards = Array[String](["Lovely", "Jealous", "Angry", "Happy", "Scared", "Sad"])
+portrait = ExtResource("2_jhui0")

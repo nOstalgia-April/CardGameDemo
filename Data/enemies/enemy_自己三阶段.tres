@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://c7204d7orn6bc"]
+
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://crrj8v2bfm5qa" path="res://assets/Portraits/lhdr2.png" id="2_l1ugu"]
+[ext_resource type="Script" uid="uid://spfeauja8pql" path="res://scripts/resolvers/self_boss_resolver.gd" id="2_resolver"]
+[ext_resource type="Texture2D" uid="uid://dtwjoeoqt0li0" path="res://assets/cards/enemy/ysk3.png" id="4_art"]
+
+[sub_resource type="Resource" id="Resource_resolver"]
+script = ExtResource("2_resolver")
+stat_multiplier = 2
+action_count = 2
+
+[resource]
+script = ExtResource("1_script")
+enemy_key = "Self_3"
+display_name = "自己"
+desc = "每回合结束时，场上每有1个其他棋子，四维+2
+随后行动2次"
+flip_trigger_id = "none"
+resolver_script = SubResource("Resource_resolver")
+card_art = ExtResource("4_art")
+card_art_flipped = ExtResource("4_art")
+portrait = ExtResource("2_l1ugu")
+portrait_flipped = ExtResource("2_l1ugu")
+n = 4
+e = 2
+s = 5
+w = 5

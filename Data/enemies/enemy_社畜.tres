@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bevv4jboabiaf"]
+
+[ext_resource type="Texture2D" uid="uid://b32c72it8hy64" path="res://assets/cards/enemy/m1a.png" id="1_hdpqf"]
+[ext_resource type="Texture2D" uid="uid://4lut7gnf50th" path="res://assets/cards/enemy/m2a.png" id="2_4h7ty"]
+[ext_resource type="Resource" uid="uid://dr3rn8bfgv1ta" path="res://Data/enemies/enemy_社畜二阶段.tres" id="3_fuh1i"]
+[ext_resource type="Script" uid="uid://buroj5wequ5ns" path="res://scripts/resolvers/attack_or_move_resolver.gd" id="4_dfqly"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="5_21ly3"]
+
+[resource]
+script = ExtResource("5_21ly3")
+enemy_key = "社畜"
+display_name = "社畜"
+desc = "因不想上班发疯了
+“试着攻击没有
+数字的那个方向？”
+
+【Mask】：
+死亡后会进入二阶段"
+flip_effect_id = "transform"
+flip_trigger_id = "death"
+resolver_script = ExtResource("4_dfqly")
+card_art = ExtResource("1_hdpqf")
+card_art_flipped = ExtResource("2_4h7ty")
+death_transform = ExtResource("3_fuh1i")
+n = 15
+e = 8
+s = 10
+w = 11

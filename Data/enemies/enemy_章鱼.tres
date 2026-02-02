@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://c176s2ltwfb16"]
+
+[ext_resource type="Texture2D" uid="uid://0k2mng8wq3g6" path="res://assets/cards/enemy/zy2.png" id="1_q6mav"]
+[ext_resource type="Texture2D" uid="uid://b13wjgrnsindt" path="res://assets/cards/enemy/zy1.png" id="2_8y5fu"]
+[ext_resource type="Script" uid="uid://buroj5wequ5ns" path="res://scripts/resolvers/attack_or_move_resolver.gd" id="3_g2kmr"]
+[ext_resource type="Texture2D" uid="uid://c1pn76ibhrjd3" path="res://assets/Portraits/enemy1_black_defeat.png" id="3_ghp6n"]
+[ext_resource type="Texture2D" uid="uid://hy8gxmxmgjyn" path="res://assets/Portraits/enemy1_black.png" id="4_5te3a"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="4_ghp6n"]
+
+[resource]
+script = ExtResource("4_ghp6n")
+enemy_key = "章鱼"
+display_name = "章鱼小姐"
+desc = "因为他很焦虑，他很紧张，所以他就什么都做不了，然后因为他什么都做不了，他就更紧张更焦虑了，所以就只能紧紧的抱住自己，那个章鱼就是他焦虑的具象化，整个上半身都变成了章鱼，触手从袖子里钻出来，紧紧地缠住了他自己
+[Mask change]
+-数字之和奇偶变换时
+发动一次优势攻击"
+flip_effect_id = "advantage_attack"
+flip_trigger_id = "parity_change"
+resolver_script = ExtResource("3_g2kmr")
+card_art = ExtResource("1_q6mav")
+card_art_flipped = ExtResource("2_8y5fu")
+portrait = ExtResource("3_ghp6n")
+portrait_flipped = ExtResource("4_5te3a")
+n = 18
+e = 20
+s = 17
+w = 15

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b4v3shfgeswu6"]
+
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://spfeauja8pql" path="res://scripts/resolvers/self_boss_resolver.gd" id="2_resolver"]
+[ext_resource type="Texture2D" uid="uid://dtwjoeoqt0li0" path="res://assets/cards/enemy/ysk3.png" id="2_vo7x0"]
+[ext_resource type="Texture2D" uid="uid://crrj8v2bfm5qa" path="res://assets/Portraits/lhdr2.png" id="3_vo7x0"]
+[ext_resource type="Texture2D" uid="uid://b1vh1mi85ga4r" path="res://assets/cards/enemy/ysk2.png" id="4_art"]
+
+[sub_resource type="Resource" id="Resource_resolver"]
+script = ExtResource("2_resolver")
+stat_multiplier = 0
+action_count = 2
+
+[resource]
+script = ExtResource("1_script")
+enemy_key = "Self_2"
+display_name = "越发清晰的幻想"
+desc = "患者习惯作为倾听者，极端投入到他人的世界，逐渐对他人的命运产生极端的控制欲，狂暴形态为孤独的信天翁，承担他人业力的同时拒绝他人侵犯自己的领地
+
+不再增加四维
+但每回合结束时会行动2次"
+flip_trigger_id = "on_any_zero"
+resolver_script = SubResource("Resource_resolver")
+card_art = ExtResource("2_vo7x0")
+card_art_flipped = ExtResource("4_art")
+portrait = ExtResource("3_vo7x0")
+portrait_flipped = ExtResource("3_vo7x0")
+n = 1
+s = 1

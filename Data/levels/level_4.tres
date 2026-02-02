@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://dkkbomjwj4hks"]
+
+[ext_resource type="Script" uid="uid://cxqsplq1m2jp3" path="res://scripts/data/enemy_spawn_data.gd" id="1_thrqp"]
+[ext_resource type="Texture2D" uid="uid://bn0qddv7fcepo" path="res://assets/Portraits/girl.png" id="2_thrqp"]
+[ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="3_tv1yf"]
+
+[sub_resource type="Resource" id="Resource_s5x5u"]
+script = ExtResource("1_thrqp")
+enemy_key = "石头"
+pos = Vector2i(1, 1)
+e = 3
+s = 3
+w = 1
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_k26sd"]
+script = ExtResource("1_thrqp")
+enemy_key = "石头"
+n = 2
+e = 4
+s = 2
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_sq5ft"]
+script = ExtResource("1_thrqp")
+enemy_key = "蜘蛛卵_长矛"
+pos = Vector2i(0, 2)
+s = 4
+w = 1
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[sub_resource type="Resource" id="Resource_thrqp"]
+script = ExtResource("1_thrqp")
+enemy_key = "长矛"
+pos = Vector2i(2, 0)
+n = 3
+e = 6
+s = 6
+w = 8
+metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
+
+[resource]
+script = ExtResource("3_tv1yf")
+level_name = "第4关"
+level_index = 4
+enemy_spawns = Array[ExtResource("1_thrqp")]([SubResource("Resource_s5x5u"), SubResource("Resource_k26sd"), SubResource("Resource_sq5ft"), SubResource("Resource_thrqp")])
+initial_hand_cards = Array[String](["Sad", "Jealous", "Angry"])
+portrait = ExtResource("2_thrqp")

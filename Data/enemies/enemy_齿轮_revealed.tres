@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://36rewwgn0q1u"]
+
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://crwxdsjygsuel" path="res://scripts/resolvers/gear_resolver.gd" id="2_resolver"]
+
+[sub_resource type="Resource" id="Resource_resolver"]
+script = ExtResource("2_resolver")
+clockwise_self = false
+
+[resource]
+script = ExtResource("1_script")
+enemy_key = "Gear_Revealed"
+display_name = "齿轮(Revealed)"
+desc = "无法攻击
+回合结束时：自身逆时针旋转，相邻棋子顺时针旋转"
+flip_trigger_id = "none"
+resolver_script = SubResource("Resource_resolver")

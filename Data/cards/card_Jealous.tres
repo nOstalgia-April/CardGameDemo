@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://c01kqgsfqdqsf"]
+
+[ext_resource type="Texture2D" uid="uid://tshxnaddrvlr" path="res://assets/cards/players/5b1.png" id="1_kj0n5"]
+[ext_resource type="Script" uid="uid://eflwu57wg7p0" path="res://scripts/data/card_data.gd" id="1_xw4vl"]
+[ext_resource type="Texture2D" uid="uid://bb7asb8qqbacq" path="res://assets/cards/players/5a1.png" id="2_l6h56"]
+
+[resource]
+script = ExtResource("1_xw4vl")
+card_key = "Jealous"
+index = 6
+display_name = "嫉妒"
+price = 1
+n = 1
+e = 1
+s = 1
+w = 2
+effect_id = "swap"
+desc = "翻牌：可以选择与一个棋子换位"
+card_art = ExtResource("1_kj0n5")
+card_art_flipped = ExtResource("2_l6h56")

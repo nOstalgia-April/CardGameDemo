@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dr3rn8bfgv1ta"]
+
+[ext_resource type="Script" uid="uid://by11idswtvv2u" path="res://scripts/resolvers/adjacent_attack_resolver.gd" id="1_2dbun"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="2_amriu"]
+[ext_resource type="Texture2D" uid="uid://c8p2l6l3j5y9" path="res://assets/Portraits/enemy2_defeat!.png" id="3_portrait"]
+
+[resource]
+script = ExtResource("2_amriu")
+enemy_key = "社畜二阶段"
+display_name = "社会人"
+desc = "想上班想得发疯了"
+resolver_script = ExtResource("1_2dbun")
+portrait = ExtResource("3_portrait")
+n = 4
+s = 2
+w = 5

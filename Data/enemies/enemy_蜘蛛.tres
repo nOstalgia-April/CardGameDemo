@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://cruqf26057npd"]
+
+[ext_resource type="Texture2D" uid="uid://x1ae3abs0pw0" path="res://assets/cards/enemy/zz1.png" id="1_81rr7"]
+[ext_resource type="Texture2D" uid="uid://u185c1l5rton" path="res://assets/cards/enemy/zz2.png" id="2_yacc7"]
+[ext_resource type="Texture2D" uid="uid://lnksuc0yrp08" path="res://assets/Portraits/enemy3_red_spider.png" id="3_q1him"]
+[ext_resource type="Script" uid="uid://buroj5wequ5ns" path="res://scripts/resolvers/attack_or_move_resolver.gd" id="3_t4gre"]
+[ext_resource type="Texture2D" uid="uid://yilxmf1d0yn8" path="res://assets/Portraits/enemy3_red.png" id="4_77luo"]
+[ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="4_q1him"]
+
+[resource]
+script = ExtResource("4_q1him")
+enemy_key = "蜘蛛"
+display_name = "修仙者"
+desc = "患者坚信自己是一位穿越至此的修仙巨擘，使命为“渡化此界苍生”。其狂暴的“蜘蛛”形态，被确认为妄想与极端攻击性的外化体现。因对公共安全构成严重威胁，经家属与多方受害人联合申请，已被强制送医，限制行动。
+医疗团队利用其妄想的固有逻辑实施了干预。主治医师通过认知行为疗法，成功将妄想逻辑转化为治疗框架。在患者的妄想逻辑中，束缚在自己身体上的丝带是一件威力无比的“封印法器”，但在现实世界里，这其实是两根用磁铁吸住，巧妙卡在他身体上的红色丝带。患者因此将对抗性行为转化为对“封印”的被动遵从，攻击性显著降低。
+[Mask on]
+-在场上有蜘蛛卵时
+每回合会打乱玩家手牌上的四个数字"
+flip_effect_id = "shuffle_hand"
+flip_trigger_id = "turn_start"
+resolver_script = ExtResource("3_t4gre")
+card_art = ExtResource("2_yacc7")
+card_art_flipped = ExtResource("1_81rr7")
+portrait = ExtResource("3_q1him")
+portrait_flipped = ExtResource("4_77luo")
+n = 15
+e = 16
+s = 15
+w = 17

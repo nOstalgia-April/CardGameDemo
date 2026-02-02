@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cipthh08jmhxp"]
+
+[ext_resource type="Script" uid="uid://kfpxxfu11pr7" path="res://tscns/turn_hint_controller.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://iq46fx7bbejl" path="res://assets/UI/Computer/ui_pls.png" id="2_yyile"]
+
+[node name="TurnHintController" type="Control" unique_id=1719947849 node_paths=PackedStringArray("hint_label")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_script")
+hint_label = NodePath("HintLabel")
+
+[node name="HintLabel" type="TextureRect" parent="." unique_id=377009389]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 270.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_yyile")
+
+[node name="ConfirmButton" type="Control" parent="." unique_id=876543210]
+anchors_preset = 0
