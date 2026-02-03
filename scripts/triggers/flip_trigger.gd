@@ -19,6 +19,8 @@ func _on_gui_input(event: InputEvent) -> void:
 	if unit.is_enemy:
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		if unit.is_flipped():
+			return
 		if !unit.turn_manager.use_flip():
 			return
 		unit.call("flip")

@@ -75,7 +75,12 @@ func _on_unit_knockback_requested(unit: Node, dir: int, context: Dictionary) -> 
 	if from_cell == null:
 		return
 	var target_cell: Cell = get_neighbor_cells(from_cell).get(dir, null) as Cell
-	if target_cell == null or target_cell.is_occupied():
+	if target_cell == null:
+		return
+	if target_cell.is_occupied():
+		var attacked: bool = resolve_attack_dir(u, dir, false, {"knockback_domino": true})
+		if attacked:
+			context["accepted"] = true
 		return
 	var moved: bool = move_unit(u, target_cell, false, {"knockback": true})
 	if !moved:
@@ -219,7 +224,7 @@ func resolve_attack_on_cell(attacker: UnitCard, target_cell: Cell, advantage: bo
 		attacker.consume_attack()
 	return true
 
-func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -> bool:
+func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false, extra_context: Dictionary = {}) -> bool:
 	var attacker_cell: Cell = get_parent_cell_of_unit(attacker)
 	var target_cell: Cell = get_neighbor_cells(attacker_cell).get(dir, null) as Cell # direct neighbor lookup (was get_neighbor_cell_by_dir)
 	if target_cell == null:
@@ -233,13 +238,16 @@ func resolve_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -
 	var def_dir: int = DirUtils.opposite_dir(dir)
 	var def_value: int = target.get_dir_value(def_dir)
 	var event_context: Dictionary = {"advantage": advantage}
+	if extra_context != null and !extra_context.is_empty():
+		for key in extra_context.keys():
+			event_context[key] = extra_context[key]
 	BattleEventBus.emit_signal("attack_started", attacker, target, dir, event_context)
 	BattleEventBus.emit_signal("screen_shake_requested", 0.0, 0.0, event_context)
 	target.take_damage(def_dir, attacker, atk_value)
 	BattleEventBus.emit_signal("damage_applied", attacker, target, dir, atk_value, event_context)
 	if !advantage:
 		attacker.take_damage(dir, target, def_value)
-		BattleEventBus.emit_signal("damage_applied", target, attacker, DirUtils.opposite_dir(dir), def_value, event_context)
+	BattleEventBus.emit_signal("damage_applied", target, attacker, DirUtils.opposite_dir(dir), def_value, event_context)
 	return true
 
 func resolve_ranged_attack_dir(attacker: UnitCard, dir: int, advantage: bool = false) -> bool:

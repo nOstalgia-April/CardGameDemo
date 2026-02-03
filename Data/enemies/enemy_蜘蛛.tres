@@ -2,9 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://x1ae3abs0pw0" path="res://assets/cards/enemy/zz1.png" id="1_81rr7"]
 [ext_resource type="Texture2D" uid="uid://u185c1l5rton" path="res://assets/cards/enemy/zz2.png" id="2_yacc7"]
-[ext_resource type="Texture2D" uid="uid://lnksuc0yrp08" path="res://assets/Portraits/enemy3_red_spider.png" id="3_q1him"]
+[ext_resource type="Texture2D" uid="uid://dpkngkqiyk1fu" path="res://assets/Portraits/enemy3333_spider.png" id="3_q1him"]
 [ext_resource type="Script" uid="uid://buroj5wequ5ns" path="res://scripts/resolvers/attack_or_move_resolver.gd" id="3_t4gre"]
-[ext_resource type="Texture2D" uid="uid://yilxmf1d0yn8" path="res://assets/Portraits/enemy3_red.png" id="4_77luo"]
+[ext_resource type="Texture2D" uid="uid://ses608oe1pbm" path="res://assets/Portraits/enemy333333.png" id="4_77luo"]
 [ext_resource type="Script" uid="uid://ct5l2wrp8n8os" path="res://scripts/data/enemy_data.gd" id="4_q1him"]
 
 [resource]

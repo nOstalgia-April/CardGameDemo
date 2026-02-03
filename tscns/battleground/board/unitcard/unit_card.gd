@@ -615,8 +615,11 @@ func _get_target_cell(candidates: Array[Cell]) -> Cell:
 	return null
 
 func flip(context: Dictionary = {}) -> bool:
-	# 切换翻转状态
-	_flipped = !_flipped
+	var force: bool = bool(context.get("force", false))
+	if _flipped and !force and !is_enemy:
+		return false
+	# 默认只翻到背面，不再来回切换
+	_flipped = true
 	
 	if effect_id != "":
 		await FlipEffectRegistry.apply(effect_id, self, context)
@@ -656,8 +659,12 @@ func _update_portrait_on_flip() -> void:
 		BattleEventBus.emit_signal("unit_portrait_changed", self, target_texture)
 
 func set_flipped(active: bool) -> void:
+	_flipped = active
 	_flip_highlight_active = active
 	_update_border()
+
+func is_flipped() -> bool:
+	return _flipped
 
 func _rotate_adjacent_units(clockwise: bool) -> void:
 	var cell: Cell = _get_parent_cell() as Cell

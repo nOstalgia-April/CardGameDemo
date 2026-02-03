@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://gcpxx4boco1g" path="res://tscns/battleground/board/unitcard/unit_card.tscn" id="2_jvffs"]
 [ext_resource type="AudioStream" uid="uid://dlhmwfp4amp2d" path="res://Music/BGM/Battle_Intro.ogg" id="3_battle_intro"]
 [ext_resource type="AudioStream" uid="uid://dxy4e5mt83l23" path="res://Music/BGM/Battle_Loop.ogg" id="4_battle_loop"]
-[ext_resource type="Texture2D" uid="uid://c3a6o5rltf5wx" path="res://assets/room.PNG" id="5_owkka"]
+[ext_resource type="Texture2D" uid="uid://36dldl5u16k6" path="res://assets/backgroundddd.png" id="5_owkka"]
 [ext_resource type="Texture2D" uid="uid://uvigbbleccrc" path="res://123.png" id="6_78w4g"]
 [ext_resource type="Texture2D" uid="uid://bfrk0ffmqgd2r" path="res://assets/table.PNG" id="6_ivtmp"]
 [ext_resource type="Script" uid="uid://cxrmr0j7edstx" path="res://scripts/turn_manager.gd" id="7_hwa8p"]

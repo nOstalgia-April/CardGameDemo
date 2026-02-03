@@ -24,6 +24,8 @@ func _on_unit_exiting() -> void:
 func _on_damage_applied(attacker: Node, target: Node, dir: int, _value: int, _context: Dictionary) -> void:
 	if unit == null:
 		return
+	if _context.get("knockback_domino", false):
+		return
 	if attacker != unit and target != unit:
 		return
 	var pushed: UnitCard = target as UnitCard

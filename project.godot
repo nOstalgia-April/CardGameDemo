@@ -36,6 +36,10 @@ window/size/viewport_width=1600
 window/size/viewport_height=1120
 window/stretch/mode="canvas_items"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg", "res://addons/godot_mcp/plugin.cfg")
+
 [gui]
 
 theme/custom="res://default_theme.tres"

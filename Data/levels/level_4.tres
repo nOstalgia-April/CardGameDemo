@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://dkkbomjwj4hks"]
 
 [ext_resource type="Script" uid="uid://cxqsplq1m2jp3" path="res://scripts/data/enemy_spawn_data.gd" id="1_thrqp"]
-[ext_resource type="Texture2D" uid="uid://bn0qddv7fcepo" path="res://assets/Portraits/girl.png" id="2_thrqp"]
+[ext_resource type="Texture2D" uid="uid://vp0s3crapkpk" path="res://assets/Portraits/enemy0_right_edit_1342495059434113.png" id="2_thrqp"]
 [ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="3_tv1yf"]
 
 [sub_resource type="Resource" id="Resource_s5x5u"]

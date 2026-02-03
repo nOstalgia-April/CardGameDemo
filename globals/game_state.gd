@@ -15,7 +15,6 @@ func _ready() -> void:
 	max_unlocked_level = SaveManager.load_game()
 	current_level_index = max_unlocked_level
 
-
 func set_current_level(level_index: int) -> void:
 	current_level_index = max(1, level_index)
 

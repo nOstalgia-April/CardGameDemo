@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cxqsplq1m2jp3" path="res://scripts/data/enemy_spawn_data.gd" id="1_a2bph"]
 [ext_resource type="Script" uid="uid://dojagwpcaplen" path="res://scripts/data/level_data.gd" id="1_kg3rt"]
-[ext_resource type="Texture2D" uid="uid://cd4npq62hjns1" path="res://assets/Portraits/Patent.png" id="2_a2bph"]
+[ext_resource type="Texture2D" uid="uid://vp0s3crapkpk" path="res://assets/Portraits/enemy0_right_edit_1342495059434113.png" id="2_a2bph"]
 
 [sub_resource type="Resource" id="Resource_rock"]
 script = ExtResource("1_a2bph")

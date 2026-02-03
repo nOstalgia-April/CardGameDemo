@@ -8,7 +8,8 @@ func _bind() -> void:
 func on_death(context: Dictionary = {}) -> bool:
 	if unit == null:
 		return false
-	# Force reset flipped state to allow transformation even if unit was already flipped
-	unit.set_flipped(false) 
-	unit.flip(context)
+	# 强制触发翻面效果（即使已翻过）
+	var forced_context := context.duplicate()
+	forced_context["force"] = true
+	unit.flip(forced_context)
 	return true
