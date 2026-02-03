@@ -94,7 +94,6 @@ texture = ExtResource("6_ivtmp")
 unique_name_in_owner = true
 script = ExtResource("7_hwa8p")
 board = NodePath("../Root/Board")
-max_energy = 5
 
 [node name="Root" type="Control" parent="." unique_id=286232410]
 unique_name_in_owner = true

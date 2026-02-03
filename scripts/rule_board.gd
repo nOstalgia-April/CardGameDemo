@@ -62,7 +62,6 @@ func _on_mouse_exited() -> void:
 	await _tween.finished
 
 func _on_scene_change_requested(scene_key: String, payload: Dictionary) -> void:
-	print('当前场景',scene_key)
 	match scene_key:
 		'level_select':
 			b_board.visible = false
@@ -75,8 +74,7 @@ func _on_scene_change_requested(scene_key: String, payload: Dictionary) -> void:
 
 func _process(delta: float) -> void:
 	var scene_key = get_tree().current_scene.name
-	if scene_key == 'level_select':
+	if scene_key == 'LevelSelect':
 		b_board.visible = false
 	else:
 		b_board.visible = true
-		print("当前场景名称:", scene_key)

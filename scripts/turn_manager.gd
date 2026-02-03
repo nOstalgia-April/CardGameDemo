@@ -6,7 +6,7 @@ var mouse_tool_tip := preload("res://tscns/ui/mouse_tooltip.tscn")
 
 @export_group("Config")
 @export var start_energy: int = 1
-@export var max_energy: int = 4
+@export var max_energy: int = 5
 @export var flip_per_turn: int = 1
 @export_group("")
 

@@ -16,7 +16,7 @@ pos = Vector2i(1, 1)
 n = 15
 e = 8
 s = 9
-w = 7
+w = 8
 metadata/_custom_type_script = "uid://cxqsplq1m2jp3"
 
 [resource]

@@ -12,9 +12,15 @@ func cleanup() -> void:
 func _on_turn_started(_turn_index: int, _context: Dictionary) -> void:
 	if unit == null or !is_instance_valid(unit):
 		return
-	# Only trigger for enemies
 	if !unit.is_enemy:
 		return
-	
-	print("[TurnStartTrigger] Triggered for unit: ", unit.name, " (", unit.display_name, ")")
-	unit.call("flip")
+
+	var ctx := {"units": []}
+	BattleEventBus.emit_signal("units_requested", null, ctx)
+	var all_units: Array = ctx.get("units", [])
+	for u in all_units:
+		print(u.display_name)
+		if u.display_name.contains("蜘蛛卵"):
+			print(unit.display_name)
+			unit.call("flip")
+			return

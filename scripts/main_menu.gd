@@ -34,7 +34,7 @@ func _ready() -> void:
 	if about_info_layer != null:
 		about_info_layer.visible = false
 	if start_battle_button != null:
-		var start_texture := start_battle_button.texture_hover if start_battle_button.texture_hover != null else start_battle_button.texture_normal
+		var start_texture := start_battle_button.texture_normal
 		_apply_click_mask(start_battle_button, start_texture)
 		start_battle_button.mouse_entered.connect(_on_start_hovered)
 		start_battle_button.mouse_exited.connect(_on_start_unhovered)
