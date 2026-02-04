@@ -336,6 +336,16 @@ func _load_and_spawn_level() -> void:
 	_current_level = level
 	if portrait != null:
 		portrait.texture = level.portrait
+
+		# 重置 Portrait 的默认值
+		portrait.position = Vector2(323.00003, 478.00003)
+		portrait.scale = Vector2(0.37, 0.37)
+
+		# 第2关和第4关的特殊调整
+		if level_index == 2 or level_index == 4:
+			portrait.scale = Vector2(0.325, 0.325)
+			portrait.position = Vector2(306, 464)
+
 	for entry in level.enemy_spawns:
 		if entry == null:
 			continue
