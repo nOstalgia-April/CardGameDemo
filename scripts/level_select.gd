@@ -274,6 +274,7 @@ func _show_portrait_for_level(level_index: int) -> void:
 		target_x = 300.0
 		if level_index == 4:
 			target_x = 310.0
+			portrait.scale = Vector2(0.3583125, 0.3583125)
 
 	if portrait.has_meta("tween"):
 		var old_tween: Tween = portrait.get_meta("tween")
