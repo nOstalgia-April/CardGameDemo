@@ -345,6 +345,8 @@ func _load_and_spawn_level() -> void:
 		if level_index == 2 or level_index == 4:
 			portrait.scale = Vector2(0.325, 0.325)
 			portrait.position = Vector2(306, 464)
+			if level_index == 4:
+				portrait.position.x = 316
 
 	for entry in level.enemy_spawns:
 		if entry == null:
