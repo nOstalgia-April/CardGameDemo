@@ -261,6 +261,18 @@ func _show_portrait_for_level(level_index: int) -> void:
 		portrait.texture = null
 		return
 	portrait.texture = level.portrait
+
+	# 重置 Portrait 的默认值
+	portrait.position = Vector2(323.00003, 478.00003)
+	portrait.scale = Vector2(0.37, 0.37)
+
+	# 第2关和第4关的特殊调整
+	var target_x: float = _portrait_end_x
+	if level_index == 2 or level_index == 4:
+		portrait.scale = Vector2(0.325, 0.325)
+		portrait.position = Vector2(200, 464)
+		target_x = 300.0
+
 	if portrait.has_meta("tween"):
 		var old_tween: Tween = portrait.get_meta("tween")
 		if is_instance_valid(old_tween):
@@ -269,5 +281,5 @@ func _show_portrait_for_level(level_index: int) -> void:
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_CUBIC)
 	tween.set_ease(Tween.EASE_OUT)
-	tween.tween_property(portrait, "position:x", _portrait_end_x, 0.5)
+	tween.tween_property(portrait, "position:x", target_x, 0.5)
 	portrait.set_meta("tween", tween)
